@@ -224,7 +224,9 @@ public class Game extends ApplicationAdapter {
         // └───────┘      └──┘    └──┘    └──┘     └───────┘ └──┘  └──┘
         //this is also good to compare against if the map looks incorrect, and you need an example of a correct map when
         //no parameters are given to generate().
-        lineDungeon = DungeonUtility.hashesToLines(decoDungeon);
+        Map map = new Map(bigWidth, bigHeight);
+        map.buildStandardLevel();
+        lineDungeon = map.pathfinding;//DungeonUtility.hashesToLines(decoDungeon);
 
         resistance = DungeonUtility.generateResistances(decoDungeon);
         visible = new double[bigWidth][bigHeight];
