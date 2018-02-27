@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.NumberUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import roguelike.screens.Start_Screen;
 import squidpony.FakeLanguageGen;
 import squidpony.NaturalLanguageCipher;
 import squidpony.StringKit;
@@ -63,23 +64,19 @@ public class Game extends ApplicationAdapter {
     //one cell; resizing the window can make the units cellWidth and cellHeight use smaller or larger than a pixel.
 
     /** In number of cells */
-    private static final int gridWidth = 80;
+    public static final int gridWidth = 112;
     /** In number of cells */
-    private static final int gridHeight = 24;
-
-    /** In number of cells */
-    private static final int bigWidth = gridWidth * 2;
-    /** In number of cells */
-    private static final int bigHeight = gridHeight * 2;
+    public static final int gridHeight = 32;
 
     /** In number of cells */
     private static final int bonusHeight = 7;
     /** The pixel width of a cell */
-    private static final int cellWidth = 10;
+    public static final int cellWidth = 10;
     /** The pixel height of a cell */
-    private static final int cellHeight = 20;
+    public static final int cellHeight = 20;
     private Color bgColor;
     private Stage stage;
+    private Start_Screen start_screen;
 
     @Override
     public void create () {
@@ -95,7 +92,7 @@ public class Game extends ApplicationAdapter {
         // the font will try to load Iosevka Slab as an embedded bitmap font with a distance field effect.
         // the distance field effect allows the font to be stretched without getting blurry or grainy too easily.
         // this font is covered under the SIL Open Font License (fully free), so there's no reason it can't be used.
-        display = new SparseLayers(gridWidth * cellWidth, gridHeight * cellHeight, cellWidth, cellHeight, DefaultResources.getStretchableSlabFont());
+        display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getStretchableSlabFont());
         //display = new SparseLayers(gridWidth * cellWidth, gridHeight * cellHeight, cellWidth, cellHeight, DefaultResources.getStretchableSlabFont());
 
         //These need to have their positions set before adding any entities if there is an offset involved.
@@ -108,16 +105,11 @@ public class Game extends ApplicationAdapter {
         //up as the colors for the cell with the same x and y.
         bgColor = SColor.DARK_SLATE_GRAY;
         SColor.LIMITED_PALETTE[3] = SColor.DB_GRAPHITE;
-        
+
         //we add display, our one visual component that moves, to the list of things that act in the main Stage.
         stage.addActor(display);
 
-
-    }
-
-    public void putStartScreen(){
-
-        display.put(30, 40, "Dungeons of Elentria", Color.WHITE);
+        start_screen = new Start_Screen(stage);
     }
 
     @Override
@@ -129,7 +121,7 @@ public class Game extends ApplicationAdapter {
         // need to display the map every frame, since we clear the screen to avoid artifacts.
         //putMap();
 
-        putStartScreen();
+        start_screen.render();
 
         stage.draw();
         stage.act();
