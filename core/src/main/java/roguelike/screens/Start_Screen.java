@@ -1,27 +1,36 @@
 package roguelike.screens;
 
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.utils.viewport.StretchViewport;
+import roguelike.engine.Game;
 import squidpony.squidgrid.gui.gdx.DefaultResources;
+import squidpony.squidgrid.gui.gdx.SColor;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
 
 import static roguelike.engine.Game.*;
 
-public class Start_Screen {
+public class Start_Screen extends Screen{
 
+    private Game game;
     private Stage stage;
     private SparseLayers display;
+    public Color bgColor;
 
-    public Start_Screen(Stage stage){
-        this.stage = stage;
+    public Start_Screen(Game game_in){
+        game = game_in;
+        stage = game.stage;
         display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getStretchableSlabFont());
+        bgColor = SColor.DARK_SLATE_GRAY;
+        display.fillBackground(bgColor);
+        stage.addActor(display);
     }
 
+    @Override
     public void render(){
         String title = "Dungeons of Elentria";
+        String enter = "Press [Enter] to start a new game";
         display.put(display.gridWidth / 2 - title.length() / 2, 5, title, Color.WHITE);
+        display.put(display.gridWidth / 2 - enter.length() / 2, gridHeight - 5, enter, Color.YELLOW);
         stage.draw();
     }
 }

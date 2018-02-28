@@ -17,9 +17,9 @@ public class DesktopLauncher {
 
     private static LwjglApplicationConfiguration getDefaultConfiguration() {
         LwjglApplicationConfiguration configuration = new LwjglApplicationConfiguration();
-        configuration.title = "SquidDungeonsofElentria";
-        configuration.width = 80 * 10;
-        configuration.height = 31 * 20;
+        configuration.title = "Dungeons of Elentria";
+        configuration.width = 112 * 10;
+        configuration.height = 32 * 20;
         for (int size : new int[] { 128, 64, 32, 16 }) {
             configuration.addIcon("libgdx" + size + ".png", FileType.Internal);
         }
