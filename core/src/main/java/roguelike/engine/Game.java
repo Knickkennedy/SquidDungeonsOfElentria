@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import lombok.Getter;
+import lombok.Setter;
 import roguelike.screens.Screen;
 import roguelike.screens.Start_Screen;
 import squidpony.squidgrid.gui.gdx.DefaultResources;
@@ -23,6 +25,7 @@ import squidpony.squidmath.RNG;
  * changing gridHeight and gridWidth to affect the visible area or bigWidth and bigHeight to adjust the size of the
  * dungeon you can move through, with the camera following your '@' symbol.
  */
+@Getter @Setter
 public class Game extends ApplicationAdapter {
     SpriteBatch batch;
 
