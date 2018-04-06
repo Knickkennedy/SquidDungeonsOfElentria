@@ -25,6 +25,10 @@ public class Map{
         this.builder = new Map_Builder(width, height);
     }
 
+    public Tile getTileAt(int x, int y){
+        return tiles[x][y];
+    }
+
     public void buildStandardLevel() {
         builder.buildStandardLevel();
         tiles = builder.getMap();
