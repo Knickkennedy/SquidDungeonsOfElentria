@@ -30,6 +30,10 @@ public class Game_Screen extends Screen{
 
     @Override
     public void render(){
+        render_map();
+    }
+
+    public void render_map(){
         for(int i  = 0; i < gridWidth; i++){
             for(int j = 0; j < gridHeight; j++){
                 display.put(i, j, map.getTileAt(i, j).getSprite().character, map.getTileAt(i, j).getSprite().foregroundColor);

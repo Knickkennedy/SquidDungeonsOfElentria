@@ -19,12 +19,10 @@ public enum Tile {
     Cave(new Sprite('*', Colors.darkGray), "cave", "a scary cave", false),
     Floor(new Sprite('.', Colors.green), "dirt", "dirty floor", false);
 
-    @Getter
-    @Setter
-    private boolean solid;
-    @Getter @Setter private String name;
-    @Getter @Setter private String description;
     @Getter @Setter private Sprite sprite;
+	@Getter @Setter private String name;
+	@Getter @Setter private String description;
+    @Getter @Setter private boolean solid;
 
     Tile(Sprite sprite, String name, String description, boolean solid){
         this.sprite = sprite;

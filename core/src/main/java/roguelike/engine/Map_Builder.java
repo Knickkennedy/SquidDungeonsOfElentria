@@ -56,28 +56,6 @@ public class Map_Builder {
         initializePathfinding();
     }
 
-    private void placeStairs(){
-        Collections.shuffle(rooms);
-        Room upstairs = rooms.get(0);
-        Room downstairs = rooms.get(rooms.size() - 1);
-        int x1 = Roll.rand(upstairs.getTopLeft().x + 1, upstairs.getBottomRight().x - 1);
-        int y1 = Roll.rand(upstairs.getTopLeft().y + 1, upstairs.getBottomRight().y - 1);
-        int x2 = Roll.rand(downstairs.getTopLeft().x + 1, downstairs.getBottomRight().x - 1);
-        int y2 = Roll.rand(downstairs.getTopLeft().y + 1, downstairs.getBottomRight().y - 1);
-        map[x1][y1] = Tile.Stairs_Up;
-        map[x2][y2] = Tile.Stairs_Down;
-        stairsUp = new java.awt.Point(x1, y1);
-        stairsDown = new java.awt.Point(x2, y2);
-    }
-
-    private void initializePathfinding(){
-        for(int x = 0; x < map.length; x++){
-            for(int y = 0; y < map[0].length; y++){
-                pathfinding[x][y] = map[x][y].getSprite().character;
-            }
-        }
-    }
-
     private void initializeMap(){
         for(int x = 0; x < map.length; x++){
             for(int y = 0; y < map[0].length; y++){
@@ -136,92 +114,63 @@ public class Map_Builder {
         }
     }
 
-    private void placeAllDoors(){
-        Room tempRoom = rooms.get(Roll.rand(0, rooms.size() - 1));
-        floodFill(tempRoom.getTopLeft().x, tempRoom.getTopLeft().y);
-        while(!connections.isEmpty()){
-            findDoors();
-            placeDoor();
-            createExtraDoors();
-            removeExtraConnectors();
-        }
-    }
-
-    private void createExtraDoors(){
-        Collections.shuffle(extraDoors);
-        for(int i = 0; i < Roll.rand(1, 3); i++){
-            Point check = extraDoors.get(Roll.rand(0, extraDoors.size() - 1));
-            if(!hasDoorNeighbor(check)){
-                map[check.x][check.y] = Tile.Closed_Door;
+    private void startMaze(){
+        for(int i = 1; i < map.length - 2; i++){
+            for(int j = 1; j < map[0].length - 2; j++){
+                if(isSolid(i, j)){
+                    generateMaze(i, j);
+                }
             }
         }
-        extraDoors.clear();
     }
 
-    private boolean hasDoorNeighbor(Point p){
+    private boolean isSolid(int x, int y){
+        return (map[x][y] == Tile.Wall)
+                && (map[x + 1][y] == Tile.Wall)
+                && (map[x - 1][y] == Tile.Wall)
+                && (map[x][y - 1] == Tile.Wall)
+                && (map[x][y + 1] == Tile.Wall)
+                && (map[x + 1][y + 1] == Tile.Wall)
+                && (map[x + 1][y - 1] == Tile.Wall)
+                && (map[x - 1][y + 1] == Tile.Wall)
+                && (map[x - 1][y - 1] == Tile.Wall);
+    }
+
+    private void generateMaze(int x, int y){
+        Point start = new Point(x, y);
+        buildFrontier(start);
+        carvePath(start);
+        updateFrontier();
+        while(!frontier.isEmpty()){
+            Point current = frontier.remove(Roll.rand(0, frontier.size() - 1));
+            buildFrontier(current);
+            carvePath(current);
+            updateFrontier();
+        }
+    }
+
+    private void buildFrontier(Point p){
         for(Point direction : Point.cardinal){
-            if(getTile(p.getNeighbor(direction)) == Tile.Closed_Door) return true;
-        }
-        return false;
-    }
-
-    private void placeDoor(){
-        Point door = potentialDoors.get(Roll.rand(0, potentialDoors.size() - 1));
-        while (hasDoorNeighbor(door)) {
-            door = potentialDoors.get(Roll.rand(0, potentialDoors.size() - 1));
-        }
-        map[door.x][door.y] = Tile.Closed_Door;
-        floodFill(door.x, door.y);
-        extraDoors.addAll(potentialDoors);
-        potentialDoors.clear();
-    }
-
-    private void findDoors(){
-        Collections.shuffle(connections);
-        for(Point p : connections){
-            if((connected[p.x - 1][p.y]) && (!connected[p.x + 1][p.y])){
-                potentialDoors.add(p);
-            }
-            if((connected[p.x + 1][p.y]) && (!connected[p.x - 1][p.y])){
-                potentialDoors.add(p);
-            }
-            if((connected[p.x][p.y - 1]) && (!connected[p.x][p.y + 1])){
-                potentialDoors.add(p);
-            }
-            if((connected[p.x][p.y + 1]) && (!connected[p.x][p.y - 1])){
-                potentialDoors.add(p);
+            if(isInBounds(p.getNeighbor(direction))){
+                if(isDirectionallySolid(p, direction)){
+                    frontier.add(p.getNeighbor(direction));
+                }
             }
         }
     }
 
-    private void removeExtraConnectors(){
-        for(Point p : connections){
-            if(connected[p.x - 1][p.y] && connected[p.x + 1][p.y]){
-                ctr.add(p);
-            }
-            if(connected[p.x][p.y - 1] && connected[p.x][p.y + 1]){
-                ctr.add(p);
-            }
-        }
-        connections.removeAll(ctr);
-        ctr.clear();
+    private void carvePath(Point s){
+        map[s.x][s.y] = Tile.Floor;
     }
 
-    private void floodFill(int x, int y){
-        if(((map[x][y] == Tile.Floor) || (map[x][y] == Tile.Closed_Door)) && (!connected[x][y])){
-            connected[x][y] = true;
+    private void updateFrontier(){
+        List <Point> toRemove = new ArrayList<>();
+        for(Point p : frontier){
+            if(!isValidMazeLocation(p)){
+                toRemove.add(p);
+            }
         }
-        else{
-            return;
-        }
-        floodFill(x + 1, y);
-        floodFill(x - 1, y);
-        floodFill(x, y + 1);
-        floodFill(x, y - 1);
-    }
-
-    private Tile getTile(Point p){
-        return map[p.x][p.y];
+        frontier.removeAll(toRemove);
     }
 
     private void findConnections(){
@@ -242,44 +191,114 @@ public class Map_Builder {
             }
         }
     }
-    private void startMaze(){
-        for(int i = 1; i < map.length - 2; i++){
-            for(int j = 1; j < map[0].length - 2; j++){
-                if(isSolid(i, j)){
-                    generateMaze(i, j);
-                }
+
+    private void placeAllDoors(){
+        Room tempRoom = rooms.get(Roll.rand(0, rooms.size() - 1));
+        floodFill(tempRoom.getTopLeft().x, tempRoom.getTopLeft().y);
+        while(!connections.isEmpty()){
+            findDoors();
+            placeDoor();
+            createExtraDoors();
+            removeExtraConnectors();
+        }
+    }
+
+    private void findDoors(){
+        Collections.shuffle(connections);
+        for(Point p : connections){
+            if((connected[p.x - 1][p.y]) && (!connected[p.x + 1][p.y])){
+                potentialDoors.add(p);
+            }
+            if((connected[p.x + 1][p.y]) && (!connected[p.x - 1][p.y])){
+                potentialDoors.add(p);
+            }
+            if((connected[p.x][p.y - 1]) && (!connected[p.x][p.y + 1])){
+                potentialDoors.add(p);
+            }
+            if((connected[p.x][p.y + 1]) && (!connected[p.x][p.y - 1])){
+                potentialDoors.add(p);
             }
         }
     }
 
-    private boolean isSolid(int x, int y){
-        if((map[x][y] == Tile.Wall)
-                && (map[x + 1][y] == Tile.Wall)
-                && (map[x - 1][y] == Tile.Wall)
-                && (map[x][y - 1] == Tile.Wall)
-                && (map[x][y + 1] == Tile.Wall)
-                && (map[x+1][y+1] == Tile.Wall)
-                && (map[x+1][y-1] == Tile.Wall)
-                && (map[x-1][y+1] == Tile.Wall)
-                && (map[x-1][y-1] == Tile.Wall)){
-            return true;
+    private void placeDoor(){
+        Point door = potentialDoors.get(Roll.rand(0, potentialDoors.size() - 1));
+        while (hasDoorNeighbor(door)) {
+            door = potentialDoors.get(Roll.rand(0, potentialDoors.size() - 1));
         }
-        else{
-            return false;
+        map[door.x][door.y] = Tile.Closed_Door;
+        floodFill(door.x, door.y);
+        extraDoors.addAll(potentialDoors);
+        potentialDoors.clear();
+    }
+
+    private void createExtraDoors(){
+        Collections.shuffle(extraDoors);
+        for(int i = 0; i < Roll.rand(1, 3); i++){
+            Point check = extraDoors.get(Roll.rand(0, extraDoors.size() - 1));
+            if(!hasDoorNeighbor(check)){
+                map[check.x][check.y] = Tile.Closed_Door;
+            }
+        }
+        extraDoors.clear();
+    }
+    private void removeExtraConnectors(){
+        for(Point p : connections){
+            if(connected[p.x - 1][p.y] && connected[p.x + 1][p.y]){
+                ctr.add(p);
+            }
+            if(connected[p.x][p.y - 1] && connected[p.x][p.y + 1]){
+                ctr.add(p);
+            }
+        }
+        connections.removeAll(ctr);
+        ctr.clear();
+    }
+
+    private void placeStairs(){
+        Collections.shuffle(rooms);
+        Room upstairs = rooms.get(0);
+        Room downstairs = rooms.get(rooms.size() - 1);
+        int x1 = Roll.rand(upstairs.getTopLeft().x + 1, upstairs.getBottomRight().x - 1);
+        int y1 = Roll.rand(upstairs.getTopLeft().y + 1, upstairs.getBottomRight().y - 1);
+        int x2 = Roll.rand(downstairs.getTopLeft().x + 1, downstairs.getBottomRight().x - 1);
+        int y2 = Roll.rand(downstairs.getTopLeft().y + 1, downstairs.getBottomRight().y - 1);
+        map[x1][y1] = Tile.Stairs_Up;
+        map[x2][y2] = Tile.Stairs_Down;
+        stairsUp = new java.awt.Point(x1, y1);
+        stairsDown = new java.awt.Point(x2, y2);
+    }
+
+    private void initializePathfinding(){
+        for(int x = 0; x < map.length; x++){
+            for(int y = 0; y < map[0].length; y++){
+                pathfinding[x][y] = map[x][y].getSprite().character;
+            }
         }
     }
 
-    private void generateMaze(int x, int y){
-        Point start = new Point(x, y);
-        buildFrontier(start);
-        carvePath(start);
-        updateFrontier();
-        while(!frontier.isEmpty()){
-            Point current = frontier.remove(Roll.rand(0, frontier.size() - 1));
-            buildFrontier(current);
-            carvePath(current);
-            updateFrontier();
+    private boolean hasDoorNeighbor(Point p){
+        for(Point direction : Point.cardinal){
+            if(getTile(p.getNeighbor(direction)) == Tile.Closed_Door) return true;
         }
+        return false;
+    }
+
+    private void floodFill(int x, int y){
+        if(((map[x][y] == Tile.Floor) || (map[x][y] == Tile.Closed_Door)) && (!connected[x][y])){
+            connected[x][y] = true;
+        }
+        else{
+            return;
+        }
+        floodFill(x + 1, y);
+        floodFill(x - 1, y);
+        floodFill(x, y + 1);
+        floodFill(x, y - 1);
+    }
+
+    private Tile getTile(Point p){
+        return map[p.x][p.y];
     }
 
     private boolean isInBounds(Point p){
@@ -308,26 +327,6 @@ public class Map_Builder {
         return true;
     }
 
-    private void buildFrontier(Point p){
-        for(Point direction : Point.cardinal){
-            if(isInBounds(p.getNeighbor(direction))){
-                if(isDirectionallySolid(p, direction)){
-                    frontier.add(p.getNeighbor(direction));
-                }
-            }
-        }
-    }
-
-    private void updateFrontier(){
-        List <Point> toRemove = new ArrayList<>();
-        for(Point p : frontier){
-            if(!isValidMazeLocation(p)){
-                toRemove.add(p);
-            }
-        }
-        frontier.removeAll(toRemove);
-    }
-
     private boolean isValidMazeLocation(Point p){
         List <Point> neighbors = p.getFrontierNeighbors(p.directionFromParent);
         int floorCount = 0;
@@ -339,10 +338,6 @@ public class Map_Builder {
             }
         }
         return floorCount == 0;
-    }
-
-    private void carvePath(Point s){
-        map[s.x][s.y] = Tile.Floor;
     }
 
     private void removeAllDeadEnds(){

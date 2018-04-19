@@ -175,6 +175,8 @@ public class Point {
     @Override
     public boolean equals(Object obj) {
 
+        if(getClass() != obj.getClass()) return false;
+
         Point p = (Point) obj;
         return this.x == p.x && this.y == p.y;
     }

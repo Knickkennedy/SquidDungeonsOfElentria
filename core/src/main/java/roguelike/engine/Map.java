@@ -11,17 +11,12 @@ public class Map{
     public java.awt.Point stairs_down;
     public java.awt.Point stairs_up;
 
-    private int danger;
-    private int level_indicator;
-
     public Map(final Tile[][] tiles) {
         this.tiles = tiles;
-        this.danger = 0;
         initializePathFinding();
     }
 
     public Map(final int width, final int height) {
-        this.danger = 0;
         this.builder = new Map_Builder(width, height);
     }
 
