@@ -4,11 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import org.json.simple.parser.ParseException;
 import roguelike.engine.Game;
 import squidpony.squidgrid.gui.gdx.DefaultResources;
 import squidpony.squidgrid.gui.gdx.SColor;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidgrid.gui.gdx.SquidInput;
+
+import java.io.IOException;
 
 import static roguelike.engine.Game.*;
 
@@ -33,7 +36,12 @@ public class Start_Screen extends Screen{
                 switch(key){
                     case SquidInput.ENTER:
                     {
-                        game.setCurrent_screen(new Game_Screen(game)); break;
+                        try {
+                            game.setCurrent_screen(new Game_Screen(game));
+                        } catch (IOException | ParseException e) {
+                            e.printStackTrace();
+                        }
+                        break;
                     }
                 }
             }

@@ -1,7 +1,8 @@
-package roguelike.engine;
+package roguelike.Generation;
 
 import lombok.Getter;
 import lombok.Setter;
+import roguelike.utilities.Point;
 import roguelike.utilities.Roll;
 
 @Getter @Setter

@@ -1,0 +1,12 @@
+{
+	"human": {
+		"details": {
+			"name": "human",
+			"description": "a valiant hero"
+		},
+		"sprite": {
+			"glyph": "@",
+			"color": "white"
+		}
+	}
+}

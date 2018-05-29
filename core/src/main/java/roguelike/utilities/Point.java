@@ -1,4 +1,4 @@
-package roguelike.engine;
+package roguelike.utilities;
 
 import java.util.ArrayList;
 import java.util.Arrays;

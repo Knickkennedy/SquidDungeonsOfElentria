@@ -1,10 +1,15 @@
-package roguelike.engine;
+package roguelike.Generation;
 
 import lombok.Getter;
 import lombok.Setter;
-import roguelike.enums.Tile;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import roguelike.utilities.Point;
 import roguelike.utilities.Roll;
 
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,11 +35,13 @@ public class Map_Builder {
     private int minRoomSize;
     private int numberOfPlacementTries;
 
+    private JSONObject tile_file;
+
     private boolean[][] roomFlag;
     private boolean[][] connected;
     private boolean[][] revealed;
 
-    public Map_Builder(int width, int height){
+    public Map_Builder(int width, int height) throws IOException, ParseException {
         this.pathfinding = new char[width][height];
         this.map = new Tile[width][height];
         this.minRoomSize = 3;
@@ -43,9 +50,11 @@ public class Map_Builder {
         this.connected = new boolean[width][height];
         this.roomFlag = new boolean[width][height];
         this.revealed = new boolean[width][height];
+		JSONParser parser = new JSONParser();
+		this.tile_file = (JSONObject)parser.parse(new FileReader("assets/tiles.txt"));
     }
 
-    public void buildStandardLevel(){
+    public void buildStandardLevel() throws IOException, ParseException{
         initializeMap();
         placeRooms();
         startMaze();
@@ -56,23 +65,26 @@ public class Map_Builder {
         initializePathfinding();
     }
 
-    private void initializeMap(){
+    private void initializeMap() throws IOException, ParseException {
+
+        JSONObject wall = (JSONObject)tile_file.get("wall");
+
         for(int x = 0; x < map.length; x++){
             for(int y = 0; y < map[0].length; y++){
-                map[x][y] = Tile.Wall;
+                map[x][y] = new Tile(wall);
                 connected[x][y] = false;
                 revealed[x][y] = false;
             }
         }
     }
 
-    private void placeRooms(){
+    private void placeRooms() throws IOException, ParseException{
         for(int i = 0; i < numberOfPlacementTries; i++){
             placeRoom();
         }
     }
 
-    private void placeRoom(){
+    private void placeRoom() throws IOException, ParseException{
         int h = Roll.rand(minRoomSize, maxRoomSize);
         if(h % 2 == 0){
             h = h + 1;
@@ -105,16 +117,19 @@ public class Map_Builder {
         }
     }
 
-    private void stampRoom(Room room){
+    private void stampRoom(Room room) throws IOException, ParseException{
+
+    	JSONObject floor = (JSONObject)tile_file.get("floor - dungeon");
+
         for(int i = 0; i <= room.getBottomRight().x - room.getTopLeft().x; i++){
             for(int j = 0; j <= room.getBottomRight().y - room.getTopLeft().y; j++){
-                map[room.getTopLeft().x + i][room.getTopLeft().y + j] = Tile.Floor;
+                map[room.getTopLeft().x + i][room.getTopLeft().y + j] = new Tile(floor);
                 roomFlag[room.getTopLeft().x + i][room.getTopLeft().y + j] = true;
             }
         }
     }
 
-    private void startMaze(){
+    private void startMaze() throws IOException, ParseException{
         for(int i = 1; i < map.length - 2; i++){
             for(int j = 1; j < map[0].length - 2; j++){
                 if(isSolid(i, j)){
@@ -125,18 +140,18 @@ public class Map_Builder {
     }
 
     private boolean isSolid(int x, int y){
-        return (map[x][y] == Tile.Wall)
-                && (map[x + 1][y] == Tile.Wall)
-                && (map[x - 1][y] == Tile.Wall)
-                && (map[x][y - 1] == Tile.Wall)
-                && (map[x][y + 1] == Tile.Wall)
-                && (map[x + 1][y + 1] == Tile.Wall)
-                && (map[x + 1][y - 1] == Tile.Wall)
-                && (map[x - 1][y + 1] == Tile.Wall)
-                && (map[x - 1][y - 1] == Tile.Wall);
+        return (map[x][y].getName().equals("wall"))
+                && (map[x + 1][y].getName().equals("wall"))
+                && (map[x - 1][y].getName().equals("wall"))
+                && (map[x][y - 1].getName().equals("wall"))
+                && (map[x][y + 1].getName().equals("wall"))
+                && (map[x + 1][y + 1].getName().equals("wall"))
+                && (map[x + 1][y - 1].getName().equals("wall"))
+                && (map[x - 1][y + 1].getName().equals("wall"))
+                && (map[x - 1][y - 1].getName().equals("wall"));
     }
 
-    private void generateMaze(int x, int y){
+    private void generateMaze(int x, int y) throws IOException, ParseException{
         Point start = new Point(x, y);
         buildFrontier(start);
         carvePath(start);
@@ -160,7 +175,8 @@ public class Map_Builder {
     }
 
     private void carvePath(Point s){
-        map[s.x][s.y] = Tile.Floor;
+    	JSONObject floor = (JSONObject)tile_file.get("floor - dungeon");
+        map[s.x][s.y] = new Tile(floor);
     }
 
     private void updateFrontier(){
@@ -176,15 +192,15 @@ public class Map_Builder {
     private void findConnections(){
         for(int i = 1; i < map.length - 1; i++){
             for(int j = 1; j < map[0].length - 1; j++){
-                if((map[i][j] == Tile.Wall)
-                        && (map[i - 1][j] == Tile.Floor)
-                        && (map[i + 1][j] == Tile.Floor)
+                if((map[i][j].getName().equals("wall"))
+                        && (map[i - 1][j].getName().equals("floor - dungeon"))
+                        && (map[i + 1][j].getName().equals("floor - dungeon"))
                         && (roomFlag[i + 1][j] || roomFlag[i - 1][j])){
                     connections.add(new Point(i, j));
                 }
-                if((map[i][j] == Tile.Wall)
-                        && (map[i][j - 1] == Tile.Floor)
-                        && (map[i][j + 1] == Tile.Floor)
+                if((map[i][j].getName().equals("wall"))
+                        && (map[i][j - 1].getName().equals("floor - dungeon"))
+                        && (map[i][j + 1].getName().equals("floor - dungeon"))
                         && (roomFlag[i][j - 1] || roomFlag[i][j + 1])){
                     connections.add(new Point(i, j));
                 }
@@ -226,7 +242,10 @@ public class Map_Builder {
         while (hasDoorNeighbor(door)) {
             door = potentialDoors.get(Roll.rand(0, potentialDoors.size() - 1));
         }
-        map[door.x][door.y] = Tile.Closed_Door;
+
+        JSONObject doorobj = (JSONObject)tile_file.get("door - closed");
+
+        map[door.x][door.y] = new Tile(doorobj);
         floodFill(door.x, door.y);
         extraDoors.addAll(potentialDoors);
         potentialDoors.clear();
@@ -237,7 +256,8 @@ public class Map_Builder {
         for(int i = 0; i < Roll.rand(1, 3); i++){
             Point check = extraDoors.get(Roll.rand(0, extraDoors.size() - 1));
             if(!hasDoorNeighbor(check)){
-                map[check.x][check.y] = Tile.Closed_Door;
+            	JSONObject door_closed = (JSONObject)tile_file.get("door - closed");
+                map[check.x][check.y] = new Tile(door_closed);
             }
         }
         extraDoors.clear();
@@ -263,8 +283,10 @@ public class Map_Builder {
         int y1 = Roll.rand(upstairs.getTopLeft().y + 1, upstairs.getBottomRight().y - 1);
         int x2 = Roll.rand(downstairs.getTopLeft().x + 1, downstairs.getBottomRight().x - 1);
         int y2 = Roll.rand(downstairs.getTopLeft().y + 1, downstairs.getBottomRight().y - 1);
-        map[x1][y1] = Tile.Stairs_Up;
-        map[x2][y2] = Tile.Stairs_Down;
+        JSONObject stairs_up = (JSONObject)tile_file.get("stairs - up");
+        JSONObject stairs_down = (JSONObject)tile_file.get("stairs - down");
+        map[x1][y1] = new Tile(stairs_up);
+        map[x2][y2] = new Tile(stairs_down);
         stairsUp = new java.awt.Point(x1, y1);
         stairsDown = new java.awt.Point(x2, y2);
     }
@@ -279,13 +301,13 @@ public class Map_Builder {
 
     private boolean hasDoorNeighbor(Point p){
         for(Point direction : Point.cardinal){
-            if(getTile(p.getNeighbor(direction)) == Tile.Closed_Door) return true;
+            if(getTile(p.getNeighbor(direction)).getName().equals("door - closed")) return true;
         }
         return false;
     }
 
     private void floodFill(int x, int y){
-        if(((map[x][y] == Tile.Floor) || (map[x][y] == Tile.Closed_Door)) && (!connected[x][y])){
+        if(((map[x][y].getName().equals("floor - dungeon")) || (map[x][y].getName().equals("door - closed"))) && (!connected[x][y])){
             connected[x][y] = true;
         }
         else{
@@ -320,7 +342,7 @@ public class Map_Builder {
     private boolean isDirectionallySolid(Point p, Point direction){
         List <Point> directionalNeighbors = p.getDirectionalNeighbors(direction);
         for(Point toCheck : directionalNeighbors){
-            if(isInBounds(toCheck) && (getTile(toCheck) != Tile.Wall)){
+            if(isInBounds(toCheck) && (!getTile(toCheck).getName().equals("wall"))){
                 return false;
             }
         }
@@ -332,7 +354,7 @@ public class Map_Builder {
         int floorCount = 0;
         for(Point point : neighbors){
             if(isInBounds(point)) {
-                if (getTile(point) == Tile.Floor) {
+                if (getTile(point).getName().equals("floor - dungeon")) {
                     floorCount++;
                 }
             }
@@ -350,17 +372,17 @@ public class Map_Builder {
         for(int i = 0; i < map.length; i++){
             for(int j = 0; j < map[0].length; j++){
                 int wallCount = 0;
-                if(map[i][j] == Tile.Floor || map[i][j] == Tile.Closed_Door){
-                    if(map[i - 1][j] == Tile.Wall){
+                if(map[i][j].getName().equals("floor - dungeon") || map[i][j].getName().equals("door - closed")){
+                    if(map[i - 1][j].getName().equals("wall")){
                         wallCount++;
                     }
-                    if(map[i + 1][j] == Tile.Wall){
+                    if(map[i + 1][j].getName().equals("wall")){
                         wallCount++;
                     }
-                    if(map[i][j - 1] == Tile.Wall){
+                    if(map[i][j - 1].getName().equals("wall")){
                         wallCount++;
                     }
-                    if(map[i][j + 1] == Tile.Wall){
+                    if(map[i][j + 1].getName().equals("wall")){
                         wallCount++;
                     }
                     if(wallCount >= 3){
@@ -370,8 +392,9 @@ public class Map_Builder {
                 }
             }
         }
+        JSONObject wall = (JSONObject)tile_file.get("wall");
         for(Point p : deadEnds){
-            map[p.x][p.y] = Tile.Wall;
+            map[p.x][p.y] = new Tile(wall);
         }
         deadEnds.clear();
     }
