@@ -6,7 +6,7 @@ import java.util.*;
 
 public class EntityManager
 {
-	int lowestUnassignedEntityID=1;
+	int lowestUnassignedEntityID=0;
 	List<Integer> allEntities;
 	HashMap<Class<?>, HashMap<Integer, ? extends Component>> componentStores;
 
@@ -73,7 +73,7 @@ public class EntityManager
 
 		int newID = generateNewEntityID();
 
-		if( newID < 1 )
+		if( newID < 0 )
 		{
 			/**
 			 Fatal error...
@@ -110,7 +110,7 @@ public class EntityManager
 			}
 			else
 			{
-				for( int i=1; i<Integer.MAX_VALUE; i++ )
+				for( int i=0; i<Integer.MAX_VALUE; i++ )
 				{
 					if(!allEntities.contains(i) )
 						return i;

@@ -4,19 +4,17 @@ import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+//import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import lombok.Getter;
 import lombok.Setter;
 import roguelike.screens.Screen;
 import roguelike.screens.Start_Screen;
-import squidpony.squidmath.RNG;
 
 @Getter @Setter
 public class Game extends ApplicationAdapter {
     SpriteBatch batch;
-
-    private RNG rng;
 
     public static final int gridWidth = 112;
     public static final int gridHeight = 32;
@@ -31,7 +29,6 @@ public class Game extends ApplicationAdapter {
 
     @Override
     public void create () {
-        rng = new RNG("SquidLib!");
 
         batch = new SpriteBatch();
 
@@ -53,5 +50,6 @@ public class Game extends ApplicationAdapter {
 
         stage.draw();
         stage.act();
+
     }
 }

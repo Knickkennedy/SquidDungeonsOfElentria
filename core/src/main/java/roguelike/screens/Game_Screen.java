@@ -1,5 +1,6 @@
 package roguelike.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import org.json.simple.parser.ParseException;
 import roguelike.Components.Active;
@@ -40,8 +41,10 @@ public class Game_Screen extends Screen {
     public void render(){
 
         world.update();
-        render_map();
+	    render_map();
         render_entities();
+
+        stage.draw();
 
     }
 

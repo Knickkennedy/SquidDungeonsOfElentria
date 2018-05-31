@@ -15,14 +15,14 @@ public class Turn_System implements System {
 	public int process(int current_actor) {
 		ArrayList<Integer> actors = new ArrayList<>(entityManager.getAllEntitiesPossessingComponent(Active.class));
 
-		Action action = entityManager.gc(actors.get(current_actor), Action_Component.class).getAction();
+		Action action = entityManager.gc(current_actor, Action_Component.class).getAction();
 
 		if(action == null) return current_actor;
 
-		entityManager.gc(actors.get(current_actor), Energy.class).energy += entityManager.gc(actors.get(current_actor), Energy.class).speed;
+		entityManager.gc(current_actor, Energy.class).energy += entityManager.gc(current_actor, Energy.class).speed;
 
 			if(!action.perform()){
-				entityManager.gc(actors.get(current_actor), Energy.class).energy -= entityManager.gc(actors.get(current_actor), Energy.class).speed;
+				entityManager.gc(current_actor, Energy.class).energy -= entityManager.gc(current_actor, Energy.class).speed;
 				return current_actor;
 			} else{
 				return (current_actor + 1) % actors.size();

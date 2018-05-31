@@ -56,7 +56,9 @@ public class World {
 		entityManager.addComponent(player, new Command(player));
 		Gdx.input.setInputProcessor(entityManager.gc(player, Command.class));
 		turn_system = new Turn_System();
-		current_actor = 0;
+		current_actor = player;
+		Gdx.files.internal("tiles.txt").reader().close();
+		Gdx.files.internal("races.txt").reader().close();
 	}
 
 	private Tile[][] initializeMapWithFile(String fileName){
@@ -108,15 +110,13 @@ public class World {
 			index++;
 		}
 
+		fileScanner.close();
+
 		return mapToReturn;
 	}
 
 	public void update(){
 		current_actor = turn_system.process(current_actor);
-
-		/*if(entityManager.gc(player, Command.class).getInput().hasNext()){
-			entityManager.gc(player, Command.class).getInput().next();
-		}*/
 	}
 
 	private static Scanner openFile(String fileName) {
