@@ -26,7 +26,8 @@ public class Start_Screen extends Screen{
         game = game_in;
         stage = game.stage;
         display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getStretchableSlabFont());
-        bgColor = SColor.BLACK;
+        display.font.tweakWidth(cellWidth + 1).tweakHeight(cellHeight + 1).setSmoothingMultiplier(1.6f).initBySize();
+        bgColor = SColor.DB_MIDNIGHT;
         display.fillBackground(bgColor);
         stage.addActor(display);
         input = new SquidInput(new SquidInput.KeyHandler() {

@@ -12,7 +12,6 @@ import roguelike.engine.EntityManager;
 import roguelike.screens.Game_Screen;
 import roguelike.utilities.Point;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -48,6 +47,7 @@ public class World {
 		current_map = surface;
 		player = entityManager.createEntity();
 		entityManager.addComponent(player, new Position(starting_location, current_map));
+		entityManager.addComponent(player, new Vision(starting_location, current_map, 5.0));
 		JSONObject human = (JSONObject)race_file.get("human");
 		entityManager.addComponent(player, new Sprite((JSONObject)human.get("sprite")));
 		entityManager.addComponent(player, new Active());

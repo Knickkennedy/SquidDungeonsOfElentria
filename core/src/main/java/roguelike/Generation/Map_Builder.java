@@ -20,8 +20,8 @@ public class Map_Builder {
     private Tile[][] map;
     private char[][] pathfinding;
 
-    private java.awt.Point stairsUp;
-    private java.awt.Point stairsDown;
+    private Point stairsUp;
+    private Point stairsDown;
 
     private List<Point> frontier = new ArrayList<>();
     private List <Point> deadEnds = new ArrayList<>();
@@ -287,14 +287,14 @@ public class Map_Builder {
         JSONObject stairs_down = (JSONObject)tile_file.get("stairs - down");
         map[x1][y1] = new Tile(stairs_up);
         map[x2][y2] = new Tile(stairs_down);
-        stairsUp = new java.awt.Point(x1, y1);
-        stairsDown = new java.awt.Point(x2, y2);
+        stairsUp = new Point(x1, y1);
+        stairsDown = new Point(x2, y2);
     }
 
     private void initializePathfinding(){
         for(int x = 0; x < map.length; x++){
             for(int y = 0; y < map[0].length; y++){
-                pathfinding[x][y] = map[x][y].getSprite().character;
+                pathfinding[x][y] = map[x][y].isPassable() ? '.' : '#';
             }
         }
     }

@@ -11,8 +11,8 @@ public class Map{
     public char[][] pathfinding;
 
     private Map_Builder builder;
-    public java.awt.Point stairs_down;
-    public java.awt.Point stairs_up;
+    public Point stairs_down;
+    public Point stairs_up;
 
     public Map(final Tile[][] tiles) {
         this.tiles = tiles;
@@ -39,7 +39,7 @@ public class Map{
         pathfinding = new char[tiles.length][tiles[0].length];
         for (int i = 0; i < this.tiles.length; i++) {
             for (int j = 0; j < this.tiles[0].length; j++) {
-                this.pathfinding[i][j] = this.tiles[i][j].getSprite().character;
+                this.pathfinding[i][j] = this.tiles[i][j].isPassable() ? '.' : '#';
             }
         }
     }
