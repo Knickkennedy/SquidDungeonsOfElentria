@@ -57,7 +57,7 @@ public class Game_Screen extends Screen {
             for(int j = 0; j < gridHeight - statistics_height; j++){
                 Sprite sprite = world.getCurrent_map().getTileAt(i, j).getSprite();
                 if(fov[i][j] > 0) 
-                    display.putWithConsistentLight(i, j, sprite.character, sprite.foregroundColor, Color.BLACK, SColor.CREAM, (float)(fov[i][j]));
+                    display.putWithConsistentLight(i, j, sprite.character, sprite.foregroundColor, Color.BLACK, SColor.CW_PALE_YELLOW, (float)(fov[i][j]));
                 else
                     display.put(i, j, sprite.character, sprite.foregroundColor, bgColor);
             }
