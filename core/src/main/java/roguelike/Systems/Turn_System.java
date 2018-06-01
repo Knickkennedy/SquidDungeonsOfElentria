@@ -23,25 +23,11 @@ public class Turn_System implements System {
 		if(entityManager.gc(current_actor, Energy.class).energy < entityManager.gc(current_actor, Action_Component.class).getAction().cost)
 			return (current_actor + 1) % actors.size();
 
-		if(entityManager.gc(current_actor, Action_Component.class).getAction().perform()){
-			java.lang.System.out.println(entityManager.gc(current_actor, Energy.class).energy);
-
+		if(entityManager.gc(current_actor, Action_Component.class).getAction().perform())
 			return (current_actor + 1) % actors.size();
-		}
 
 		entityManager.gc(current_actor, Energy.class).energy -= entityManager.gc(current_actor, Energy.class).speed;
 		return current_actor;
-		/*Action action = entityManager.gc(current_actor, Action_Component.class).getAction();
-
-		if(action == null) return current_actor;
-
-		entityManager.gc(current_actor, Energy.class).energy += entityManager.gc(current_actor, Energy.class).speed;
-
-			if(!action.perform()){
-				entityManager.gc(current_actor, Energy.class).energy -= entityManager.gc(current_actor, Energy.class).speed;
-				return current_actor;
-			} else{
-				return (current_actor + 1) % actors.size();
-			}*/
+		
 	}
 }
