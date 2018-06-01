@@ -6,8 +6,6 @@ import lombok.Getter;
 import roguelike.Actions.Move;
 import roguelike.utilities.Point;
 
-import static roguelike.Generation.World.entityManager;
-
 @Getter
 public class Command extends Component implements InputProcessor{
 
@@ -55,7 +53,9 @@ public class Command extends Component implements InputProcessor{
 				move.direction = Point.WAIT;
 				break;
 		}
-		entityManager.gc(entity, Action_Component.class).setAction(move);
+		//entityManager.gc(entity, Action_Component.class).setAction(move);
+		if(!move.direction.equals(Point.WAIT))
+			move.perform();
 		return true;
 	}
 

@@ -5,7 +5,7 @@ import roguelike.Components.Action_Component;
 import roguelike.Components.Active;
 import roguelike.Components.Energy;
 
-import java.util.ArrayList;
+import java.util.Set;
 
 import static roguelike.Generation.World.entityManager;
 
@@ -13,7 +13,7 @@ public class Turn_System implements System {
 
 	@Override
 	public int process(int current_actor) {
-		ArrayList<Integer> actors = new ArrayList<>(entityManager.getAllEntitiesPossessingComponent(Active.class));
+		Set<Integer> actors = entityManager.getAllEntitiesPossessingComponent(Active.class);
 
 		Action action = entityManager.gc(current_actor, Action_Component.class).getAction();
 

@@ -21,11 +21,13 @@ public class Move extends Action{
 	@Override
 	public boolean perform() {
 
-		if(entityManager.gc(entity, Energy.class).energy < entityManager.gc(entity, Position.class).getMap().getCost(entityManager.gc(entity, Position.class).getLocation(), direction)) {
-			entityManager.gc(entity, Action_Component.class).setAction(this);
-
-			return true;
-		}
+//		if(entityManager.gc(entity, Energy.class).energy <
+//				entityManager.gc(entity, Position.class).getMap()
+//						.getCost(entityManager.gc(entity, Position.class).getLocation(), direction)) {
+//			entityManager.gc(entity, Action_Component.class).setAction(this);
+//
+//			return true;
+//		}
 
 		if(entityManager.gc(entity, Position.class).getMap().isPassable(entityManager.gc(entity, Position.class).getLocation(), direction)){
 			entityManager.gc(entity, Position.class).setLocation(direction);
@@ -37,7 +39,6 @@ public class Move extends Action{
 		}
 		else{
 			entityManager.gc(entity, Action_Component.class).setAction(null);
-
 			return false;
 		}
 	}
