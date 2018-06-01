@@ -1,17 +1,19 @@
 package roguelike.screens;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import org.json.simple.parser.ParseException;
 import roguelike.Components.Active;
 import roguelike.Components.Position;
 import roguelike.Components.Sprite;
+import roguelike.Components.Vision;
 import roguelike.Generation.World;
 import roguelike.engine.Game;
 import roguelike.utilities.Point;
 import squidpony.squidgrid.gui.gdx.DefaultResources;
 import squidpony.squidgrid.gui.gdx.SColor;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
+
 import java.io.IOException;
 import java.util.Set;
 
@@ -49,9 +51,14 @@ public class Game_Screen extends Screen {
     }
 
     private void render_map(){
+        double[][] fov = entityManager.gc(world.getPlayer(), Vision.class).getFov();
         for(int i  = 0; i < gridWidth; i++){
             for(int j = 0; j < gridHeight - statistics_height; j++){
-                display.put(i, j, world.getCurrent_map().getTileAt(i, j).getSprite().character, world.getCurrent_map().getTileAt(i, j).getSprite().foregroundColor);
+                Sprite sprite = world.getCurrent_map().getTileAt(i, j).getSprite();
+                if(fov[i][j] > 0) 
+                    display.putWithConsistentLight(i, j, sprite.character, sprite.foregroundColor, Color.BLACK, SColor.CREAM, (float)(fov[i][j]));
+                else
+                    display.put(i, j, sprite.character, sprite.foregroundColor, bgColor);
             }
         }
     }

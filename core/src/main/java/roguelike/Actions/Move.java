@@ -3,13 +3,14 @@ package roguelike.Actions;
 import roguelike.Components.Action_Component;
 import roguelike.Components.Energy;
 import roguelike.Components.Position;
+import roguelike.Components.Vision;
 import roguelike.utilities.Point;
 
 import static roguelike.Generation.World.entityManager;
 
 public class Move extends Action{
 
-	private Point direction;
+	public Point direction;
 	private Integer entity;
 
 	public Move(Integer entity, Point direction){
@@ -28,6 +29,7 @@ public class Move extends Action{
 
 		if(entityManager.gc(entity, Position.class).getMap().isPassable(entityManager.gc(entity, Position.class).getLocation(), direction)){
 			entityManager.gc(entity, Position.class).setLocation(direction);
+			entityManager.gc(entity, Vision.class).setLocation(direction);
 			entityManager.gc(entity, Action_Component.class).setAction(null);
 			entityManager.gc(entity, Energy.class).energy -= entityManager.gc(entity, Position.class).getMap().getCost(entityManager.gc(entity, Position.class).getLocation(), direction);
 

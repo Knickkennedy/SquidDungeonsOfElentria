@@ -38,11 +38,7 @@ public class Point {
 
         return new Point(x + direction.x, y + direction.y, direction);
     }
-
-    public java.awt.Point getNeighbor(java.awt.Point direction) {
-        return new java.awt.Point(x + direction.x, y + direction.y);
-    }
-
+    
     public List<Point> cardinalNeighbors() {
         List<Point> neighbors = new ArrayList<>();
         for (Point direction : cardinal) {
