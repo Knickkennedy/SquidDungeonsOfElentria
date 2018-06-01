@@ -30,10 +30,11 @@ public class Game_Screen extends Screen {
     Game_Screen(Game game_in) throws IOException, ParseException{
         game = game_in;
         stage = game.stage;
-        display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getStretchableDejaVuFont());
+        display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getCrispDejaVuFont());
+        display.font.tweakWidth(cellWidth + 1).tweakHeight(cellHeight + 1).setSmoothingMultiplier(1.6f).initBySize();
         //display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getStretchableTypewriterFont());
         //display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getStretchableCodeFont());
-        bgColor = SColor.BLACK;
+        bgColor = SColor.DB_MIDNIGHT;
         display.fillBackground(bgColor);
 		world = new World(gridWidth, gridHeight - statistics_height);
         stage.addActor(display);
