@@ -3,17 +3,19 @@ package roguelike.Components;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import lombok.Getter;
+import roguelike.Actions.Action;
 import roguelike.Actions.Move;
 import roguelike.utilities.Point;
+
+import static roguelike.Generation.World.entityManager;
 
 @Getter
 public class Command extends Component implements InputProcessor{
 
 	private Integer entity;
-	private Move move;
+	private Action action;
 	public Command(final Integer entity){
 		this.entity = entity;
-		move = new Move(this.entity, Point.WAIT);
 	}
 
 	@Override
@@ -21,41 +23,39 @@ public class Command extends Component implements InputProcessor{
 
 		switch(keycode){
 			case Input.Keys.NUMPAD_1:
-				move.direction = Point.SOUTH_WEST;
+				action = new Move(entity, Point.SOUTH_WEST);
 				break;
 			case Input.Keys.DOWN:
 			case Input.Keys.NUMPAD_2:
-				move.direction = Point.SOUTH;
+				action = new Move(entity,Point.SOUTH);
 				break;
 			case Input.Keys.NUMPAD_3:
-				move.direction = Point.SOUTH_EAST;
+				action = new Move(entity,Point.SOUTH_EAST);
 				break;
 			case Input.Keys.LEFT:
 			case Input.Keys.NUMPAD_4:
-				move.direction = Point.WEST;
+				action = new Move(entity,Point.WEST);
 				break;
 			case Input.Keys.RIGHT:
 			case Input.Keys.NUMPAD_6:
-				move.direction = Point.EAST;
+				action = new Move(entity,Point.EAST);
 				break;
 			case Input.Keys.NUMPAD_7:
-				move.direction = Point.NORTH_WEST;
+				action = new Move(entity,Point.NORTH_WEST);
 				break;
 			case Input.Keys.UP:
 			case Input.Keys.NUMPAD_8:
-				move.direction = Point.NORTH;
+				action = new Move(entity,Point.NORTH);
 				break;
 			case Input.Keys.NUMPAD_9:
-				move.direction = Point.NORTH_EAST;
+				action = new Move(entity,Point.NORTH_EAST);
 				break;
 			//case Input.Keys.NUMPAD_5:
 			default:
-				move.direction = Point.WAIT;
+				action = new Move(entity,Point.WAIT);
 				break;
 		}
-		//entityManager.gc(entity, Action_Component.class).setAction(move);
-		if(!move.direction.equals(Point.WAIT))
-			move.perform();
+		entityManager.gc(entity, Action_Component.class).setAction(action);
 		return true;
 	}
 

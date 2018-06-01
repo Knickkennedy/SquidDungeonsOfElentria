@@ -57,8 +57,6 @@ public class World {
 		Gdx.input.setInputProcessor(entityManager.gc(player, Command.class));
 		turn_system = new Turn_System();
 		current_actor = player;
-		Gdx.files.internal("tiles.txt").reader().close();
-		Gdx.files.internal("races.txt").reader().close();
 	}
 
 	private Tile[][] initializeMapWithFile(String fileName){
@@ -116,7 +114,9 @@ public class World {
 	}
 
 	public void update(){
-		current_actor = turn_system.process(current_actor);
+		while(entityManager.gc(current_actor, Action_Component.class).getAction() != null) {
+			current_actor = turn_system.process(current_actor);
+		}
 	}
 
 	private static Scanner openFile(String fileName) {

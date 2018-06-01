@@ -15,17 +15,19 @@ public class Turn_System implements System {
 	public int process(int current_actor) {
 		Set<Integer> actors = entityManager.getAllEntitiesPossessingComponent(Active.class);
 
-		Action action = entityManager.gc(current_actor, Action_Component.class).getAction();
-
-		if(action == null) return current_actor;
+		if(entityManager.gc(current_actor, Action_Component.class).getAction() == null)
+			return current_actor;
 
 		entityManager.gc(current_actor, Energy.class).energy += entityManager.gc(current_actor, Energy.class).speed;
 
-			if(!action.perform()){
-				entityManager.gc(current_actor, Energy.class).energy -= entityManager.gc(current_actor, Energy.class).speed;
-				return current_actor;
-			} else{
-				return (current_actor + 1) % actors.size();
-			}
+		if(entityManager.gc(current_actor, Energy.class).energy < entityManager.gc(current_actor, Action_Component.class).getAction().cost)
+			return (current_actor + 1) % actors.size();
+
+		if(entityManager.gc(current_actor, Action_Component.class).getAction().perform())
+			return (current_actor + 1) % actors.size();
+
+		entityManager.gc(current_actor, Energy.class).energy -= entityManager.gc(current_actor, Energy.class).speed;
+		return current_actor;
+		
 	}
 }

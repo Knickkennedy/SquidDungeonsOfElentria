@@ -10,10 +10,7 @@ public class Action_Component extends Component{
 	public Action_Component(){ }
 
 	public Action getAction(){
-		Action temp = action;
-		action = null;
-
-		return temp;
+		return action;
 	}
 
 	public boolean hasAction(){
