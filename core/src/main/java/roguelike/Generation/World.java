@@ -24,8 +24,9 @@ public class World {
 	private int map_width;
 	private int map_height;
 
-	private JSONObject tile_file;
-	private JSONObject race_file;
+	private JSONObject tiles;
+	private JSONObject races;
+	private JSONObject items;
 
 	private Map surface;
 	private Map current_map;
@@ -41,22 +42,49 @@ public class World {
 		this.map_height = map_height;
 
 		JSONParser parser = new JSONParser();
-		tile_file = (JSONObject)parser.parse(Gdx.files.internal("tiles.txt").reader());
-		race_file = (JSONObject)parser.parse(Gdx.files.internal("races.txt").reader());
+		tiles = (JSONObject)parser.parse(Gdx.files.internal("tiles.txt").reader());
+		races = (JSONObject)parser.parse(Gdx.files.internal("races.txt").reader());
+		items = (JSONObject)parser.parse(Gdx.files.internal("items.txt").reader());
 		surface = new Map(initializeMapWithFile("/surface.txt"));
 		current_map = surface;
+		initializePlayer();
+		Gdx.input.setInputProcessor(entityManager.gc(player, Command.class));
+		turn_system = new Turn_System();
+		current_actor = player;
+	}
+
+	public void initializePlayer(){
 		player = entityManager.createEntity();
 		entityManager.addComponent(player, new Position(starting_location, current_map));
 		entityManager.addComponent(player, new Vision(starting_location, current_map, 5.0));
-		JSONObject human = (JSONObject)race_file.get("human");
+		JSONObject human = (JSONObject) races.get("human");
 		entityManager.addComponent(player, new Sprite((JSONObject)human.get("sprite")));
 		entityManager.addComponent(player, new Active());
 		entityManager.addComponent(player, new Action_Component());
 		entityManager.addComponent(player, new Energy(100));
 		entityManager.addComponent(player, new Command(player));
-		Gdx.input.setInputProcessor(entityManager.gc(player, Command.class));
-		turn_system = new Turn_System();
-		current_actor = player;
+		entityManager.addComponent(player, new Inventory());
+		entityManager.gc(player, Inventory.class).add_item(create_new_item("leather armor"));
+		entityManager.gc(player, Inventory.class).add_item(create_new_item("iron helm"));
+		for(int i = 0; i < entityManager.gc(player, Inventory.class).inventory.size(); i++){
+			System.out.println(entityManager.gc(entityManager.gc(player, Inventory.class).inventory.get(i), Details.class).name + " "
+					+ entityManager.gc(entityManager.gc(player, Inventory.class).inventory.get(i), Details.class).description);
+		}
+	}
+
+	public Integer create_new_item(String name){
+		Integer item = entityManager.createEntity();
+
+		JSONObject item_properties = (JSONObject)items.get(name);
+
+		for(Object o : item_properties.keySet()) {
+			switch (o.toString()) {
+				case "details":
+					entityManager.addComponent(item, new Details(name, (JSONObject) item_properties.get(o)));
+			}
+		}
+
+		return item;
 	}
 
 	private Tile[][] initializeMapWithFile(String fileName){
@@ -75,32 +103,32 @@ public class World {
 				char c = line.charAt(i);
 
 				if(c == '='){
-					tile = (JSONObject)tile_file.get("water");
+					tile = (JSONObject) tiles.get("water");
 					mapToReturn[i][index] = new Tile(tile);
 				}
 				else if(c == '^'){
-					tile = (JSONObject)tile_file.get("mountain");
+					tile = (JSONObject) tiles.get("mountain");
 					mapToReturn[i][index] = new Tile(tile);
 				}
 				else if(c == '"'){
-					tile = (JSONObject)tile_file.get("grass");
+					tile = (JSONObject) tiles.get("grass");
 					mapToReturn[i][index] = new Tile(tile);
 				}
 				else if(c == '&'){
-					tile = (JSONObject)tile_file.get("forest");
+					tile = (JSONObject) tiles.get("forest");
 					mapToReturn[i][index] = new Tile(tile);
 				}
 				else if(c == '.'){
-					tile = (JSONObject)tile_file.get("road");
+					tile = (JSONObject) tiles.get("road");
 					mapToReturn[i][index] = new Tile(tile);
 				}
 				else if(c == '*'){
-					tile = (JSONObject)tile_file.get("cave");
+					tile = (JSONObject) tiles.get("cave");
 					mapToReturn[i][index] = new Tile(tile);
 					//main_entrance = new Point(i, index);
 				}
 				else if(c == 'X') {
-					tile = (JSONObject)tile_file.get("road");
+					tile = (JSONObject) tiles.get("road");
 					mapToReturn[i][index] = new Tile(tile);
 					starting_location = new Point(i, index);
 				}

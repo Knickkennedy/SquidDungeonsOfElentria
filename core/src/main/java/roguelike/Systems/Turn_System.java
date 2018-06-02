@@ -28,6 +28,6 @@ public class Turn_System implements System {
 
 		entityManager.gc(current_actor, Energy.class).energy -= entityManager.gc(current_actor, Energy.class).speed;
 		return current_actor;
-		
+
 	}
 }
