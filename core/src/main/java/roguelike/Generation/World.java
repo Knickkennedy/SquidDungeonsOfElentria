@@ -68,7 +68,8 @@ public class World {
 		entityManager.gc(player, Inventory.class).add_item(create_new_item("iron helm"));
 		for(int i = 0; i < entityManager.gc(player, Inventory.class).inventory.size(); i++){
 			System.out.println(entityManager.gc(entityManager.gc(player, Inventory.class).inventory.get(i), Details.class).name + " "
-					+ entityManager.gc(entityManager.gc(player, Inventory.class).inventory.get(i), Details.class).description);
+					+ entityManager.gc(entityManager.gc(player, Inventory.class).inventory.get(i), Details.class).description + " "
+					+ entityManager.gc(entityManager.gc(player, Inventory.class).inventory.get(i), Equippable.class).slots.get(0));
 		}
 	}
 
@@ -81,6 +82,10 @@ public class World {
 			switch (o.toString()) {
 				case "details":
 					entityManager.addComponent(item, new Details(name, (JSONObject) item_properties.get(o)));
+					break;
+				case "equippable":
+					entityManager.addComponent(item, new Equippable((JSONObject)item_properties.get(o)));
+					break;
 			}
 		}
 

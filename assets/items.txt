@@ -1,12 +1,18 @@
 {
-    "leather armor":{
-        "details": {
-            "description": "a dusty old piece of leather"
-        }
-    }
-    "iron helm":{
-        "details": {
-            "description": "thick iron to protect a thin skull"
-        }
-    }
+	"leather armor": {
+		"details": {
+			"description": "a dusty old piece of leather"
+		},
+		"equippable": {
+			"chest": null
+		}
+	},
+	"iron helm": {
+		"details": {
+			"description": "thick iron to protect a thin skull"
+		},
+		"equippable": {
+			"head": null
+		}
+	}
 }
