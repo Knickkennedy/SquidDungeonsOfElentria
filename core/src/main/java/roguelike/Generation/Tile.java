@@ -7,6 +7,7 @@ public class Tile {
 	public String name;
 	public Sprite sprite;
 	public String description;
+	public Exit exit;
 	public int movement_cost;
 	public boolean passable;
 	public boolean openable;

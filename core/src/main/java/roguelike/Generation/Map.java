@@ -7,6 +7,7 @@ import roguelike.utilities.Point;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,7 +18,7 @@ public class Map{
 
     private JSONObject tile_file;
 
-    public HashMap<Point, Exit> exits;
+    public ArrayList<Exit> exits;
 
     private Map_Builder builder;
     public Point stairs_down;
@@ -25,7 +26,7 @@ public class Map{
 
     public Map(final Tile[][] tiles) {
         this.tiles = tiles;
-        this.exits = new HashMap<>();
+        this.exits = new ArrayList<>();
         initializePathFinding();
 
 	    JSONParser parser = new JSONParser();
@@ -38,7 +39,6 @@ public class Map{
 
     public Map(final int width, final int height) {
         this.builder = new Map_Builder(width, height);
-	    this.exits = new HashMap<>();
 	    JSONParser parser = new JSONParser();
 	    try {
 		    this.tile_file = (JSONObject)parser.parse(new FileReader("assets/tiles.txt"));
@@ -57,6 +57,7 @@ public class Map{
         pathfinding = builder.getPathfinding();
         this.stairs_down = builder.getStairsDown();
         this.stairs_up = builder.getStairsUp();
+	    this.exits = new ArrayList<>();
     }
 
     public void build_final_level(){
@@ -64,6 +65,7 @@ public class Map{
 	    tiles = builder.getMap();
 	    pathfinding = builder.getPathfinding();
 	    this.stairs_up = builder.getStairsUp();
+	    this.exits = new ArrayList<>();
     }
 
     public void initializePathFinding() {
@@ -77,13 +79,23 @@ public class Map{
 
     public boolean isExit(Point location){
 
-    	Exit exit = exits.get(location);
+    	for(Exit exit : exits){
+    		if(exit.exit_location.equals(location)){
+    			return true;
+		    }
+	    }
 
-	    return exit != null;
+	    return false;
     }
 
     public Exit findExit(Point location){
-    	return exits.get(location);
+    	for(Exit exit : exits){
+    		if(exit.exit_location.equals(location)){
+    			return exit;
+		    }
+	    }
+
+	    return null;
     }
 
     public boolean isPassable(Point start, Point direction){

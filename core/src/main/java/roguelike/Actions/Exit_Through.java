@@ -22,13 +22,16 @@ public class Exit_Through extends Action{
 	public boolean perform() {
 		Point temp_position = entityManager.gc(entity, Position.class).location;
 
+		System.out.println(entityManager.gc(entity, Position.class).map.findExit(temp_position).floor);
+
 		if(entityManager.gc(entity, Position.class).map.isExit(temp_position)){
 
 			entityManager.gc(entity, Energy.class).energy -= cost;
 
+			entityManager.gc(entity, Position.class).map.findExit(temp_position).set_player_location();
 			Exit exit = entityManager.gc(entity, Position.class).map.findExit(temp_position);
 
-			Position position = new Position(entityManager.gc(entity, Position.class).map.findExit(temp_position).go_through());
+			Position position = new Position(exit.go_through());
 
 			entityManager.addComponent(entity, position);
 			entityManager.gc(entity, Position.class).location = exit.player_coordinates;

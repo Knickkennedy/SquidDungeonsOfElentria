@@ -42,20 +42,22 @@ public class World {
 	private Integer current_actor;
 	private Turn_System turn_system;
 
-	public HashMap<Point, Exit> surface_exits;
+	public ArrayList<Exit> surface_exits;
 
 	public World(int map_width, int map_height) throws IOException, ParseException {
 		this.map_width = map_width;
 		this.map_height = map_height;
 
-		surface_exits = new HashMap<>();
+		surface_exits = new ArrayList<>();
 
 		JSONParser parser = new JSONParser();
 		tiles = (JSONObject)parser.parse(Gdx.files.internal("tiles.txt").reader());
 		first_dungeon = new Dungeon("Main Dungeon", 25);
 		surface = new Map(initializeMapWithFile("/surface.txt"));
 		first_dungeon.add_level(0, surface);
+		first_dungeon.build_dungeon();
 		initialize_exits();
+
 		current_map = surface;
 		factory = new Factory();
 		player = factory.initialize_player();
@@ -64,10 +66,12 @@ public class World {
 
 		turn_system = new Turn_System();
 		current_actor = player;
+
+		first_dungeon.print_exits();
 	}
 
 	public void initialize_exits(){
-		surface.exits.putAll(surface_exits);
+		surface.exits.addAll(surface_exits);
 	}
 
 
@@ -109,7 +113,7 @@ public class World {
 				else if(c == '1'){
 					tile = (JSONObject) tiles.get("cave");
 					mapToReturn[i][index] = new Tile(tile);
-					surface_exits.put(new Point(i, index), new Exit(first_dungeon, 1, "stairs - up"));
+					surface_exits.add(new Exit(first_dungeon, new Point(i, index), 1, "stairs - up"));
 					first_dungeon_location = new Point(i, index);
 				}
 				else if(c == 'X') {

@@ -23,7 +23,7 @@ public class Map_Builder {
     private Point stairsUp;
     private Point stairsDown;
 
-    private List<Point> frontier = new ArrayList<>();
+    private List <Point> frontier = new ArrayList<>();
     private List <Point> deadEnds = new ArrayList<>();
     private List <Point> potentialDoors = new ArrayList<>();
     private List <Point> extraDoors = new ArrayList<>();

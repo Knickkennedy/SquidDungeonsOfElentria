@@ -22,31 +22,33 @@ public class Dungeon {
 		levels.add(index, level);
 	}
 
-	public void build_level(int width, int height){
-		Map map = new Map(width, height);
-		if(levels.size() < size) {
-			map.buildStandardLevel();
-			final Point point = map.stairs_up;
-			final Point point2 = map.stairs_down;
-			map.exits.put(point, new Exit(this, levels.size() - 1, "stairs - down"));
-			map.exits.put(point2, new Exit(this, levels.size() + 1, "stairs - up"));
-			levels.add(map);
-		}
-		else if(levels.size() == size){
-			map.build_final_level();
-			map.exits.put(map.stairs_up, new Exit(this, levels.size() - 1, "stairs - down"));
-			levels.add(map);
+	public void build_dungeon(){
+		for(int i = 1; i < size; i++){
+			if(i < size - 1) {
+				Map map = new Map(gridWidth, gridHeight - statistics_height);
+				map.buildStandardLevel();
+				Exit exit = new Exit(this, map.stairs_up, i - 1, "stairs - down");
+				Exit exit2 = new Exit(this, map.stairs_down, i + 1, "stairs - up");
+				levels.add(map);
+				levels.get(i).exits.add(exit);
+				levels.get(i).exits.add(exit2);
+			}
+			else{
+				Map map = new Map(gridWidth, gridHeight - statistics_height);
+				map.build_final_level();
+				Exit exit = new Exit(this, map.stairs_up, i - 1, "stairs - down");
+				levels.add(map);
+				levels.get(i).exits.add(exit);
+			}
 		}
 	}
 
-	public boolean level_exists(int level){
-		if(level > size)
-			return false;
-
-		if(level < 0)
-			return false;
-
-		return level < levels.size();
+	public void print_exits(){
+		for(int i = 0; i < levels.size(); i++){
+			for(Exit exit : levels.get(i).exits){
+				System.out.println(exit.floor);
+			}
+		}
 	}
 
 	public Map getLevel(int i){
