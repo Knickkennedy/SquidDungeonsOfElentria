@@ -19,6 +19,7 @@ public class Game extends ApplicationAdapter {
     public static final int gridWidth = 112;
     public static final int gridHeight = 32;
     public static final int statistics_height = 4;
+    public static final int message_buffer = 2;
 
 
     public static final int cellWidth = 10;

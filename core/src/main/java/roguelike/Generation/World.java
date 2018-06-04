@@ -13,6 +13,8 @@ import roguelike.screens.Game_Screen;
 import roguelike.utilities.Point;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 @Getter
@@ -24,40 +26,54 @@ public class World {
 	private int map_width;
 	private int map_height;
 
-	private JSONObject tile_file;
-	private JSONObject race_file;
+	private JSONObject tiles;
 
 	private Map surface;
 	private Map current_map;
+	private Dungeon first_dungeon;
+
+	private Factory factory;
 
 	private Integer player;
 	private Point starting_location;
 
+	public static Point first_dungeon_location;
+
 	private Integer current_actor;
 	private Turn_System turn_system;
+
+	public ArrayList<Exit> surface_exits;
 
 	public World(int map_width, int map_height) throws IOException, ParseException {
 		this.map_width = map_width;
 		this.map_height = map_height;
 
+		surface_exits = new ArrayList<>();
+
 		JSONParser parser = new JSONParser();
-		tile_file = (JSONObject)parser.parse(Gdx.files.internal("tiles.txt").reader());
-		race_file = (JSONObject)parser.parse(Gdx.files.internal("races.txt").reader());
+		tiles = (JSONObject)parser.parse(Gdx.files.internal("tiles.txt").reader());
+		first_dungeon = new Dungeon("Main Dungeon", 25);
 		surface = new Map(initializeMapWithFile("/surface.txt"));
+		first_dungeon.add_level(0, surface);
+		first_dungeon.build_dungeon();
+		initialize_exits();
+
 		current_map = surface;
-		player = entityManager.createEntity();
-		entityManager.addComponent(player, new Position(starting_location, current_map));
-		entityManager.addComponent(player, new Vision(starting_location, current_map, 5.0));
-		JSONObject human = (JSONObject)race_file.get("human");
-		entityManager.addComponent(player, new Sprite((JSONObject)human.get("sprite")));
-		entityManager.addComponent(player, new Active());
-		entityManager.addComponent(player, new Action_Component());
-		entityManager.addComponent(player, new Energy(100));
-		entityManager.addComponent(player, new Command(player));
+		factory = new Factory();
+		player = factory.initialize_player();
+		factory.build_player(player, starting_location, surface);
 		Gdx.input.setInputProcessor(entityManager.gc(player, Command.class));
+
 		turn_system = new Turn_System();
 		current_actor = player;
+
+		first_dungeon.print_exits();
 	}
+
+	public void initialize_exits(){
+		surface.exits.addAll(surface_exits);
+	}
+
 
 	private Tile[][] initializeMapWithFile(String fileName){
 
@@ -75,32 +91,33 @@ public class World {
 				char c = line.charAt(i);
 
 				if(c == '='){
-					tile = (JSONObject)tile_file.get("water");
+					tile = (JSONObject) tiles.get("water");
 					mapToReturn[i][index] = new Tile(tile);
 				}
 				else if(c == '^'){
-					tile = (JSONObject)tile_file.get("mountain");
+					tile = (JSONObject) tiles.get("mountain");
 					mapToReturn[i][index] = new Tile(tile);
 				}
 				else if(c == '"'){
-					tile = (JSONObject)tile_file.get("grass");
+					tile = (JSONObject) tiles.get("grass");
 					mapToReturn[i][index] = new Tile(tile);
 				}
 				else if(c == '&'){
-					tile = (JSONObject)tile_file.get("forest");
+					tile = (JSONObject) tiles.get("forest");
 					mapToReturn[i][index] = new Tile(tile);
 				}
 				else if(c == '.'){
-					tile = (JSONObject)tile_file.get("road");
+					tile = (JSONObject) tiles.get("road");
 					mapToReturn[i][index] = new Tile(tile);
 				}
-				else if(c == '*'){
-					tile = (JSONObject)tile_file.get("cave");
+				else if(c == '1'){
+					tile = (JSONObject) tiles.get("cave");
 					mapToReturn[i][index] = new Tile(tile);
-					//main_entrance = new Point(i, index);
+					surface_exits.add(new Exit(first_dungeon, new Point(i, index), 1, "stairs - up"));
+					first_dungeon_location = new Point(i, index);
 				}
 				else if(c == 'X') {
-					tile = (JSONObject)tile_file.get("road");
+					tile = (JSONObject) tiles.get("road");
 					mapToReturn[i][index] = new Tile(tile);
 					starting_location = new Point(i, index);
 				}
@@ -117,6 +134,8 @@ public class World {
 		while(entityManager.gc(current_actor, Action_Component.class).getAction() != null) {
 			current_actor = turn_system.process(current_actor);
 		}
+
+		current_map = entityManager.gc(player, Position.class).map;
 	}
 
 	private static Scanner openFile(String fileName) {

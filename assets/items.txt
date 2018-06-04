@@ -1,0 +1,43 @@
+{
+	"leather armor": {
+		"details": {
+			"description": "a dusty old piece of leather"
+		},
+		"equippable": {
+			"chest": true
+		}
+		"defenses":{
+			"piercing": 1,
+			"slashing": 1,
+			"crushing": 1,
+		}
+	},
+	
+	"iron helm": {
+		"details": {
+			"description": "thick iron to protect a thin skull"
+		},
+		"equippable": {
+			"head": true
+		}
+		"defenses":{
+			"piercing": 1,
+			"slashing": 1,
+			"crushing": 1,
+		}
+	},
+	
+	"iron breastplate": {
+		"details":{
+			"description": "sturdy, heavy. This is what quality feels like."
+		},
+		"equippable":{
+			"chest": true
+		}
+		"defenses":{
+			"piercing": 1,
+			"slashing": 1,
+			"crushing": 1,
+		}
+	}
+}

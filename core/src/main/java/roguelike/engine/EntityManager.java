@@ -30,6 +30,10 @@ public class EntityManager
 		return result;
 	}
 
+	public void remove_component(int entity, Class componentType){
+		componentStores.get(componentType).remove(entity);
+	}
+
 	public <T extends Component> List<T> getAllComponentsOfType( Class<T> componentType )
 	{
 		HashMap<Integer, ? extends Component> store = componentStores.get( componentType );

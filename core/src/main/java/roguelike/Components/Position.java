@@ -4,18 +4,16 @@ import lombok.Getter;
 import roguelike.Generation.Map;
 import roguelike.utilities.Point;
 
-@Getter
 public class Position extends Component{
 
-	private Point location;
-	private Map map;
+	public Point location;
+	public Map map;
 
-	public Position(Point point, Map map){
-		this.location = point;
+	public Position(Map map){
 		this.map = map;
 	}
 
-	public void setLocation(Point direction){
+	public void update_location(Point direction){
 		this.location.x += direction.x;
 		this.location.y += direction.y;
 	}

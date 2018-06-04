@@ -5,6 +5,27 @@
 			"color": "gray"
 		},
 		"description": "a hole leading deep into the ground",
+		"movement cost": 1500,
+		"passable": true
+	},
+	
+	"door - closed":{
+		"sprite":{
+			"glyph": "+",
+			"color": "brown"
+		},
+		"description": "sturdy, yet dirty. An unlikeable combination in an obstacle."
+		"movement cost": 1500,
+		"passable": false,
+		"openable": true
+	},
+	
+	"door - open":{
+		"sprite":{
+			"glyph": "/",
+			"color": "gray"
+		},
+		"description": "sturdy, yet dirty. An unlikeable combination in an obstacle."
 		"movement cost": 1000,
 		"passable": true
 	},
@@ -12,7 +33,7 @@
 	"floor - dungeon":{
 		"sprite":{
 			"glyph": ".",
-			"color": "gray"
+			"color": "brown"
 		},
 		"description": "a dusty floor, perhaps a broom?",
 		"movement cost": 1000,

@@ -23,7 +23,7 @@ public class Map_Builder {
     private Point stairsUp;
     private Point stairsDown;
 
-    private List<Point> frontier = new ArrayList<>();
+    private List <Point> frontier = new ArrayList<>();
     private List <Point> deadEnds = new ArrayList<>();
     private List <Point> potentialDoors = new ArrayList<>();
     private List <Point> extraDoors = new ArrayList<>();
@@ -41,7 +41,7 @@ public class Map_Builder {
     private boolean[][] connected;
     private boolean[][] revealed;
 
-    public Map_Builder(int width, int height) throws IOException, ParseException {
+    public Map_Builder(int width, int height){
         this.pathfinding = new char[width][height];
         this.map = new Tile[width][height];
         this.minRoomSize = 3;
@@ -51,10 +51,14 @@ public class Map_Builder {
         this.roomFlag = new boolean[width][height];
         this.revealed = new boolean[width][height];
 		JSONParser parser = new JSONParser();
-		this.tile_file = (JSONObject)parser.parse(new FileReader("assets/tiles.txt"));
+	    try {
+		    this.tile_file = (JSONObject)parser.parse(new FileReader("assets/tiles.txt"));
+	    } catch (IOException | ParseException e) {
+		    e.printStackTrace();
+	    }
     }
 
-    public void buildStandardLevel() throws IOException, ParseException{
+    public void buildStandardLevel(){
         initializeMap();
         placeRooms();
         startMaze();
@@ -65,7 +69,18 @@ public class Map_Builder {
         initializePathfinding();
     }
 
-    private void initializeMap() throws IOException, ParseException {
+    public void build_final_level(){
+	    initializeMap();
+	    placeRooms();
+	    startMaze();
+	    findConnections();
+	    placeAllDoors();
+	    removeAllDeadEnds();
+	    place_only_up_stairs();
+	    initializePathfinding();
+    }
+
+    private void initializeMap(){
 
         JSONObject wall = (JSONObject)tile_file.get("wall");
 
@@ -78,13 +93,13 @@ public class Map_Builder {
         }
     }
 
-    private void placeRooms() throws IOException, ParseException{
+    private void placeRooms(){
         for(int i = 0; i < numberOfPlacementTries; i++){
             placeRoom();
         }
     }
 
-    private void placeRoom() throws IOException, ParseException{
+    private void placeRoom(){
         int h = Roll.rand(minRoomSize, maxRoomSize);
         if(h % 2 == 0){
             h = h + 1;
@@ -117,7 +132,7 @@ public class Map_Builder {
         }
     }
 
-    private void stampRoom(Room room) throws IOException, ParseException{
+    private void stampRoom(Room room){
 
     	JSONObject floor = (JSONObject)tile_file.get("floor - dungeon");
 
@@ -129,7 +144,7 @@ public class Map_Builder {
         }
     }
 
-    private void startMaze() throws IOException, ParseException{
+    private void startMaze(){
         for(int i = 1; i < map.length - 2; i++){
             for(int j = 1; j < map[0].length - 2; j++){
                 if(isSolid(i, j)){
@@ -140,18 +155,18 @@ public class Map_Builder {
     }
 
     private boolean isSolid(int x, int y){
-        return (map[x][y].getName().equals("wall"))
-                && (map[x + 1][y].getName().equals("wall"))
-                && (map[x - 1][y].getName().equals("wall"))
-                && (map[x][y - 1].getName().equals("wall"))
-                && (map[x][y + 1].getName().equals("wall"))
-                && (map[x + 1][y + 1].getName().equals("wall"))
-                && (map[x + 1][y - 1].getName().equals("wall"))
-                && (map[x - 1][y + 1].getName().equals("wall"))
-                && (map[x - 1][y - 1].getName().equals("wall"));
+        return (map[x][y].sprite.character == '#')
+                && (map[x + 1][y].sprite.character =='#')
+                && (map[x - 1][y].sprite.character == '#')
+                && (map[x][y - 1].sprite.character == '#')
+                && (map[x][y + 1].sprite.character == '#')
+                && (map[x + 1][y + 1].sprite.character == '#')
+                && (map[x + 1][y - 1].sprite.character == '#')
+                && (map[x - 1][y + 1].sprite.character == '#')
+                && (map[x - 1][y - 1].sprite.character == '#');
     }
 
-    private void generateMaze(int x, int y) throws IOException, ParseException{
+    private void generateMaze(int x, int y){
         Point start = new Point(x, y);
         buildFrontier(start);
         carvePath(start);
@@ -192,15 +207,15 @@ public class Map_Builder {
     private void findConnections(){
         for(int i = 1; i < map.length - 1; i++){
             for(int j = 1; j < map[0].length - 1; j++){
-                if((map[i][j].getName().equals("wall"))
-                        && (map[i - 1][j].getName().equals("floor - dungeon"))
-                        && (map[i + 1][j].getName().equals("floor - dungeon"))
+                if((map[i][j].sprite.character == '#')
+                        && (map[i - 1][j].sprite.character == '.')
+                        && (map[i + 1][j].sprite.character == '.')
                         && (roomFlag[i + 1][j] || roomFlag[i - 1][j])){
                     connections.add(new Point(i, j));
                 }
-                if((map[i][j].getName().equals("wall"))
-                        && (map[i][j - 1].getName().equals("floor - dungeon"))
-                        && (map[i][j + 1].getName().equals("floor - dungeon"))
+                if((map[i][j].sprite.character == '#')
+                        && (map[i][j - 1].sprite.character == '.')
+                        && (map[i][j + 1].sprite.character == '.')
                         && (roomFlag[i][j - 1] || roomFlag[i][j + 1])){
                     connections.add(new Point(i, j));
                 }
@@ -291,23 +306,35 @@ public class Map_Builder {
         stairsDown = new Point(x2, y2);
     }
 
+    private void place_only_up_stairs(){
+	    Collections.shuffle(rooms);
+	    Room upstairs = rooms.get(0);
+	    int x1 = Roll.rand(upstairs.getTopLeft().x + 1, upstairs.getBottomRight().x - 1);
+	    int y1 = Roll.rand(upstairs.getTopLeft().y + 1, upstairs.getBottomRight().y - 1);
+
+	    JSONObject stairs_up = (JSONObject)tile_file.get("stairs - up");
+	    map[x1][y1] = new Tile(stairs_up);
+	    stairsUp = new Point(x1, y1);
+
+    }
+
     private void initializePathfinding(){
         for(int x = 0; x < map.length; x++){
             for(int y = 0; y < map[0].length; y++){
-                pathfinding[x][y] = map[x][y].isPassable() ? '.' : '#';
+                pathfinding[x][y] = map[x][y].passable ? '.' : '#';
             }
         }
     }
 
     private boolean hasDoorNeighbor(Point p){
         for(Point direction : Point.cardinal){
-            if(getTile(p.getNeighbor(direction)).getName().equals("door - closed")) return true;
+            if(getTile(p.getNeighbor(direction)).sprite.character == '+') return true;
         }
         return false;
     }
 
     private void floodFill(int x, int y){
-        if(((map[x][y].getName().equals("floor - dungeon")) || (map[x][y].getName().equals("door - closed"))) && (!connected[x][y])){
+        if(((map[x][y].sprite.character == '.') || (map[x][y].sprite.character == '+')) && (!connected[x][y])){
             connected[x][y] = true;
         }
         else{
@@ -342,7 +369,7 @@ public class Map_Builder {
     private boolean isDirectionallySolid(Point p, Point direction){
         List <Point> directionalNeighbors = p.getDirectionalNeighbors(direction);
         for(Point toCheck : directionalNeighbors){
-            if(isInBounds(toCheck) && (!getTile(toCheck).getName().equals("wall"))){
+            if(isInBounds(toCheck) && (getTile(toCheck).sprite.character != '#')){
                 return false;
             }
         }
@@ -354,7 +381,7 @@ public class Map_Builder {
         int floorCount = 0;
         for(Point point : neighbors){
             if(isInBounds(point)) {
-                if (getTile(point).getName().equals("floor - dungeon")) {
+                if (getTile(point).sprite.character == '.') {
                     floorCount++;
                 }
             }
@@ -372,17 +399,17 @@ public class Map_Builder {
         for(int i = 0; i < map.length; i++){
             for(int j = 0; j < map[0].length; j++){
                 int wallCount = 0;
-                if(map[i][j].getName().equals("floor - dungeon") || map[i][j].getName().equals("door - closed")){
-                    if(map[i - 1][j].getName().equals("wall")){
+                if(map[i][j].sprite.character == '.' || map[i][j].sprite.character == '+'){
+                    if(map[i - 1][j].sprite.character == '#'){
                         wallCount++;
                     }
-                    if(map[i + 1][j].getName().equals("wall")){
+                    if(map[i + 1][j].sprite.character == '#'){
                         wallCount++;
                     }
-                    if(map[i][j - 1].getName().equals("wall")){
+                    if(map[i][j - 1].sprite.character == '#'){
                         wallCount++;
                     }
-                    if(map[i][j + 1].getName().equals("wall")){
+                    if(map[i][j + 1].sprite.character == '#'){
                         wallCount++;
                     }
                     if(wallCount >= 3){

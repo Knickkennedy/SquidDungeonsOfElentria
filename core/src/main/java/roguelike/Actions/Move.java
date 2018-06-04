@@ -16,21 +16,26 @@ public class Move extends Action{
 	public Move(Integer entity, Point direction){
 		this.direction = direction;
 		this.entity = entity;
-		this.cost = entityManager.gc(entity, Position.class).getMap().getCost(entityManager.gc(entity, Position.class).getLocation(), direction);
+		this.cost = entityManager.gc(entity, Position.class).map.getCost(entityManager.gc(entity, Position.class).location, direction);
 	}
 
 	@Override
 	public boolean perform() {
 
-		if(entityManager.gc(entity, Position.class).getMap().isPassable(entityManager.gc(entity, Position.class).getLocation(), direction)){
+		if(entityManager.gc(entity, Position.class).map.isPassable(entityManager.gc(entity, Position.class).location, direction)){
 
 			entityManager.gc(entity, Energy.class).energy -= cost;
 
-			entityManager.gc(entity, Position.class).setLocation(direction);
-			entityManager.gc(entity, Vision.class).setLocation(direction);
+			entityManager.gc(entity, Position.class).update_location(direction);
+			entityManager.gc(entity, Vision.class).setLocation();
 			entityManager.gc(entity, Action_Component.class).setAction(null);
 
 			return true;
+		}
+		else if(entityManager.gc(entity, Position.class).map.isOpenable(entityManager.gc(entity, Position.class).location, direction)){
+			entityManager.gc(entity, Action_Component.class).setAction(new Open_Door(entity, direction));
+
+			return false;
 		}
 		else{
 
