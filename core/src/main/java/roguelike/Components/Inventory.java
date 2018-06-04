@@ -13,4 +13,8 @@ public class Inventory extends Component{
 	public void add_item(Integer item){
 		inventory.add(item);
 	}
+
+	public void remove_item(Integer item){
+		inventory.remove(item);
+	}
 }

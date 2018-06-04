@@ -24,9 +24,7 @@ public class Vision extends Component{
 		FOV.reuseFOV(this.res, this.fov, this.location.x, this.location.y, this.range, Radius.CIRCLE);
 	}
 
-	public void setLocation(Point direction){
-//		this.location.x += direction.x;
-//		this.location.y += direction.y;
+	public void setLocation(){
 		FOV.reuseFOV(this.res, this.fov, this.location.x, this.location.y, this.range, Radius.CIRCLE);
 	}
 }

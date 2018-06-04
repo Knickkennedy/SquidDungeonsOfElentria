@@ -4,6 +4,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import lombok.Getter;
 import roguelike.Actions.Action;
+import roguelike.Actions.Exit_Through;
 import roguelike.Actions.Move;
 import roguelike.utilities.Point;
 
@@ -23,37 +24,29 @@ public class Command extends Component implements InputProcessor{
 
 		switch(keycode){
 			case Input.Keys.NUMPAD_1:
-				action = new Move(entity, Point.SOUTH_WEST);
-				break;
+				action = new Move(entity, Point.SOUTH_WEST); break;
 			case Input.Keys.DOWN:
 			case Input.Keys.NUMPAD_2:
-				action = new Move(entity,Point.SOUTH);
-				break;
+				action = new Move(entity,Point.SOUTH); break;
 			case Input.Keys.NUMPAD_3:
-				action = new Move(entity,Point.SOUTH_EAST);
-				break;
+				action = new Move(entity,Point.SOUTH_EAST); break;
 			case Input.Keys.LEFT:
 			case Input.Keys.NUMPAD_4:
-				action = new Move(entity,Point.WEST);
-				break;
+				action = new Move(entity,Point.WEST); break;
+			case Input.Keys.NUMPAD_5:
+				action = new Move(entity,Point.WAIT); break;
 			case Input.Keys.RIGHT:
 			case Input.Keys.NUMPAD_6:
-				action = new Move(entity,Point.EAST);
-				break;
+				action = new Move(entity,Point.EAST); break;
 			case Input.Keys.NUMPAD_7:
-				action = new Move(entity,Point.NORTH_WEST);
-				break;
+				action = new Move(entity,Point.NORTH_WEST); break;
 			case Input.Keys.UP:
 			case Input.Keys.NUMPAD_8:
-				action = new Move(entity,Point.NORTH);
-				break;
+				action = new Move(entity,Point.NORTH); break;
 			case Input.Keys.NUMPAD_9:
-				action = new Move(entity,Point.NORTH_EAST);
-				break;
-			//case Input.Keys.NUMPAD_5:
-			default:
-				action = new Move(entity,Point.WAIT);
-				break;
+				action = new Move(entity,Point.NORTH_EAST); break;
+			case Input.Keys.ENTER:
+				action = new Exit_Through(entity); break;
 		}
 		entityManager.gc(entity, Action_Component.class).setAction(action);
 		return true;

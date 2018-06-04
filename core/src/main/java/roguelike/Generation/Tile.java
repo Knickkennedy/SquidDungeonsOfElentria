@@ -1,25 +1,27 @@
 package roguelike.Generation;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.json.simple.JSONObject;
 import roguelike.Components.Sprite;
 
-@Getter @Setter
 public class Tile {
-	private String name;
-	private Sprite sprite;
-	private String description;
-	private int movement_cost;
-	private boolean passable;
+	public String name;
+	public Sprite sprite;
+	public String description;
+	public int movement_cost;
+	public boolean passable;
+	public boolean openable;
 
 	public Tile(JSONObject tile){
+
+		openable = false;
+
 		for(Object o : tile.keySet()){
 			switch (o.toString()){
 				case "sprite": 			sprite = new Sprite((JSONObject)tile.get(o)); break;
 				case "description": 	description = (String)tile.get(o); break;
 				case "movement cost":	movement_cost = (int)(long)tile.get(o); break;
 				case "passable": 		passable = (boolean)tile.get(o); break;
+				case "openable":        openable = (boolean)tile.get(o); break;
 			}
 		}
 	}

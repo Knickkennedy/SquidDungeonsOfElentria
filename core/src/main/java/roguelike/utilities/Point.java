@@ -3,6 +3,7 @@ package roguelike.utilities;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class Point {
 
@@ -168,7 +169,12 @@ public class Point {
         return String.format("(%s, %s)", this.x, this.y);
     }
 
-    @Override
+	@Override
+	public int hashCode() {
+		return Objects.hash(x, y);
+	}
+
+	@Override
     public boolean equals(Object obj) {
 
         if(getClass() != obj.getClass()) return false;
