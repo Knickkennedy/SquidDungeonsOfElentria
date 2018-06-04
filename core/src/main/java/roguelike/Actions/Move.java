@@ -40,7 +40,6 @@ public class Move extends Action{
 		else{
 
 			entityManager.gc(entity, Action_Component.class).setAction(null);
-
 			return false;
 		}
 	}
