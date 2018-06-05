@@ -1,6 +1,7 @@
 package roguelike.utilities;
 
 import squidpony.squidmath.LinnormRNG;
+import squidpony.squidmath.RNG;
 
 public class Roll {
 
@@ -11,7 +12,9 @@ public class Roll {
     // class-level initialization for variables, a seeded sequence may change.
     // For most usage it's fine to use the zero-arg constructor, which gets some
     // random starting values from Math.random() and is different every time.
-    private static LinnormRNG random = new LinnormRNG(); 
+    private static LinnormRNG random = new LinnormRNG(123456L);
+    
+    public static RNG rng = new RNG(random);
 
     public static int rand(int min, int max){
         return random.nextInt(min, max+1);

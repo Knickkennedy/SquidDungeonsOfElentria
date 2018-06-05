@@ -6,7 +6,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import roguelike.Components.*;
 import roguelike.Enums.Equipment_Slot;
-import roguelike.utilities.Point;
+import squidpony.squidmath.Coord;
 
 import java.io.IOException;
 
@@ -27,7 +27,7 @@ public class Factory {
 		return entityManager.createEntity();
 	}
 
-	public void build_player(Integer player, Point starting_location, Map current_map){
+	public void build_player(Integer player, Coord starting_location, Map current_map){
 		entityManager.addComponent(player, new Position(current_map));
 		entityManager.gc(player, Position.class).location = starting_location;
 		entityManager.addComponent(player, new Vision(starting_location, current_map, 5.0));

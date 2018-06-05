@@ -6,15 +6,15 @@ import lombok.Setter;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import roguelike.Components.*;
+import roguelike.Components.Action_Component;
+import roguelike.Components.Command;
+import roguelike.Components.Position;
 import roguelike.Systems.Turn_System;
 import roguelike.engine.EntityManager;
-import roguelike.screens.Game_Screen;
-import roguelike.utilities.Point;
+import squidpony.squidmath.Coord;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Scanner;
 
 @Getter
@@ -35,9 +35,9 @@ public class World {
 	private Factory factory;
 
 	private Integer player;
-	private Point starting_location;
+	private Coord starting_location;
 
-	public static Point first_dungeon_location;
+	public static Coord first_dungeon_location;
 
 	private Integer current_actor;
 	private Turn_System turn_system;
@@ -53,7 +53,7 @@ public class World {
 		JSONParser parser = new JSONParser();
 		tiles = (JSONObject)parser.parse(Gdx.files.internal("tiles.txt").reader());
 		first_dungeon = new Dungeon("Main Dungeon", 25);
-		surface = new Map(initializeMapWithFile("/surface.txt"));
+		surface = new Map(initializeMapWithFile("surface.txt"));
 		first_dungeon.add_level(0, surface);
 		first_dungeon.build_dungeon();
 		initialize_exits();
@@ -113,13 +113,13 @@ public class World {
 				else if(c == '1'){
 					tile = (JSONObject) tiles.get("cave");
 					mapToReturn[i][index] = new Tile(tile);
-					surface_exits.add(new Exit(first_dungeon, new Point(i, index), 1, "stairs - up"));
-					first_dungeon_location = new Point(i, index);
+					surface_exits.add(new Exit(first_dungeon, Coord.get(i, index), 1, "stairs - up"));
+					first_dungeon_location = Coord.get(i, index);
 				}
 				else if(c == 'X') {
 					tile = (JSONObject) tiles.get("road");
 					mapToReturn[i][index] = new Tile(tile);
-					starting_location = new Point(i, index);
+					starting_location = Coord.get(i, index);
 				}
 			}
 			index++;
@@ -139,6 +139,6 @@ public class World {
 	}
 
 	private static Scanner openFile(String fileName) {
-		return new Scanner(Game_Screen.class.getResourceAsStream(fileName));
+		return new Scanner(Gdx.files.internal(fileName).reader());
 	}
 }

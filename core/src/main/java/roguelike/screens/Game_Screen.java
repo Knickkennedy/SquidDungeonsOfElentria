@@ -7,10 +7,10 @@ import roguelike.Components.*;
 import roguelike.Generation.World;
 import roguelike.engine.Game;
 import roguelike.utilities.Colors;
-import roguelike.utilities.Point;
 import squidpony.squidgrid.gui.gdx.DefaultResources;
 import squidpony.squidgrid.gui.gdx.SColor;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
+import squidpony.squidmath.Coord;
 
 import java.io.IOException;
 import java.util.Set;
@@ -91,7 +91,7 @@ public class Game_Screen extends Screen {
         }
     }
 
-    private void place_entity(Integer entity, Point point){
+    private void place_entity(Integer entity, Coord point){
         display.put(point.x, point.y + message_buffer, entityManager.gc(entity, Sprite.class).character, entityManager.gc(entity, Sprite.class).foregroundColor);
     }
 }

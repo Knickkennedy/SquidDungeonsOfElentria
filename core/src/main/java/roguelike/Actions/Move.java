@@ -4,16 +4,16 @@ import roguelike.Components.Action_Component;
 import roguelike.Components.Energy;
 import roguelike.Components.Position;
 import roguelike.Components.Vision;
-import roguelike.utilities.Point;
+import squidpony.squidmath.Coord;
 
 import static roguelike.Generation.World.entityManager;
 
 public class Move extends Action{
 
-	public Point direction;
+	public Coord direction;
 	private Integer entity;
 
-	public Move(Integer entity, Point direction){
+	public Move(Integer entity, Coord direction){
 		this.direction = direction;
 		this.entity = entity;
 		this.cost = entityManager.gc(entity, Position.class).map.getCost(entityManager.gc(entity, Position.class).location, direction);
@@ -27,7 +27,7 @@ public class Move extends Action{
 			entityManager.gc(entity, Energy.class).energy -= cost;
 
 			entityManager.gc(entity, Position.class).update_location(direction);
-			entityManager.gc(entity, Vision.class).setLocation();
+			entityManager.gc(entity, Vision.class).setLocation(entityManager.gc(entity, Position.class).location);
 			entityManager.gc(entity, Action_Component.class).setAction(null);
 
 			return true;
@@ -40,7 +40,6 @@ public class Move extends Action{
 		else{
 
 			entityManager.gc(entity, Action_Component.class).setAction(null);
-
 			return false;
 		}
 	}

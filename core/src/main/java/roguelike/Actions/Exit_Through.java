@@ -6,6 +6,7 @@ import roguelike.Components.Position;
 import roguelike.Components.Vision;
 import roguelike.Generation.Exit;
 import roguelike.utilities.Point;
+import squidpony.squidmath.Coord;
 
 import static roguelike.Generation.World.entityManager;
 
@@ -20,10 +21,15 @@ public class Exit_Through extends Action{
 
 	@Override
 	public boolean perform() {
-		Point temp_position = entityManager.gc(entity, Position.class).location;
-
-		System.out.println(entityManager.gc(entity, Position.class).map.findExit(temp_position).floor);
-
+		Coord temp_position = entityManager.gc(entity, Position.class).location;
+		if(temp_position != null) 
+			System.out.println(entityManager.gc(entity, Position.class).map.findExit(temp_position).floor);
+		else
+		{
+			System.out.println("temp_position is null");
+			return false;
+		}
+		
 		if(entityManager.gc(entity, Position.class).map.isExit(temp_position)){
 
 			entityManager.gc(entity, Energy.class).energy -= cost;
@@ -32,11 +38,10 @@ public class Exit_Through extends Action{
 			Exit exit = entityManager.gc(entity, Position.class).map.findExit(temp_position);
 
 			Position position = new Position(exit.go_through());
-
+			position.location = exit.player_coordinates;
 			entityManager.addComponent(entity, position);
-			entityManager.gc(entity, Position.class).location = exit.player_coordinates;
 
-			Vision vision = new Vision(entityManager.gc(entity, Position.class).location, entityManager.gc(entity, Position.class).map, 5);
+			Vision vision = new Vision(position.location, position.map, 5);
 			entityManager.addComponent(entity, vision);
 
 			entityManager.gc(entity, Action_Component.class).setAction(null);
