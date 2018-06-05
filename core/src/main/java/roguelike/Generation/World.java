@@ -55,7 +55,7 @@ public class World {
 		first_dungeon = new Dungeon("Main Dungeon", 25);
 		surface = new Map(initializeMapWithFile("surface.txt"));
 		first_dungeon.add_level(0, surface);
-		first_dungeon.build_dungeon();
+		first_dungeon.build_basic_dungeon();
 		initialize_exits();
 
 		current_map = surface;
@@ -66,8 +66,6 @@ public class World {
 
 		turn_system = new Turn_System();
 		current_actor = player;
-
-		first_dungeon.print_exits();
 	}
 
 	public void initialize_exits(){

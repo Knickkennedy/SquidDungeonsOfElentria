@@ -22,6 +22,8 @@ public class Map{
     public Coord stairs_down;
     public Coord stairs_up;
 
+    public boolean isBuilt;
+
     public Map(final Tile[][] tiles) {
         this.tiles = tiles;
         this.exits = new ArrayList<>();
@@ -33,11 +35,13 @@ public class Map{
 	    } catch (IOException | ParseException e) {
 		    e.printStackTrace();
 	    }
+	    this.isBuilt = false;
     }
 
     public Map(final int width, final int height) {
         builder = new Map_Builder(width, height);
         tile_file = builder.tile_file;
+        this.isBuilt = false;
     }
 
     public Tile getTileAt(int x, int y){
@@ -51,14 +55,16 @@ public class Map{
         this.stairs_down = builder.getStairsDown();
         this.stairs_up = builder.getStairsUp();
 	    this.exits = new ArrayList<>();
+	    this.isBuilt = true;
     }
 
     public void build_final_level(){
-	    builder.buildStandardLevel();
+	    builder.build_final_level();
 	    tiles = builder.getMap();
 	    pathfinding = builder.getPathfinding();
 	    this.stairs_up = builder.getStairsUp();
 	    this.exits = new ArrayList<>();
+	    this.isBuilt = true;
     }
 
     public void initializePathFinding() {
