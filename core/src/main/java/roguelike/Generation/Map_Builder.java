@@ -1,5 +1,6 @@
 package roguelike.Generation;
 
+import com.badlogic.gdx.Gdx;
 import lombok.Getter;
 import lombok.Setter;
 import org.json.simple.JSONObject;
@@ -7,8 +8,9 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import roguelike.utilities.Point;
 import roguelike.utilities.Roll;
+import squidpony.squidmath.Coord;
+import squidpony.squidmath.IntVLA;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,22 +22,22 @@ public class Map_Builder {
     private Tile[][] map;
     private char[][] pathfinding;
 
-    private Point stairsUp;
-    private Point stairsDown;
+    private Coord stairsUp;
+    private Coord stairsDown;
 
-    private List <Point> frontier = new ArrayList<>();
-    private List <Point> deadEnds = new ArrayList<>();
-    private List <Point> potentialDoors = new ArrayList<>();
-    private List <Point> extraDoors = new ArrayList<>();
-    private List <Point> connections = new ArrayList<>();
-    private List <Point> ctr = new ArrayList<>();
+    private List <Coord> frontier = new ArrayList<>();
+    private List <Coord> deadEnds = new ArrayList<>();
+    private List <Coord> potentialDoors = new ArrayList<>();
+    private List <Coord> extraDoors = new ArrayList<>();
+    private List <Coord> connections = new ArrayList<>();
+    private List <Coord> ctr = new ArrayList<>();
     private List <Room> rooms = new ArrayList<>();
 
     private int maxRoomSize;
     private int minRoomSize;
     private int numberOfPlacementTries;
 
-    private JSONObject tile_file;
+    public JSONObject tile_file;
 
     private boolean[][] roomFlag;
     private boolean[][] connected;
@@ -52,7 +54,7 @@ public class Map_Builder {
         this.revealed = new boolean[width][height];
 		JSONParser parser = new JSONParser();
 	    try {
-		    this.tile_file = (JSONObject)parser.parse(new FileReader("assets/tiles.txt"));
+		    this.tile_file = (JSONObject)parser.parse(Gdx.files.internal("tiles.txt").reader());
 	    } catch (IOException | ParseException e) {
 		    e.printStackTrace();
 	    }
@@ -167,41 +169,49 @@ public class Map_Builder {
     }
 
     private void generateMaze(int x, int y){
-        Point start = new Point(x, y);
+        Coord start = Coord.get(x, y);
         buildFrontier(start);
         carvePath(start);
         updateFrontier();
         while(!frontier.isEmpty()){
-            Point current = frontier.remove(Roll.rand(0, frontier.size() - 1));
+            int idx = Roll.rand(0, frontier.size() - 2) & -2;
+            Coord current = frontier.remove(idx);
+            frontier.remove(idx);
             buildFrontier(current);
             carvePath(current);
             updateFrontier();
         }
     }
 
-    private void buildFrontier(Point p){
-        for(Point direction : Point.cardinal){
-            if(isInBounds(p.getNeighbor(direction))){
+    private void buildFrontier(Coord p){
+        for(Coord direction : Point.cardinal){
+            if(p.add(direction).isWithinRectangle(1, 1, map.length - 1, map[0].length - 1)){
                 if(isDirectionallySolid(p, direction)){
-                    frontier.add(p.getNeighbor(direction));
+                    frontier.add(p.add(direction));
+                    frontier.add(direction);
                 }
             }
         }
     }
 
-    private void carvePath(Point s){
+    private void carvePath(Coord s){
     	JSONObject floor = (JSONObject)tile_file.get("floor - dungeon");
         map[s.x][s.y] = new Tile(floor);
     }
 
     private void updateFrontier(){
-        List <Point> toRemove = new ArrayList<>();
-        for(Point p : frontier){
-            if(!isValidMazeLocation(p)){
-                toRemove.add(p);
+        IntVLA toRemove = new IntVLA(8);
+        for (int i = 0; i < frontier.size() - 1; i+=2) {
+            Coord p = frontier.get(i), p2 = frontier.get(i+1);
+            if(!isValidMazeLocation(p, p2)){
+                toRemove.add(i);
+                toRemove.add(i+1);
             }
         }
-        frontier.removeAll(toRemove);
+        toRemove.sort();
+        for (int i = toRemove.size - 1; i >= 0; i--) {
+            frontier.remove(toRemove.get(i));
+        }
     }
 
     private void findConnections(){
@@ -211,13 +221,13 @@ public class Map_Builder {
                         && (map[i - 1][j].sprite.character == '.')
                         && (map[i + 1][j].sprite.character == '.')
                         && (roomFlag[i + 1][j] || roomFlag[i - 1][j])){
-                    connections.add(new Point(i, j));
+                    connections.add(Coord.get(i, j));
                 }
                 if((map[i][j].sprite.character == '#')
                         && (map[i][j - 1].sprite.character == '.')
                         && (map[i][j + 1].sprite.character == '.')
                         && (roomFlag[i][j - 1] || roomFlag[i][j + 1])){
-                    connections.add(new Point(i, j));
+                    connections.add(Coord.get(i, j));
                 }
             }
         }
@@ -235,8 +245,8 @@ public class Map_Builder {
     }
 
     private void findDoors(){
-        Collections.shuffle(connections);
-        for(Point p : connections){
+        Roll.rng.shuffleInPlace(connections);
+        for(Coord p : connections){
             if((connected[p.x - 1][p.y]) && (!connected[p.x + 1][p.y])){
                 potentialDoors.add(p);
             }
@@ -253,9 +263,11 @@ public class Map_Builder {
     }
 
     private void placeDoor(){
-        Point door = potentialDoors.get(Roll.rand(0, potentialDoors.size() - 1));
+        if(potentialDoors.isEmpty())
+            return;
+        Coord door = Roll.rng.getRandomElement(potentialDoors);
         while (hasDoorNeighbor(door)) {
-            door = potentialDoors.get(Roll.rand(0, potentialDoors.size() - 1));
+            door = Roll.rng.getRandomElement(potentialDoors);
         }
 
         JSONObject doorobj = (JSONObject)tile_file.get("door - closed");
@@ -267,9 +279,11 @@ public class Map_Builder {
     }
 
     private void createExtraDoors(){
-        Collections.shuffle(extraDoors);
-        for(int i = 0; i < Roll.rand(1, 3); i++){
-            Point check = extraDoors.get(Roll.rand(0, extraDoors.size() - 1));
+        if(extraDoors.isEmpty())
+            return;
+        Roll.rng.shuffleInPlace(extraDoors);
+        for(int i = Roll.rng.nextInt(3); i >= 0; i--){
+            Coord check = Roll.rng.getRandomElement(extraDoors);
             if(!hasDoorNeighbor(check)){
             	JSONObject door_closed = (JSONObject)tile_file.get("door - closed");
                 map[check.x][check.y] = new Tile(door_closed);
@@ -278,7 +292,7 @@ public class Map_Builder {
         extraDoors.clear();
     }
     private void removeExtraConnectors(){
-        for(Point p : connections){
+        for(Coord p : connections){
             if(connected[p.x - 1][p.y] && connected[p.x + 1][p.y]){
                 ctr.add(p);
             }
@@ -302,8 +316,8 @@ public class Map_Builder {
         JSONObject stairs_down = (JSONObject)tile_file.get("stairs - down");
         map[x1][y1] = new Tile(stairs_up);
         map[x2][y2] = new Tile(stairs_down);
-        stairsUp = new Point(x1, y1);
-        stairsDown = new Point(x2, y2);
+        stairsUp = Coord.get(x1, y1);
+        stairsDown = Coord.get(x2, y2);
     }
 
     private void place_only_up_stairs(){
@@ -314,7 +328,7 @@ public class Map_Builder {
 
 	    JSONObject stairs_up = (JSONObject)tile_file.get("stairs - up");
 	    map[x1][y1] = new Tile(stairs_up);
-	    stairsUp = new Point(x1, y1);
+	    stairsUp = Coord.get(x1, y1);
 
     }
 
@@ -326,9 +340,9 @@ public class Map_Builder {
         }
     }
 
-    private boolean hasDoorNeighbor(Point p){
-        for(Point direction : Point.cardinal){
-            if(getTile(p.getNeighbor(direction)).sprite.character == '+') return true;
+    private boolean hasDoorNeighbor(Coord p){
+        for(Coord direction : Point.cardinal){
+            if(getTile(p.add(direction)).sprite.character == '+') return true;
         }
         return false;
     }
@@ -346,11 +360,11 @@ public class Map_Builder {
         floodFill(x, y - 1);
     }
 
-    private Tile getTile(Point p){
+    private Tile getTile(Coord p){
         return map[p.x][p.y];
     }
 
-    private boolean isInBounds(Point p){
+    private boolean isInBounds(Coord p){
         return isHorizontallyInBounds(p.x) && isVerticallyInBounds(p.y);
     }
 
@@ -366,9 +380,11 @@ public class Map_Builder {
         return y > 0 && y < map[0].length - 1;
     }
 
-    private boolean isDirectionallySolid(Point p, Point direction){
-        List <Point> directionalNeighbors = p.getDirectionalNeighbors(direction);
-        for(Point toCheck : directionalNeighbors){
+    private boolean isDirectionallySolid(Coord p, Coord direction){
+        List <Coord> directionalNeighbors = Point.getDirectionalNeighbors(p, direction);
+        if(directionalNeighbors == null)
+            return true;
+        for(Coord toCheck : directionalNeighbors){
             if(isInBounds(toCheck) && (getTile(toCheck).sprite.character != '#')){
                 return false;
             }
@@ -376,10 +392,12 @@ public class Map_Builder {
         return true;
     }
 
-    private boolean isValidMazeLocation(Point p){
-        List <Point> neighbors = p.getFrontierNeighbors(p.directionFromParent);
+    private boolean isValidMazeLocation(Coord p, Coord directionFromParent){
+        List <Coord> neighbors = Point.getFrontierNeighbors(p, directionFromParent);
+        if(neighbors == null)
+            return false;
         int floorCount = 0;
-        for(Point point : neighbors){
+        for(Coord point : neighbors){
             if(isInBounds(point)) {
                 if (getTile(point).sprite.character == '.') {
                     floorCount++;
@@ -413,14 +431,13 @@ public class Map_Builder {
                         wallCount++;
                     }
                     if(wallCount >= 3){
-                        Point newP = new Point(i, j);
-                        deadEnds.add(newP);
+                        deadEnds.add(Coord.get(i, j));
                     }
                 }
             }
         }
         JSONObject wall = (JSONObject)tile_file.get("wall");
-        for(Point p : deadEnds){
+        for(Coord p : deadEnds){
             map[p.x][p.y] = new Tile(wall);
         }
         deadEnds.clear();

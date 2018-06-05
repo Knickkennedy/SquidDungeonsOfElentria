@@ -2,20 +2,20 @@ package roguelike.Components;
 
 import lombok.Getter;
 import roguelike.Generation.Map;
-import roguelike.utilities.Point;
 import squidpony.squidgrid.FOV;
 import squidpony.squidgrid.Radius;
 import squidpony.squidgrid.mapping.DungeonUtility;
+import squidpony.squidmath.Coord;
 
 @Getter
 public class Vision extends Component{
 
-	private Point location;
+	private Coord location;
 	private Map map;
 	private double range;
 	private double[][] res, fov;
 
-	public Vision(Point point, Map map, double range){
+	public Vision(Coord point, Map map, double range){
 		this.location = point;
 		this.map = map;
 		this.range = range;
@@ -24,7 +24,8 @@ public class Vision extends Component{
 		FOV.reuseFOV(this.res, this.fov, this.location.x, this.location.y, this.range, Radius.CIRCLE);
 	}
 
-	public void setLocation(){
-		FOV.reuseFOV(this.res, this.fov, this.location.x, this.location.y, this.range, Radius.CIRCLE);
+	public void setLocation(Coord mapPosition){
+		location = mapPosition;
+		FOV.reuseFOV(res, fov, location.x, location.y, range, Radius.CIRCLE);
 	}
 }

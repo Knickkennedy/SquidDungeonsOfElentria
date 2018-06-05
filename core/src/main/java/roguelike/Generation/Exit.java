@@ -1,21 +1,18 @@
 package roguelike.Generation;
 
-import roguelike.utilities.Point;
-
-import java.util.Objects;
+import squidpony.squidmath.Coord;
 
 import static roguelike.Generation.World.first_dungeon_location;
-import static roguelike.engine.Game.*;
 
 public class Exit{
 
 	public Dungeon leads_to_dungeon;
 	public final int floor;
-	public Point player_coordinates;
+	public Coord player_coordinates;
 	public String put_at;
-	public final Point exit_location;
+	public final Coord exit_location;
 
-	public Exit(Dungeon leads_to, final Point exit_location, final int floor_to, String put_at){
+	public Exit(Dungeon leads_to, final Coord exit_location, final int floor_to, String put_at){
 		this.leads_to_dungeon = leads_to;
 		this.exit_location = exit_location;
 		floor = floor_to;

@@ -1,7 +1,5 @@
 package roguelike.Generation;
 
-import roguelike.utilities.Point;
-
 import java.util.ArrayList;
 
 import static roguelike.engine.Game.*;
