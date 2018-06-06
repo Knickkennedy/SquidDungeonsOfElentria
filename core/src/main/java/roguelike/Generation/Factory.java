@@ -4,8 +4,10 @@ import com.badlogic.gdx.Gdx;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import roguelike.Actions.Move;
 import roguelike.Components.*;
 import roguelike.Enums.Equipment_Slot;
+import roguelike.utilities.Point;
 import squidpony.squidmath.Coord;
 
 import java.io.IOException;
@@ -42,6 +44,27 @@ public class Factory {
 		entityManager.addComponent(player, new Equipment());
 		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("leather armor"), Equipment_Slot.CHEST);
 		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("iron helm"), Equipment_Slot.HEAD);
+
+
+		Integer new_enemy = entityManager.createEntity();
+		entityManager.addComponent(new_enemy, new Position(current_map));
+		entityManager.gc(new_enemy, Position.class).location = starting_location.add(Point.EAST);
+		entityManager.addComponent(new_enemy, new Sprite((JSONObject)human.get("sprite")));
+		entityManager.addComponent(new_enemy, new Active());
+		entityManager.addComponent(new_enemy, new Action_Component());
+		entityManager.addComponent(new_enemy, new Energy(100));
+		entityManager.addComponent(new_enemy, new AI());
+		entityManager.gc(new_enemy, Action_Component.class).setAction(new Move(new_enemy, Point.WAIT));
+
+		Integer new_enemy2 = entityManager.createEntity();
+		entityManager.addComponent(new_enemy2, new Position(current_map));
+		entityManager.gc(new_enemy2, Position.class).location = starting_location.add(Point.SOUTH_EAST);
+		entityManager.addComponent(new_enemy2, new Sprite((JSONObject)human.get("sprite")));
+		entityManager.addComponent(new_enemy2, new Active());
+		entityManager.addComponent(new_enemy2, new Action_Component());
+		entityManager.addComponent(new_enemy2, new Energy(100));
+		entityManager.addComponent(new_enemy2, new AI());
+		entityManager.gc(new_enemy2, Action_Component.class).setAction(new Move(new_enemy2, Point.WAIT));
 	}
 
 	public Integer create_new_item(String name){

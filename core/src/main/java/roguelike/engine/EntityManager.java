@@ -6,14 +6,14 @@ import java.util.*;
 
 public class EntityManager
 {
-	int lowestUnassignedEntityID=0;
-	List<Integer> allEntities;
-	HashMap<Class<?>, HashMap<Integer, ? extends Component>> componentStores;
+	private int lowestUnassignedEntityID=0;
+	private List<Integer> allEntities;
+	private HashMap<Class<?>, HashMap<Integer, ? extends Component>> componentStores;
 
 	public EntityManager()
 	{
-		allEntities = new LinkedList<Integer>();
-		componentStores = new HashMap<Class<?>, HashMap<Integer,? extends Component>>();
+		allEntities = new LinkedList<>();
+		componentStores = new HashMap<>();
 	}
 
 	public <T extends Component> T gc(int entity, Class<T> componentType)
@@ -23,11 +23,10 @@ public class EntityManager
 		if( store == null)
 			throw new IllegalArgumentException( "GET FAIL: there are no entities with a Component of class: "+componentType );
 
-		T result = componentType.cast(store.get(entity));
-		if( result == null )
-			throw new IllegalArgumentException( "GET FAIL: "+entity+" does not possess Component of class\n   missing: "+componentType );
+		/*if( result == null )
+			throw new IllegalArgumentException( "GET FAIL: "+entity+" does not possess Component of class\n   missing: "+componentType );*/
 
-		return result;
+		return componentType.cast(store.get(entity));
 	}
 
 	public void remove_component(int entity, Class componentType){
@@ -44,8 +43,7 @@ public class EntityManager
 		}
 		else
 		{
-			List<T> result = new ArrayList<T>((java.util.Collection<T>)store.values());
-			return result;
+			return new ArrayList<T>((Collection<T>)store.values());
 		}
 	}
 
@@ -54,7 +52,7 @@ public class EntityManager
 		HashMap<Integer, ? extends Component> store = componentStores.get( componentType );
 
 		if( store == null)
-			return new HashSet<Integer>();
+			return new HashSet<>();
 
 		return store.keySet();
 	}
@@ -65,7 +63,7 @@ public class EntityManager
 
 		if( store == null )
 		{
-			store = new HashMap<Integer, T>();
+			store = new HashMap<>();
 			componentStores.put(component.getClass(), store );
 		}
 
@@ -79,9 +77,6 @@ public class EntityManager
 
 		if( newID < 0 )
 		{
-			/**
-			 Fatal error...
-			 */
 			return 0;
 		}
 		else
@@ -104,7 +99,7 @@ public class EntityManager
 		}
 	}
 
-	public int generateNewEntityID()
+	private int generateNewEntityID()
 	{
 		synchronized( this ) // prevent it generating two entities with same ID at once
 		{

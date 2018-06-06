@@ -11,6 +11,7 @@ import roguelike.Components.Command;
 import roguelike.Components.Position;
 import roguelike.Systems.Turn_System;
 import roguelike.engine.EntityManager;
+import roguelike.utilities.Roll;
 import squidpony.squidmath.Coord;
 
 import java.io.IOException;
@@ -129,7 +130,8 @@ public class World {
 	}
 
 	public void update(){
-		while(entityManager.gc(current_actor, Action_Component.class).getAction() != null) {
+
+		while(entityManager.gc(player, Action_Component.class).getAction() != null) {
 			current_actor = turn_system.process(current_actor);
 		}
 

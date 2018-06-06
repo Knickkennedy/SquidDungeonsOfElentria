@@ -27,7 +27,10 @@ public class Move extends Action{
 			entityManager.gc(entity, Energy.class).energy -= cost;
 
 			entityManager.gc(entity, Position.class).update_location(direction);
-			entityManager.gc(entity, Vision.class).setLocation(entityManager.gc(entity, Position.class).location);
+
+			if(entityManager.gc(entity, Vision.class) != null) {
+				entityManager.gc(entity, Vision.class).setLocation(entityManager.gc(entity, Position.class).location);
+			}
 			entityManager.gc(entity, Action_Component.class).setAction(null);
 
 			return true;
