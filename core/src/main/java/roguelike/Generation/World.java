@@ -40,18 +40,13 @@ public class World {
 	private Coord starting_location;
 
 	public static Coord first_dungeon_location;
-
-	private Integer current_actor;
 	private Turn_System turn_system;
 
 	public ArrayList<Exit> surface_exits;
-	private AI_System AI_system;
 
 	public World(int map_width, int map_height) throws IOException, ParseException {
 		this.map_width = map_width;
 		this.map_height = map_height;
-
-		this.AI_system = new AI_System();
 
 		surface_exits = new ArrayList<>();
 
@@ -70,7 +65,6 @@ public class World {
 		Gdx.input.setInputProcessor(entityManager.gc(player, Command.class));
 
 		turn_system = new Turn_System();
-		current_actor = player;
 	}
 
 	public void initialize_exits(){
@@ -135,11 +129,7 @@ public class World {
 
 	public void update(){
 
-		AI_system.process(current_actor);
-
-		while(entityManager.gc(current_actor, Action_Component.class).getAction() != null) {
-			current_actor = turn_system.process(current_actor);
-		}
+		turn_system.process();
 
 		current_map = entityManager.gc(player, Position.class).map;
 	}

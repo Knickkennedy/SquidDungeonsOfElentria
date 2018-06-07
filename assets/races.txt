@@ -19,5 +19,27 @@
 			"dexterity": 10,
 			"charisma": 10
 		}
+	},
+	
+	"goblin": {
+		"details": {
+			"name": "goblin",
+			"description": "a tiny gobbo"
+		},
+		"sprite": {
+			"glyph": "g",
+			"color": "blue"
+		},
+		"speed": 110,
+		"statistics": {
+			"health": 8
+		
+			"strength": 9,
+			"intelligence": 9,
+			"willpower": 9,
+			"constitution": 9,
+			"dexterity": 15,
+			"charisma": 9
+		}
 	}
 }

@@ -29,6 +29,7 @@ public class Move extends Action{
 			Coord victim_location = entityManager.gc(actor, Position.class).location;
 
 			if(attacker_location.equals(victim_location) && !entity.equals(actor)){
+				System.out.println(String.format("You are attacking at %s and your victim should be at %s.", attacker_location, victim_location));
 				entityManager.gc(entity, Action_Component.class).setAction(new Attack(entity, actor));
 
 				return false;

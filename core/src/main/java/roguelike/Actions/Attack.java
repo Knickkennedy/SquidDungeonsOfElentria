@@ -2,7 +2,6 @@ package roguelike.Actions;
 
 import roguelike.Components.Action_Component;
 import roguelike.Components.Energy;
-import roguelike.Components.Position;
 
 import static roguelike.Generation.World.entityManager;
 
@@ -24,9 +23,6 @@ public class Attack extends Action{
 			return true;
 
 		System.out.println("Successful attack!");
-
-		System.out.println(entityManager.gc(attacker, Position.class).location);
-		System.out.println(entityManager.gc(target, Position.class).location);
 
 		entityManager.gc(attacker, Energy.class).energy -= cost;
 		entityManager.gc(attacker, Action_Component.class).setAction(null);

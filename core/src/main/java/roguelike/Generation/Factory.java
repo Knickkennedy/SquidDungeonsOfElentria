@@ -49,10 +49,11 @@ public class Factory {
 		Integer new_enemy = entityManager.createEntity();
 		entityManager.addComponent(new_enemy, new Position(current_map));
 		entityManager.gc(new_enemy, Position.class).location = starting_location.add(Point.EAST);
-		entityManager.addComponent(new_enemy, new Sprite((JSONObject)human.get("sprite")));
+		JSONObject goblin = (JSONObject)races.get("goblin");
+		entityManager.addComponent(new_enemy, new Sprite((JSONObject)goblin.get("sprite")));
 		entityManager.addComponent(new_enemy, new Active());
 		entityManager.addComponent(new_enemy, new Action_Component());
-		entityManager.addComponent(new_enemy, new Energy(100));
+		entityManager.addComponent(new_enemy, new Energy(110));
 		entityManager.addComponent(new_enemy, new AI());
 
 		/*Integer new_enemy2 = entityManager.createEntity();
