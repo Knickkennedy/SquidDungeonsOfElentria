@@ -8,7 +8,7 @@ import roguelike.utilities.Roll;
 
 import static roguelike.Generation.World.entityManager;
 
-public class AI_System implements System{
+public class AI_System implements Base_System {
 
 	@Override
 	public int process(int current_actor) {

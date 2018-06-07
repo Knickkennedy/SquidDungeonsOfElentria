@@ -4,7 +4,7 @@ import roguelike.Components.Energy;
 
 import static roguelike.Generation.World.entityManager;
 
-public class Energy_System implements System{
+public class Energy_System implements Base_System {
 
 
 	@Override

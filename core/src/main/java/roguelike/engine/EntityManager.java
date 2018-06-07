@@ -21,7 +21,8 @@ public class EntityManager
 		HashMap<Integer, ? extends Component> store = componentStores.get( componentType );
 
 		if( store == null)
-			throw new IllegalArgumentException( "GET FAIL: there are no entities with a Component of class: "+componentType );
+			return null;
+			//throw new IllegalArgumentException( "GET FAIL: there are no entities with a Component of class: "+componentType );
 
 		/*if( result == null )
 			throw new IllegalArgumentException( "GET FAIL: "+entity+" does not possess Component of class\n   missing: "+componentType );*/

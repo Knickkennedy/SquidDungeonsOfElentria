@@ -54,17 +54,15 @@ public class Factory {
 		entityManager.addComponent(new_enemy, new Action_Component());
 		entityManager.addComponent(new_enemy, new Energy(100));
 		entityManager.addComponent(new_enemy, new AI());
-		entityManager.gc(new_enemy, Action_Component.class).setAction(new Move(new_enemy, Point.WAIT));
 
-		Integer new_enemy2 = entityManager.createEntity();
+		/*Integer new_enemy2 = entityManager.createEntity();
 		entityManager.addComponent(new_enemy2, new Position(current_map));
 		entityManager.gc(new_enemy2, Position.class).location = starting_location.add(Point.SOUTH_EAST);
 		entityManager.addComponent(new_enemy2, new Sprite((JSONObject)human.get("sprite")));
 		entityManager.addComponent(new_enemy2, new Active());
 		entityManager.addComponent(new_enemy2, new Action_Component());
 		entityManager.addComponent(new_enemy2, new Energy(100));
-		entityManager.addComponent(new_enemy2, new AI());
-		entityManager.gc(new_enemy2, Action_Component.class).setAction(new Move(new_enemy2, Point.WAIT));
+		entityManager.addComponent(new_enemy2, new AI());*/
 	}
 
 	public Integer create_new_item(String name){
