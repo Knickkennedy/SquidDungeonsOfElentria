@@ -19,6 +19,7 @@ public class Command extends SquidInput implements Component {
 		super();
 		this.entity = entity;
 		setKeyHandler(new KH());
+		setRepeatGap(100);
 	}
 	private class KH implements KeyHandler
 	{

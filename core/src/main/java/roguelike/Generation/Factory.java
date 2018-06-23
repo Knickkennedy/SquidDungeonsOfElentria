@@ -57,11 +57,18 @@ public class Factory {
 		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("iron shortsword"), Equipment_Slot.LEFT_HAND);
 
 
-		Integer new_enemy = create_new_entity("goblin");
-		entityManager.gc(new_enemy, Position.class).map = current_map;
-		entityManager.gc(new_enemy, Position.class).location = Coord.get(45, 20);
 
-		current_map.entities.add(new_enemy);
+		for(int i = 0; i < 20; i++){
+			Integer new_enemy = create_new_entity("goblin");
+			entityManager.gc(new_enemy, Position.class).map = current_map;
+			entityManager.gc(new_enemy, Position.class).location = Coord.get(20 + i + 1, 20 );
+			current_map.entities.add(new_enemy);
+		}
+
+
+
+
+
 		current_map.entities.add(player);
 	}
 
