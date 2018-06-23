@@ -12,6 +12,11 @@ public class Dice {
 		this.size = (int)(long)object.get("size");
 	}
 
+	public Dice(int number_of, int size){
+		this.number_of = number_of;
+		this.size = size;
+	}
+
 	public int roll(){
 
 		int x = 0;

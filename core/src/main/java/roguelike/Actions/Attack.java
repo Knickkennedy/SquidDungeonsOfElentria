@@ -27,7 +27,7 @@ public class Attack extends Action{
 		if(entityManager.gc(attacker, Equipment.class).equipment.get(Equipment_Slot.LEFT_HAND) != null){
 			int damage = 0;
 
-			for(Damage dam : entityManager.gc(entityManager.gc(attacker, Equipment.class).equipment.get(Equipment_Slot.LEFT_HAND), Offensive_Component.class).damages){
+			for(Damage dam : entityManager.gc(attacker, Equipment.class).get_left_damage()){
 				damage += dam.roll();
 			}
 

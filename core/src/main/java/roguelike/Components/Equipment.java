@@ -2,6 +2,7 @@ package roguelike.Components;
 
 import roguelike.Effects.Damage;
 import roguelike.Enums.Equipment_Slot;
+import roguelike.utilities.Dice;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,6 +41,32 @@ public class Equipment extends Component{
 
 	public ArrayList<Damage> get_left_damage(){
 		return entityManager.gc(equipment.get(Equipment_Slot.LEFT_HAND), Offensive_Component.class).damages;
+	}
+
+	public ArrayList<Damage> get_right_damage(){
+		return entityManager.gc(equipment.get(Equipment_Slot.RIGHT_HAND), Offensive_Component.class).damages;
+	}
+
+	public ArrayList<Damage> get_dual_wield_damages(){
+		ArrayList<Damage> temp = new ArrayList<>(entityManager.gc(equipment.get(Equipment_Slot.RIGHT_HAND), Offensive_Component.class).damages);
+		temp.addAll(entityManager.gc(equipment.get(Equipment_Slot.LEFT_HAND), Offensive_Component.class).damages);
+
+		return temp;
+	}
+
+	public ArrayList<Damage> get_combat_damages(){
+		if(entityManager.gc(equipment.get(Equipment_Slot.LEFT_HAND), Offensive_Component.class) == null
+				&& entityManager.gc(equipment.get(Equipment_Slot.RIGHT_HAND), Offensive_Component.class) == null){
+			ArrayList<Damage> damages = new ArrayList<>();
+			damages.add(new Damage("crushing", new Dice(1, 3)));
+			return damages;
+		}
+		else if(entityManager.gc(equipment.get(Equipment_Slot.RIGHT_HAND), Offensive_Component.class) == null){
+			return get_left_damage();
+		}
+		else{
+			return get_right_damage();
+		}
 	}
 
 	public void equip_item(Integer owner, Integer item, Equipment_Slot slot){

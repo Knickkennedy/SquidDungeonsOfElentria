@@ -16,6 +16,11 @@ public class Damage {
 		}
 	}
 
+	public Damage(String type, Dice dice){
+		this.type = type;
+		this.dice = dice;
+	}
+
 	public int roll(){
 		return dice.roll();
 	}
