@@ -6,7 +6,7 @@ import roguelike.Enums.Equipment_Slot;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class Equippable extends Component{
+public class Equippable implements Component{
 	public ArrayList<Equipment_Slot> slots;
 
 	public Equippable(JSONObject object){

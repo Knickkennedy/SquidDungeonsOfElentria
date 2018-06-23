@@ -5,7 +5,7 @@ import roguelike.Effects.Damage;
 
 import java.util.ArrayList;
 
-public class Offensive_Component extends Component{
+public class Offensive_Component implements Component{
 
 	public ArrayList<Damage> damages;
 

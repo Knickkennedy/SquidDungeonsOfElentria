@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import org.json.simple.JSONObject;
 import roguelike.utilities.Colors;
 
-public class Sprite extends Component {
+public class Sprite implements Component {
     public char character;
     public Color backgroundColor;
     public Color foregroundColor;

@@ -3,7 +3,7 @@ package roguelike.Components;
 import org.json.simple.JSONObject;
 import roguelike.utilities.Limited_Statistic;
 
-public class Statistics extends Component{
+public class Statistics implements Component{
 
 	public Limited_Statistic health;
 

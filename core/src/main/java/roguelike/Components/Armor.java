@@ -2,7 +2,7 @@ package roguelike.Components;
 
 import org.json.simple.JSONObject;
 
-public class Armor extends Component{
+public class Armor implements Component{
 
 	public int piercing;
 	public int slashing;

@@ -6,13 +6,10 @@ import lombok.Setter;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import roguelike.Components.Action_Component;
 import roguelike.Components.Command;
 import roguelike.Components.Position;
-import roguelike.Systems.AI_System;
 import roguelike.Systems.Turn_System;
 import roguelike.engine.EntityManager;
-import roguelike.utilities.Roll;
 import squidpony.squidmath.Coord;
 
 import java.io.IOException;
@@ -60,6 +57,7 @@ public class World {
 
 		player = Factory.getInstance().initialize_player();
 		Factory.getInstance().build_player(player, starting_location, surface);
+		//Gdx.input.setInputProcessor(entityManager.gc(player, Command.class));
 		Gdx.input.setInputProcessor(entityManager.gc(player, Command.class));
 
 		turn_system = new Turn_System();

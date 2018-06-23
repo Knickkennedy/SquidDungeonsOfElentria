@@ -2,7 +2,7 @@ package roguelike.Components;
 
 import java.util.ArrayList;
 
-public class Inventory extends Component{
+public class Inventory implements Component{
 
 	public ArrayList<Integer> inventory;
 

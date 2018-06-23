@@ -9,7 +9,7 @@ import java.util.HashMap;
 
 import static roguelike.Generation.World.entityManager;
 
-public class Equipment extends Component{
+public class Equipment implements Component{
 	public HashMap<Equipment_Slot, Integer> equipment;
 
 	public Equipment(){

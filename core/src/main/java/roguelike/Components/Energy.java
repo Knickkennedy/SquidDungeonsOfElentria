@@ -1,6 +1,6 @@
 package roguelike.Components;
 
-public class Energy extends Component{
+public class Energy implements Component{
 
 	public int speed;
 	public int energy;

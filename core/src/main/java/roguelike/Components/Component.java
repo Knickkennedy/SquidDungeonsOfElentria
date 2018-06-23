@@ -1,4 +1,4 @@
 package roguelike.Components;
 
-public class Component {
+public interface Component {
 }
