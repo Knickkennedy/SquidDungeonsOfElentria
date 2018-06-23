@@ -4,7 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 
 public class Colors {
     private static Color green = new Color(0.0f, 0.73f, 0.0f, 1.0f);
-    private static Color blue = new Color(0f, 0f, 0.6f, 1.0f);
+    private static Color blue = new Color(0f, 0.5f, 1.0f, 1.0f);
     private static Color darkGreen = new Color(0.0f, .35f, 0.0f, 1.0f);
     private static Color brown = new Color(.4f, .2f, 0.0f, 1.0f);
     private static Color gray = new Color(.6f, .6f, .6f, 1.0f);

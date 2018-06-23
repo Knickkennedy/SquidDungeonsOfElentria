@@ -30,16 +30,21 @@
 			"glyph": "g",
 			"color": "blue"
 		},
-		"speed": 110,
+		"speed": 100,
 		"statistics": {
-			"health": 8
-		
+			"health": 8,
+			
 			"strength": 9,
 			"intelligence": 9,
 			"willpower": 9,
 			"constitution": 9,
 			"dexterity": 15,
 			"charisma": 9
+		},
+		"ai": true,
+		"equipped item":{
+			"name": "iron shortsword",
+			"slot": "left hand"
 		}
 	}
 }

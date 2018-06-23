@@ -34,8 +34,6 @@ public class World {
 	private Map current_map;
 	private Dungeon first_dungeon;
 
-	private Factory factory;
-
 	private Integer player;
 	private Coord starting_location;
 
@@ -59,9 +57,9 @@ public class World {
 		initialize_exits();
 
 		current_map = surface;
-		factory = new Factory();
-		player = factory.initialize_player();
-		factory.build_player(player, starting_location, surface);
+
+		player = Factory.getInstance().initialize_player();
+		Factory.getInstance().build_player(player, starting_location, surface);
 		Gdx.input.setInputProcessor(entityManager.gc(player, Command.class));
 
 		turn_system = new Turn_System();

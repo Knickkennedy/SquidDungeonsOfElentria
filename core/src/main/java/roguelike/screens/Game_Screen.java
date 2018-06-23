@@ -1,11 +1,15 @@
 package roguelike.screens;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import org.json.simple.parser.ParseException;
 import roguelike.Components.*;
+import roguelike.Effects.Damage;
 import roguelike.Generation.World;
 import roguelike.engine.Game;
+import roguelike.engine.Message_Log;
 import roguelike.utilities.Colors;
 import squidpony.squidgrid.gui.gdx.DefaultResources;
 import squidpony.squidgrid.gui.gdx.SColor;
@@ -13,6 +17,7 @@ import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidmath.Coord;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Set;
 
 import static roguelike.Generation.World.entityManager;
@@ -46,12 +51,40 @@ public class Game_Screen extends Screen {
     @Override
     public void render(){
 
+    	display.clear();
         world.update();
 	    render_map();
         render_entities();
         render_statistics();
+        render_messages();
 
         stage.draw();
+
+    }
+
+    private void render_messages(){
+    	String[] temp = new String[] {"", ""};
+    	for(String message : Message_Log.getInstance().messages){
+
+    		if(temp[0].concat(message).length() < gridWidth){
+			    temp[0] = temp[0].concat(" ");
+			    temp[0] = temp[0].concat(message);
+		    }
+		    else if(temp[1].concat(message).length() >= gridWidth){
+			    Message_Log.getInstance().messages.clear();
+			    Message_Log.getInstance().messages.add(message);
+			    break;
+		    }
+		    else{
+			    temp[1] = temp[1].concat(" ");
+			    temp[1] = temp[1].concat(message);
+
+		    }
+
+	    }
+
+	    display.put(0, 0, temp[0], Colors.getColor("gray"));
+    	display.put(0, 1, temp[1], Colors.getColor("gray"));
 
     }
 
@@ -70,7 +103,7 @@ public class Game_Screen extends Screen {
 
     private void render_statistics(){
 	    Statistics temp = entityManager.gc(world.getPlayer(), Statistics.class);
-	    String health = String.format("HP:%s/%s", temp.health, temp.health.maximum);
+	    String health = String.format("HP:%s/%s", temp.health.current_value, temp.health.maximum);
 	    String first = String.format("Str:%s Int:%s Will:%s", temp.strength, temp.intelligence, temp.willpower);
 	    String second = String.format("Con:%s Dex:%s Char:%s", temp.constitution, temp.dexterity, temp.charisma);
 
@@ -81,7 +114,16 @@ public class Game_Screen extends Screen {
     	int[] armor = entityManager.gc(world.getPlayer(), Equipment.class).total_armor();
     	String armor_string = String.format("Pierce:%d Slash:%d Crush:%d", armor[0], armor[1], armor[2]);
 
+	    ArrayList<Damage> left_hand = entityManager.gc(world.getPlayer(), Equipment.class).get_left_damage();
+	    StringBuilder left_hand_string = new StringBuilder();
+	    for(Damage damage : left_hand){
+	    	left_hand_string.append(String.format("Type: %s %s", damage.type, damage.dice));
+	    }
+
+	    String left = left_hand_string.toString();
+
     	display.put(gridWidth - armor_string.length() - 1, map_height_end, armor_string, Colors.getColor("gray"));
+	    display.put(gridWidth - left.length() - 1, map_height_end + 1, left, Colors.getColor("gray"));
     }
 
     private void render_entities(){

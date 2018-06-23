@@ -1,43 +1,66 @@
 {
 	"leather armor": {
 		"details": {
+			"name": "leather armor",
 			"description": "a dusty old piece of leather"
 		},
 		"equippable": {
 			"chest": true
-		}
+		},
 		"defenses":{
 			"piercing": 1,
 			"slashing": 1,
-			"crushing": 1,
+			"crushing": 1
 		}
 	},
 	
 	"iron helm": {
 		"details": {
+			"name": "iron helm",
 			"description": "thick iron to protect a thin skull"
 		},
 		"equippable": {
 			"head": true
-		}
+		},
 		"defenses":{
 			"piercing": 1,
 			"slashing": 1,
-			"crushing": 1,
+			"crushing": 1
+		}
+	},
+	
+	"iron shortsword": {
+		"details":{
+			"name": "iron shortsword",
+			"description": "Light, sharp, fast. Perfect for the task at hand."
+		},
+		"equippable":{
+			"left hand": true,
+			"right hand": true
+		},
+		"attack":{
+			"physical":{
+				"type": "piercing/slashing",
+				"dice":{
+					"number of": 1,
+					"size": 6
+				}
+			}
 		}
 	},
 	
 	"iron breastplate": {
 		"details":{
+			"name": "iron breastplate",
 			"description": "sturdy, heavy. This is what quality feels like."
 		},
 		"equippable":{
 			"chest": true
-		}
+		},
 		"defenses":{
 			"piercing": 1,
 			"slashing": 1,
-			"crushing": 1,
+			"crushing": 1
 		}
 	}
 }

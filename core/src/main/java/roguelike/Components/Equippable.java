@@ -16,6 +16,8 @@ public class Equippable extends Component{
 			switch (o.toString()){
 				case "head": slots.add(Equipment_Slot.HEAD); break;
 				case "chest": slots.add(Equipment_Slot.CHEST); break;
+				case "left hand": slots.add(Equipment_Slot.LEFT_HAND); break;
+				case "right hand": slots.add(Equipment_Slot.RIGHT_HAND); break;
 			}
 		}
 	}

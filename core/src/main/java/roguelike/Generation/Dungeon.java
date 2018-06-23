@@ -17,6 +17,7 @@ public class Dungeon {
 	}
 
 	public void add_level(int index, Map level){
+		level.isBuilt = true;
 		levels.add(index, level);
 	}
 

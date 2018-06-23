@@ -1,5 +1,6 @@
 package roguelike.Components;
 
+import roguelike.Effects.Damage;
 import roguelike.Enums.Equipment_Slot;
 
 import java.util.ArrayList;
@@ -26,13 +27,19 @@ public class Equipment extends Component{
 
 		for(Equipment_Slot slot : Equipment_Slot.values()){
 			if(equipment.get(slot) != null){
-				piercing += entityManager.gc(equipment.get(slot), Armor.class).piercing;
-				slashing += entityManager.gc(equipment.get(slot), Armor.class).slashing;
-				crushing += entityManager.gc(equipment.get(slot), Armor.class).crushing;
+				if(entityManager.gc(equipment.get(slot), Armor.class) != null) {
+					piercing += entityManager.gc(equipment.get(slot), Armor.class).piercing;
+					slashing += entityManager.gc(equipment.get(slot), Armor.class).slashing;
+					crushing += entityManager.gc(equipment.get(slot), Armor.class).crushing;
+				}
 			}
 		}
 
 		return new int[]{piercing, slashing, crushing};
+	}
+
+	public ArrayList<Damage> get_left_damage(){
+		return entityManager.gc(equipment.get(Equipment_Slot.LEFT_HAND), Offensive_Component.class).damages;
 	}
 
 	public void equip_item(Integer owner, Integer item, Equipment_Slot slot){

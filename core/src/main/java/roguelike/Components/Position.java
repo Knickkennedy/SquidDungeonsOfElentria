@@ -8,6 +8,7 @@ public class Position extends Component{
 	public Coord location;
 	public Map map;
 
+	public Position(){}
 	public Position(Map map){
 		this.map = map;
 	}

@@ -24,19 +24,21 @@ public class AI_System implements Base_System {
 		for (Integer current_actor : actors) {
 			String action;
 			if (entityManager.gc(current_actor, AI.class) != null) {
-				action = entityManager.gc(current_actor, AI.class).get_decision();
+				if(entityManager.gc(current_actor, Action_Component.class).getAction() == null) {
+					action = entityManager.gc(current_actor, AI.class).get_decision();
 
-				switch (action) {
-					case "wait":
-						entityManager.gc(current_actor, Action_Component.class).setAction(new Move(current_actor, Point.WAIT));
-						break;
-					case "move east":
-						entityManager.gc(current_actor, Action_Component.class).setAction(new Move(current_actor, Point.EAST));
-						break;
-					case "wander":
-						entityManager.gc(current_actor, Action_Component.class).setAction(
-								new Move(current_actor, Point.direction.get(Roll.rand(0, Point.direction.size() - 1))));
-						break;
+					switch (action) {
+						case "wait":
+							entityManager.gc(current_actor, Action_Component.class).setAction(new Move(current_actor, Point.WAIT));
+							break;
+						case "move east":
+							entityManager.gc(current_actor, Action_Component.class).setAction(new Move(current_actor, Point.EAST));
+							break;
+						case "wander":
+							entityManager.gc(current_actor, Action_Component.class).setAction(
+									new Move(current_actor, Point.direction.get(Roll.rand(0, Point.direction.size() - 1))));
+							break;
+					}
 				}
 			}
 		}

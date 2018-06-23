@@ -7,6 +7,7 @@ import org.json.simple.parser.ParseException;
 import squidpony.squidmath.Coord;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Map{
@@ -22,12 +23,15 @@ public class Map{
     public Coord stairs_down;
     public Coord stairs_up;
 
+    public ArrayList<Integer> entities;
+
     public boolean isBuilt;
 
     public Map(final Tile[][] tiles) {
         this.tiles = tiles;
         this.exits = new ArrayList<>();
         initializePathFinding();
+        entities = new ArrayList<>();
 
 	    JSONParser parser = new JSONParser();
 	    try {
@@ -42,6 +46,7 @@ public class Map{
         builder = new Map_Builder(width, height);
         tile_file = builder.tile_file;
         this.isBuilt = false;
+	    entities = new ArrayList<>();
     }
 
     public Tile getTileAt(int x, int y){

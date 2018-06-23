@@ -1,6 +1,8 @@
 package roguelike.Actions;
 
 import roguelike.Components.*;
+import roguelike.engine.Message_Log;
+import roguelike.utilities.Point;
 import squidpony.squidmath.Coord;
 
 import java.util.Set;
@@ -22,6 +24,19 @@ public class Move extends Action{
 	public boolean perform() {
 		Set<Integer> active_actors = entityManager.getAllEntitiesPossessingComponent(Active.class);
 
+		if(direction == Point.WAIT){
+
+			if(entityManager.gc(entity, Energy.class).energy < cost)
+				return true;
+
+			entityManager.gc(entity, Energy.class).energy -= cost;
+
+			Message_Log.getInstance().add_formatted_message("wait", entity);
+
+			entityManager.gc(entity, Action_Component.class).setAction(null);
+			return true;
+		}
+
 		for(Integer actor : active_actors){
 
 			Coord attacker_location = entityManager.gc(entity, Position.class).location;
@@ -29,17 +44,16 @@ public class Move extends Action{
 			Coord victim_location = entityManager.gc(actor, Position.class).location;
 
 			if(attacker_location.equals(victim_location) && !entity.equals(actor)){
-				System.out.println(String.format("You are attacking at %s and your victim should be at %s.", attacker_location, victim_location));
 				entityManager.gc(entity, Action_Component.class).setAction(new Attack(entity, actor));
 
 				return false;
 			}
 		}
 
-		if(entityManager.gc(entity, Energy.class).energy < cost)
-			return true;
-
 		if(entityManager.gc(entity, Position.class).map.isPassable(entityManager.gc(entity, Position.class).location, direction)){
+
+			if(entityManager.gc(entity, Energy.class).energy < cost)
+				return true;
 
 			entityManager.gc(entity, Energy.class).energy -= cost;
 

@@ -1,8 +1,10 @@
 package roguelike.Systems;
 
+import roguelike.Actions.Action;
 import roguelike.Components.Action_Component;
 import roguelike.Components.Active;
 import roguelike.Components.Energy;
+import roguelike.engine.Message_Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,17 +27,25 @@ public class Turn_System implements Base_System {
 		int current_actor = actors.get(0);
 
 		this.AI_System = new AI_System(actors);
-		AI_System.process();
 
-		while (entityManager.gc(current_actor, Action_Component.class).getAction() != null){
+		while(true){
 
-			entityManager.gc(current_actor, Energy.class).energy += entityManager.gc(current_actor, Energy.class).speed;
+			AI_System.process();
 
-			if(entityManager.gc(current_actor, Action_Component.class).getAction().perform()){
-				current_actor = actors.get((actors.indexOf(current_actor) + 1) % actors.size());
+			Action action = entityManager.gc(current_actor, Action_Component.class).getAction();
+
+			if(action != null) {
+
+				entityManager.gc(current_actor, Energy.class).energy += entityManager.gc(current_actor, Energy.class).speed;
+
+				if (entityManager.gc(current_actor, Action_Component.class).getAction().perform()) {
+					current_actor = actors.get((actors.indexOf(current_actor) + 1) % actors.size());
+				} else {
+					entityManager.gc(current_actor, Energy.class).energy -= entityManager.gc(current_actor, Energy.class).speed;
+				}
 			}
 			else{
-				entityManager.gc(current_actor, Energy.class).energy -= entityManager.gc(current_actor, Energy.class).speed;
+				break;
 			}
 		}
 

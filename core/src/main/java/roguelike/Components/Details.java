@@ -6,8 +6,17 @@ public class Details extends Component{
 	public String name;
 	public String description;
 
-	public Details(String name, JSONObject object){
-		this.name = name;
-		description = (String)object.get("description");
+	public boolean isPlayer;
+
+	public Details(JSONObject object){
+
+		for(Object o : object.keySet()){
+			switch (o.toString()){
+				case "name": name = (String)object.get(o.toString()); break;
+				case "description": description = (String)object.get(o.toString()); break;
+			}
+		}
+
+		isPlayer = false;
 	}
 }

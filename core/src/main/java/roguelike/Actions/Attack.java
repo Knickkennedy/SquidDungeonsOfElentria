@@ -1,7 +1,9 @@
 package roguelike.Actions;
 
-import roguelike.Components.Action_Component;
-import roguelike.Components.Energy;
+import roguelike.Components.*;
+import roguelike.Effects.Damage;
+import roguelike.Enums.Equipment_Slot;
+import roguelike.engine.Message_Log;
 
 import static roguelike.Generation.World.entityManager;
 
@@ -22,7 +24,18 @@ public class Attack extends Action{
 		if(entityManager.gc(attacker, Energy.class).energy < cost)
 			return true;
 
-		System.out.println("Successful attack!");
+		if(entityManager.gc(attacker, Equipment.class).equipment.get(Equipment_Slot.LEFT_HAND) != null){
+			int damage = 0;
+
+			for(Damage dam : entityManager.gc(entityManager.gc(attacker, Equipment.class).equipment.get(Equipment_Slot.LEFT_HAND), Offensive_Component.class).damages){
+				damage += dam.roll();
+			}
+
+			Message_Log.getInstance().add_formatted_message("attack", attacker, target, damage);
+
+			entityManager.gc(target, Statistics.class).health.current_value -= damage;
+
+		}
 
 		entityManager.gc(attacker, Energy.class).energy -= cost;
 		entityManager.gc(attacker, Action_Component.class).setAction(null);

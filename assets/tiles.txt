@@ -76,7 +76,7 @@
 			"color": "brown"
 		},
 		"description": "a well-paved walkway",
-		"movement cost": 900,
+		"movement cost": 1000,
 		"passable": true
 	},
 	
