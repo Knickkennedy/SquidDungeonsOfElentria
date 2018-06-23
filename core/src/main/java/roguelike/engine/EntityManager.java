@@ -8,7 +8,7 @@ public class EntityManager
 {
 	private int lowestUnassignedEntityID=0;
 	private List<Integer> allEntities;
-	private HashMap<Class<?>, HashMap<Integer, ? extends Component>> componentStores;
+	private HashMap<Class<?>, HashMap<Integer, Component>> componentStores;
 
 	public EntityManager()
 	{
@@ -18,7 +18,7 @@ public class EntityManager
 
 	public <T extends Component> T gc(int entity, Class<T> componentType)
 	{
-		HashMap<Integer, ? extends Component> store = componentStores.get( componentType );
+		HashMap<Integer, Component> store = componentStores.get( componentType );
 
 		if( store == null)
 			return null;
@@ -36,7 +36,7 @@ public class EntityManager
 
 	public <T extends Component> List<T> getAllComponentsOfType( Class<T> componentType )
 	{
-		HashMap<Integer, ? extends Component> store = componentStores.get( componentType );
+		HashMap<Integer, Component> store = componentStores.get( componentType );
 
 		if( store == null )
 		{
@@ -50,7 +50,7 @@ public class EntityManager
 
 	public <T extends Component> Set<Integer> getAllEntitiesPossessingComponent(Class<T> componentType )
 	{
-		HashMap<Integer, ? extends Component> store = componentStores.get( componentType );
+		HashMap<Integer, Component> store = componentStores.get( componentType );
 
 		if( store == null)
 			return new HashSet<>();
@@ -60,7 +60,7 @@ public class EntityManager
 
 	public <T extends Component> void addComponent( int entity, T component )
 	{
-		HashMap<Integer, ? extends Component> store = componentStores.get( component.getClass() );
+		HashMap<Integer, Component> store = componentStores.get( component.getClass() );
 
 		if( store == null )
 		{
@@ -93,7 +93,7 @@ public class EntityManager
 		synchronized( this ) // prevent it generating two entities with same ID at once
 		{
 			allEntities.remove(entity);
-			for( HashMap<Integer, ? extends Component> store : componentStores.values() )
+			for( HashMap<Integer, Component> store : componentStores.values() )
 			{
 				store.remove(entity);
 			}

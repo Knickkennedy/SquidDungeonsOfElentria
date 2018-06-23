@@ -1,4 +1,4 @@
 package roguelike.Components;
 
-public class Active extends Component{
+public class Active implements Component{
 }

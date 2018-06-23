@@ -4,7 +4,7 @@ import lombok.Setter;
 import roguelike.Actions.Action;
 
 @Setter
-public class Action_Component extends Component{
+public class Action_Component implements Component{
 	private Action action;
 
 	public Action_Component(){ }

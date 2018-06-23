@@ -8,7 +8,7 @@ import squidpony.squidgrid.mapping.DungeonUtility;
 import squidpony.squidmath.Coord;
 
 @Getter
-public class Vision extends Component{
+public class Vision implements Component{
 
 	private Coord location;
 	private Map map;

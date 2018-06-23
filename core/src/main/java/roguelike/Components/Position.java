@@ -3,7 +3,7 @@ package roguelike.Components;
 import roguelike.Generation.Map;
 import squidpony.squidmath.Coord;
 
-public class Position extends Component{
+public class Position implements Component{
 
 	public Coord location;
 	public Map map;

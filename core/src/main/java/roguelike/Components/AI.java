@@ -1,10 +1,8 @@
 package roguelike.Components;
 
-import roguelike.Actions.Move;
 import roguelike.Enums.AI_MODE;
-import roguelike.utilities.Point;
 
-public class AI extends Component{
+public class AI implements Component{
 
 	public AI_MODE mode;
 

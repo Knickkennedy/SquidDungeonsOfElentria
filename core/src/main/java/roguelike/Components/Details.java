@@ -2,7 +2,7 @@ package roguelike.Components;
 
 import org.json.simple.JSONObject;
 
-public class Details extends Component{
+public class Details implements Component{
 	public String name;
 	public String description;
 

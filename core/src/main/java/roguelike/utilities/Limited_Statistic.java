@@ -25,9 +25,9 @@ public class Limited_Statistic {
 
 	public void setValue(int value){
 		if(value < minimum)
-			setValue(minimum);
+			this.current_value = minimum;
 		else if(value > maximum)
-			setValue(maximum);
+			this.current_value = maximum;
 		else
 			this.current_value = value;
 	}
