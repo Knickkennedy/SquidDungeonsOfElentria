@@ -5,14 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import roguelike.Components.Command;
 import roguelike.Components.Position;
 import roguelike.Systems.Turn_System;
 import roguelike.engine.EntityManager;
 import squidpony.squidmath.Coord;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -39,14 +37,19 @@ public class World {
 
 	public ArrayList<Exit> surface_exits;
 
-	public World(int map_width, int map_height) throws IOException, ParseException {
+	public World(int map_width, int map_height) {
 		this.map_width = map_width;
 		this.map_height = map_height;
 
 		surface_exits = new ArrayList<>();
 
 		JSONParser parser = new JSONParser();
-		tiles = (JSONObject)parser.parse(Gdx.files.internal("tiles.txt").reader());
+		try {
+			tiles = (JSONObject)parser.parse(Gdx.files.internal("tiles.txt").reader());
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 		first_dungeon = new Dungeon("Main Dungeon", 25);
 		surface = new Map(initializeMapWithFile("surface.txt"));
 		first_dungeon.add_level(0, surface);

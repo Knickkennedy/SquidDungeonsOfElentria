@@ -3,7 +3,6 @@ package roguelike.screens;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import org.json.simple.parser.ParseException;
 import roguelike.Components.*;
 import roguelike.Effects.Damage;
 import roguelike.Generation.Factory;
@@ -16,7 +15,6 @@ import squidpony.squidgrid.gui.gdx.SColor;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidmath.Coord;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -36,9 +34,13 @@ public class Game_Screen extends ScreenAdapter {
     private int map_height_start;
     private int map_height_end;
 
-    public Game_Screen(Game game_in) throws IOException, ParseException{
+    public Game_Screen(Game game_in){
         game = game_in;
         Factory.getInstance().setGame(game_in);
+    }
+
+    @Override
+    public void show(){
         stage = game.stage;
         display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getCrispDejaVuFont());
         display.font.tweakWidth(cellWidth + 1).tweakHeight(cellHeight + 1).setSmoothingMultiplier(1.6f).initBySize();
@@ -48,8 +50,9 @@ public class Game_Screen extends ScreenAdapter {
         display.fillBackground(bgColor);
         map_height_start = message_buffer;
         map_height_end = gridHeight - statistics_height + message_buffer;
-		world = new World(gridWidth, gridHeight - statistics_height);
+        world = new World(gridWidth, gridHeight - statistics_height);
         stage.addActor(display);
+
     }
 
     @Override
