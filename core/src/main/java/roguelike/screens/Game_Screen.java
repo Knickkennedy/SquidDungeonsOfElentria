@@ -143,4 +143,9 @@ public class Game_Screen extends ScreenAdapter {
     private void place_entity(Integer entity, Coord point){
         display.put(point.x, point.y + message_buffer, entityManager.gc(entity, Sprite.class).character, entityManager.gc(entity, Sprite.class).foregroundColor);
     }
+
+    @Override
+	public void hide(){
+		display.clear();
+    }
 }

@@ -6,6 +6,7 @@ import roguelike.Actions.Exit_Through;
 import roguelike.Actions.Move;
 import roguelike.engine.Game;
 import roguelike.engine.Message_Log;
+import roguelike.screens.Equipment_Screen;
 import roguelike.utilities.Point;
 import squidpony.squidgrid.gui.gdx.SquidInput;
 
@@ -17,12 +18,17 @@ public class Command extends SquidInput implements Component {
 	private Integer entity;
 	private Game game;
 	private Action action;
+
+	private Equipment_Screen equipment_screen;
+
 	public Command(final Integer entity, Game game) {
 		super();
 		this.entity = entity;
 		this.game = game;
 		setKeyHandler(new KH());
 		setRepeatGap(160);
+
+		this.equipment_screen = new Equipment_Screen(entity, game);
 	}
 	private class KH implements KeyHandler
 	{
@@ -67,7 +73,9 @@ public class Command extends SquidInput implements Component {
 				case ENTER:
 					action = new Exit_Through(entity); break;
 				case 'e':
-					break;
+					game.setScreen(equipment_screen); break;
+				default:
+					return;
 			}
 
 			Message_Log.getInstance().ticks++;

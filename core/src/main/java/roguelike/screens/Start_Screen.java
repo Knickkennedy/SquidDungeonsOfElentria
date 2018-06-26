@@ -49,6 +49,7 @@ public class Start_Screen extends ScreenAdapter {
 
     @Override
     public void render(float delta){
+
         String title = "Dungeons of Elentria";
         String enter = "Press [Enter] to start a new game";
         display.put(display.gridWidth / 2 - title.length() / 2, 5, title, Color.WHITE);
