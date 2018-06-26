@@ -2,6 +2,7 @@ package roguelike.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import org.json.simple.parser.ParseException;
@@ -15,11 +16,14 @@ import java.io.IOException;
 
 import static roguelike.engine.Game.*;
 
-public class Start_Screen extends Screen{
+public class Start_Screen extends ScreenAdapter {
 
     private Game game;
     private Stage stage;
     private SparseLayers display;
+
+    private Color bgColor;
+
     private SquidInput input;
 
     public Start_Screen(Game game_in){
@@ -30,29 +34,27 @@ public class Start_Screen extends Screen{
         bgColor = SColor.DB_MIDNIGHT;
         display.fillBackground(bgColor);
         stage.addActor(display);
-        input = new SquidInput(new SquidInput.KeyHandler() {
-            @Override
-            public void handle(char key, boolean alt, boolean ctrl, boolean shift) {
 
-                switch(key){
-                    case SquidInput.ENTER:
-                    {
-                        try {
-                            game.setCurrent_screen(new Game_Screen(game));
-                        } catch (IOException | ParseException e) {
-                            e.printStackTrace();
-                        }
-                        break;
-                    }
-                }
-            }
-        });
-
-        Gdx.input.setInputProcessor(new InputMultiplexer(stage, input));
     }
 
     @Override
-    public void render(){
+    public void show(){
+	    input = new SquidInput((key, alt, ctrl, shift) -> {
+
+		    switch(key){
+			    case SquidInput.ENTER:
+			    {
+			    	game.setScreen(game.getGame_screen());
+				    break;
+			    }
+		    }
+	    });
+
+	    Gdx.input.setInputProcessor(new InputMultiplexer(stage, input));
+    }
+
+    @Override
+    public void render(float delta){
         String title = "Dungeons of Elentria";
         String enter = "Press [Enter] to start a new game";
         display.put(display.gridWidth / 2 - title.length() / 2, 5, title, Color.WHITE);
@@ -63,4 +65,9 @@ public class Start_Screen extends Screen{
         }
         stage.draw();
     }
+
+	@Override
+	public void hide(){
+		Gdx.input.setInputProcessor(null);
+	}
 }

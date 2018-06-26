@@ -1,12 +1,12 @@
 package roguelike.screens;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import org.json.simple.parser.ParseException;
 import roguelike.Components.*;
 import roguelike.Effects.Damage;
+import roguelike.Generation.Factory;
 import roguelike.Generation.World;
 import roguelike.engine.Game;
 import roguelike.engine.Message_Log;
@@ -23,18 +23,22 @@ import java.util.Set;
 import static roguelike.Generation.World.entityManager;
 import static roguelike.engine.Game.*;
 
-public class Game_Screen extends Screen {
+public class Game_Screen extends ScreenAdapter {
 
     private Game game;
     private Stage stage;
     private SparseLayers display;
+
+    private Color bgColor;
+
     private World world;
 
     private int map_height_start;
     private int map_height_end;
 
-    Game_Screen(Game game_in) throws IOException, ParseException{
+    public Game_Screen(Game game_in) throws IOException, ParseException{
         game = game_in;
+        Factory.getInstance().setGame(game_in);
         stage = game.stage;
         display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getCrispDejaVuFont());
         display.font.tweakWidth(cellWidth + 1).tweakHeight(cellHeight + 1).setSmoothingMultiplier(1.6f).initBySize();
@@ -49,7 +53,7 @@ public class Game_Screen extends Screen {
     }
 
     @Override
-    public void render(){
+    public void render(float delta){
 
     	display.clear();
         world.update();
@@ -62,7 +66,7 @@ public class Game_Screen extends Screen {
 
     }
 
-    private void render_messages(){
+	private void render_messages(){
     	String[] temp = new String[] {"", ""};
     	for(String message : Message_Log.getInstance().messages){
 

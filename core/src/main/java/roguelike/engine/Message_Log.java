@@ -34,11 +34,16 @@ public class Message_Log {
 		}
 		else if(entities.length == 3){
 			if(entityManager.gc(entities[0], Details.class).isPlayer){
-				messages.add(String.format("You %s the %s for %d damage.", message, entityManager.gc(entities[1], Details.class).name, entities[2]));
+				messages.add(String.format("You %s the %s for %d damage.",
+						message, entityManager.gc(entities[1], Details.class).name, entities[2]));
 			}
-			else{
-				messages.add(String.format("The %s %s you for %d damage.", entityManager.gc(entities[0], Details.class).name, structure_verb(message), entities[2]));
+			else if(entityManager.gc(entities[1], Details.class).isPlayer){
+				messages.add(String.format("The %s %s you for %d damage.",
+						entityManager.gc(entities[0], Details.class).name, structure_verb(message), entities[2]));
 			}
+			else
+				messages.add(String.format("The %s %s the %s for %d damage.", entityManager.gc(entities[0], Details.class).name,
+						structure_verb(message), entityManager.gc(entities[1], Details.class).name, entities[2]));
 		}
 	}
 

@@ -2,7 +2,7 @@ package roguelike.screens;
 
 import com.badlogic.gdx.graphics.Color;
 
-public class Screen {
-    public Color bgColor;
-    public void render(){}
+public interface Screen {
+    public void render();
+    public Color getBGColor();
 }

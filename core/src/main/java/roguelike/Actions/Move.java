@@ -44,7 +44,7 @@ public class Move extends Action{
 			Coord victim_location = entityManager.gc(actor, Position.class).location;
 
 			if(attacker_location.equals(victim_location) && !entity.equals(actor)){
-				entityManager.gc(entity, Action_Component.class).setAction(new Attack(entity, actor));
+				entityManager.gc(entity, Action_Component.class).setAction(new Melee_Attack(entity, actor));
 
 				return false;
 			}

@@ -6,6 +6,7 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import roguelike.Components.*;
 import roguelike.Enums.Equipment_Slot;
+import roguelike.engine.Game;
 import roguelike.utilities.Point;
 import squidpony.squidmath.Coord;
 
@@ -16,6 +17,8 @@ import static roguelike.Generation.World.entityManager;
 public class Factory {
 
 	public static Factory factory;
+
+	public Game game;
 
 	private JSONObject races;
 	private JSONObject items;
@@ -31,6 +34,10 @@ public class Factory {
 			factory = new Factory();
 
 		return factory;
+	}
+
+	public void setGame(Game game){
+		this.game = game;
 	}
 
 	public Integer initialize_player(){
@@ -49,7 +56,7 @@ public class Factory {
 		entityManager.addComponent(player, new Active());
 		entityManager.addComponent(player, new Action_Component());
 		entityManager.addComponent(player, new Energy(100));
-		entityManager.addComponent(player, new Command(player));
+		entityManager.addComponent(player, new Command(player, game));
 		entityManager.addComponent(player, new Inventory());
 		entityManager.addComponent(player, new Equipment());
 		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("leather armor"), Equipment_Slot.CHEST);
@@ -58,7 +65,7 @@ public class Factory {
 
 
 
-		for(int i = 0; i < 20; i++){
+		for(int i = 0; i < 1; i++){
 			Integer new_enemy = create_new_entity("goblin");
 			entityManager.gc(new_enemy, Position.class).map = current_map;
 			entityManager.gc(new_enemy, Position.class).location = Coord.get(20 + i + 1, 20 );

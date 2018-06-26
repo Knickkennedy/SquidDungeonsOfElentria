@@ -39,6 +39,12 @@ public class Equipment implements Component{
 		return new int[]{piercing, slashing, crushing};
 	}
 
+	public ArrayList<Damage> get_base_damage(){
+		ArrayList<Damage> damages = new ArrayList<>();
+		damages.add(new Damage("crushing", new Dice(1, 3)));
+		return damages;
+	}
+
 	public ArrayList<Damage> get_left_damage(){
 		return entityManager.gc(equipment.get(Equipment_Slot.LEFT_HAND), Offensive_Component.class).damages;
 	}
@@ -54,19 +60,42 @@ public class Equipment implements Component{
 		return temp;
 	}
 
-	public ArrayList<Damage> get_combat_damages(){
-		if(entityManager.gc(equipment.get(Equipment_Slot.LEFT_HAND), Offensive_Component.class) == null
-				&& entityManager.gc(equipment.get(Equipment_Slot.RIGHT_HAND), Offensive_Component.class) == null){
-			ArrayList<Damage> damages = new ArrayList<>();
-			damages.add(new Damage("crushing", new Dice(1, 3)));
-			return damages;
+	public ArrayList<Damage> get_melee_damages(){
+
+		if(equipment.get(Equipment_Slot.LEFT_HAND) != null && equipment.get(Equipment_Slot.RIGHT_HAND) != null){
+
+			if(entityManager.gc(equipment.get(Equipment_Slot.LEFT_HAND), Offensive_Component.class) != null
+					&& entityManager.gc(equipment.get(Equipment_Slot.RIGHT_HAND), Offensive_Component.class) != null){
+				return get_dual_wield_damages();
+			}
+			else if(entityManager.gc(equipment.get(Equipment_Slot.RIGHT_HAND), Offensive_Component.class) != null
+					&& entityManager.gc(equipment.get(Equipment_Slot.LEFT_HAND), Offensive_Component.class) == null){
+				return get_right_damage();
+			}
+			else if(entityManager.gc(equipment.get(Equipment_Slot.LEFT_HAND), Offensive_Component.class) != null
+					&& entityManager.gc(equipment.get(Equipment_Slot.RIGHT_HAND), Offensive_Component.class) == null){
+				return get_left_damage();
+			}
+			else
+				return get_base_damage();
+
 		}
-		else if(entityManager.gc(equipment.get(Equipment_Slot.RIGHT_HAND), Offensive_Component.class) == null){
-			return get_left_damage();
+		else if(equipment.get(Equipment_Slot.LEFT_HAND) != null && equipment.get(Equipment_Slot.RIGHT_HAND) == null){
+			if(entityManager.gc(equipment.get(Equipment_Slot.LEFT_HAND), Offensive_Component.class) != null){
+				return get_left_damage();
+			}
+			else
+				return get_base_damage();
 		}
-		else{
-			return get_right_damage();
+		else if(equipment.get(Equipment_Slot.RIGHT_HAND) != null && equipment.get(Equipment_Slot.LEFT_HAND) == null){
+			if(entityManager.gc(equipment.get(Equipment_Slot.RIGHT_HAND), Offensive_Component.class) != null){
+				return get_right_damage();
+			}
+			else
+				return get_base_damage();
 		}
+		else
+			return get_base_damage();
 	}
 
 	public void equip_item(Integer owner, Integer item, Equipment_Slot slot){

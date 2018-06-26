@@ -58,9 +58,9 @@
 			"chest": true
 		},
 		"defenses":{
-			"piercing": 1,
-			"slashing": 1,
-			"crushing": 1
+			"piercing": 2,
+			"slashing": 2,
+			"crushing": 2
 		}
 	}
 }

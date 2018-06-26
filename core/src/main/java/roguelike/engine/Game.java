@@ -2,18 +2,22 @@ package roguelike.engine;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-//import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import lombok.Getter;
 import lombok.Setter;
+import org.json.simple.parser.ParseException;
+import roguelike.screens.Game_Screen;
 import roguelike.screens.Screen;
 import roguelike.screens.Start_Screen;
 
+import java.io.IOException;
+
 @Getter @Setter
-public class Game extends ApplicationAdapter {
+public class Game extends com.badlogic.gdx.Game {
     SpriteBatch batch;
 
     public static final int gridWidth = 112;
@@ -26,7 +30,7 @@ public class Game extends ApplicationAdapter {
     public static final int cellHeight = 20;
 
     public Stage stage;
-    private Screen current_screen;
+    private ScreenAdapter game_screen;
 
     @Override
     public void create () {
@@ -38,13 +42,19 @@ public class Game extends ApplicationAdapter {
 
         stage = new Stage(mainViewport, batch);
 
-        current_screen = new Start_Screen(this);
-    }
+	    try {
+		    game_screen = new Game_Screen(this);
+	    } catch (IOException | ParseException e) {
+		    e.printStackTrace();
+	    }
 
-    @Override
+
+	    setScreen(new Start_Screen(this));
+    }
+    /*@Override
     public void render () {
         // standard clear the background routine for libGDX
-        Gdx.gl.glClearColor(current_screen.bgColor.r / 255.0f, current_screen.bgColor.g / 255.0f, current_screen.bgColor.b / 255.0f, 1.0f);
+        Gdx.gl.glClearColor(current_screen.getBGColor().r / 255.0f, current_screen.getBGColor().g / 255.0f, current_screen.getBGColor().b / 255.0f, 1.0f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         current_screen.render();
@@ -52,5 +62,11 @@ public class Game extends ApplicationAdapter {
         stage.draw();
         stage.act();
 
+    }*/
+
+    @Override
+	public void dispose(){
+    	batch.dispose();
+    	stage.dispose();
     }
 }
