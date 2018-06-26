@@ -42,6 +42,7 @@ public class Game_Screen extends ScreenAdapter {
     @Override
     public void show(){
         stage = game.stage;
+        stage.clear();
         display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getCrispDejaVuFont());
         display.font.tweakWidth(cellWidth + 1).tweakHeight(cellHeight + 1).setSmoothingMultiplier(1.6f).initBySize();
         //display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getStretchableTypewriterFont());
@@ -50,15 +51,17 @@ public class Game_Screen extends ScreenAdapter {
         display.fillBackground(bgColor);
         map_height_start = message_buffer;
         map_height_end = gridHeight - statistics_height + message_buffer;
-        world = new World(gridWidth, gridHeight - statistics_height);
+        if(world != null)
+            world.reload();
+        else
+            world = new World(gridWidth, gridHeight - statistics_height);
         stage.addActor(display);
 
     }
 
     @Override
     public void render(float delta){
-
-    	display.clear();
+        display.clear();
         world.update();
 	    render_map();
         render_entities();
@@ -66,7 +69,7 @@ public class Game_Screen extends ScreenAdapter {
         render_messages();
 
         stage.draw();
-
+        stage.act();
     }
 
 	private void render_messages(){

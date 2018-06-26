@@ -59,6 +59,7 @@ public class Start_Screen extends ScreenAdapter {
             input.next();
         }
         stage.draw();
+        stage.act();
     }
 
 	@Override
