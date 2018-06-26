@@ -1,20 +1,13 @@
 package roguelike.engine;
 
-import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import lombok.Getter;
 import lombok.Setter;
-import org.json.simple.parser.ParseException;
 import roguelike.screens.Game_Screen;
-import roguelike.screens.Screen;
 import roguelike.screens.Start_Screen;
-
-import java.io.IOException;
 
 @Getter @Setter
 public class Game extends com.badlogic.gdx.Game {
@@ -42,11 +35,7 @@ public class Game extends com.badlogic.gdx.Game {
 
         stage = new Stage(mainViewport, batch);
 
-	    try {
-		    game_screen = new Game_Screen(this);
-	    } catch (IOException | ParseException e) {
-		    e.printStackTrace();
-	    }
+        game_screen = new Game_Screen(this);
 
 
 	    setScreen(new Start_Screen(this));

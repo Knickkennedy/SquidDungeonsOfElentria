@@ -1,18 +1,14 @@
 package roguelike.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import org.json.simple.parser.ParseException;
 import roguelike.engine.Game;
 import squidpony.squidgrid.gui.gdx.DefaultResources;
 import squidpony.squidgrid.gui.gdx.SColor;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidgrid.gui.gdx.SquidInput;
-
-import java.io.IOException;
 
 import static roguelike.engine.Game.*;
 
@@ -34,23 +30,21 @@ public class Start_Screen extends ScreenAdapter {
         bgColor = SColor.DB_MIDNIGHT;
         display.fillBackground(bgColor);
         stage.addActor(display);
-
     }
 
     @Override
     public void show(){
 	    input = new SquidInput((key, alt, ctrl, shift) -> {
 
-		    switch(key){
-			    case SquidInput.ENTER:
-			    {
-			    	game.setScreen(game.getGame_screen());
-				    break;
-			    }
-		    }
+		    switch(key) {
+                case SquidInput.ENTER: {
+                    game.setScreen(game.getGame_screen());
+                    break;
+                }
+            }
 	    });
 
-	    Gdx.input.setInputProcessor(new InputMultiplexer(stage, input));
+	    Gdx.input.setInputProcessor(input);
     }
 
     @Override
@@ -68,6 +62,13 @@ public class Start_Screen extends ScreenAdapter {
 
 	@Override
 	public void hide(){
-		Gdx.input.setInputProcessor(null);
+//        if(input != null)
+//            input.setIgnoreInput(true);
 	}
+
+    @Override
+    public void resume() {
+//        if(input != null)
+//            input.setIgnoreInput(true);
+    }
 }

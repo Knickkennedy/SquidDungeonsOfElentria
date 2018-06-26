@@ -3,14 +3,10 @@ package roguelike.Generation;
 import com.badlogic.gdx.Gdx;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 import roguelike.Components.*;
 import roguelike.Enums.Equipment_Slot;
 import roguelike.engine.Game;
-import roguelike.utilities.Point;
 import squidpony.squidmath.Coord;
-
-import java.io.IOException;
 
 import static roguelike.Generation.World.entityManager;
 
@@ -23,13 +19,19 @@ public class Factory {
 	private JSONObject races;
 	private JSONObject items;
 
-	private Factory() throws IOException, ParseException {
+	private Factory() {
 		JSONParser parser = new JSONParser();
-		races = (JSONObject)parser.parse(Gdx.files.internal("races.txt").reader());
-		items = (JSONObject)parser.parse(Gdx.files.internal("items.txt").reader());
+		try {
+			races = (JSONObject) parser.parse(Gdx.files.internal("races.txt").reader());
+			items = (JSONObject) parser.parse(Gdx.files.internal("items.txt").reader());
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+		}
 	}
 
-	public static Factory getInstance() throws IOException, ParseException {
+	public static Factory getInstance() {
 		if(factory == null)
 			factory = new Factory();
 
