@@ -1,6 +1,9 @@
 package roguelike.engine;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
@@ -40,18 +43,17 @@ public class Game extends com.badlogic.gdx.Game {
 
 	    setScreen(new Start_Screen(this));
     }
-    /*@Override
+    @Override
     public void render () {
         // standard clear the background routine for libGDX
-        Gdx.gl.glClearColor(current_screen.getBGColor().r / 255.0f, current_screen.getBGColor().g / 255.0f, current_screen.getBGColor().b / 255.0f, 1.0f);
+        Gdx.gl.glClearColor(0f, 0f, 0f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        current_screen.render();
-
-        stage.draw();
-        stage.act();
-
-    }*/
+        Screen screen = getScreen();
+        if(screen != null) 
+            screen.render(Gdx.graphics.getDeltaTime());
+//        stage.draw();
+//        stage.act();
+    }
 
     @Override
 	public void dispose(){

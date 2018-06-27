@@ -30,6 +30,7 @@ public class Command extends SquidInput implements Component {
 
 		this.equipment_screen = new Equipment_Screen(entity, game);
 	}
+
 	private class KH implements KeyHandler
 	{
 			/**
@@ -73,6 +74,7 @@ public class Command extends SquidInput implements Component {
 				case ENTER:
 					action = new Exit_Through(entity); break;
 				case 'e':
+					lastKeyCode = -1; // needed because this class won't be used to handle input after the screen switch
 					game.setScreen(equipment_screen); break;
 				default:
 					return;

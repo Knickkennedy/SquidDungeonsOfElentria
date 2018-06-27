@@ -57,13 +57,15 @@ public class World {
 		initialize_exits();
 
 		current_map = surface;
-
 		player = Factory.getInstance().initialize_player();
 		Factory.getInstance().build_player(player, starting_location, surface);
 		//Gdx.input.setInputProcessor(entityManager.gc(player, Command.class));
-		Gdx.input.setInputProcessor(entityManager.gc(player, Command.class));
-
 		turn_system = new Turn_System();
+		reload();
+	}
+	public void reload()
+	{
+		Gdx.input.setInputProcessor(entityManager.gc(player, Command.class));
 	}
 
 	public void initialize_exits(){
