@@ -29,15 +29,17 @@ public class Start_Screen extends ScreenAdapter {
         display.font.tweakWidth(cellWidth + 1).tweakHeight(cellHeight + 1).setSmoothingMultiplier(1.6f).initBySize();
         bgColor = SColor.DB_MIDNIGHT;
         display.fillBackground(bgColor);
-        stage.addActor(display);
+
     }
 
     @Override
     public void show(){
+	    stage.addActor(display);
 	    input = new SquidInput((key, alt, ctrl, shift) -> {
 
 		    switch(key) {
                 case SquidInput.ENTER: {
+	                game.setGame_screen(new Game_Screen(game));
                     game.setScreen(game.getGame_screen());
                     break;
                 }
@@ -64,8 +66,7 @@ public class Start_Screen extends ScreenAdapter {
 
 	@Override
 	public void hide(){
-//        if(input != null)
-//            input.setIgnoreInput(true);
+
 	}
 
     @Override

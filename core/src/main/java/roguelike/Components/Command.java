@@ -7,6 +7,7 @@ import roguelike.Actions.Move;
 import roguelike.engine.Game;
 import roguelike.engine.Message_Log;
 import roguelike.screens.Equipment_Screen;
+import roguelike.screens.Inventory_Screen;
 import roguelike.utilities.Point;
 import squidpony.squidgrid.gui.gdx.SquidInput;
 
@@ -20,6 +21,7 @@ public class Command extends SquidInput implements Component {
 	private Action action;
 
 	private Equipment_Screen equipment_screen;
+	private Inventory_Screen inventory_screen;
 
 	public Command(final Integer entity, Game game) {
 		super();
@@ -29,6 +31,7 @@ public class Command extends SquidInput implements Component {
 		setRepeatGap(160);
 
 		this.equipment_screen = new Equipment_Screen(entity, game);
+		this.inventory_screen = new Inventory_Screen(entity, game);
 	}
 
 	private class KH implements KeyHandler
@@ -75,7 +78,12 @@ public class Command extends SquidInput implements Component {
 					action = new Exit_Through(entity); break;
 				case 'e':
 					lastKeyCode = -1; // needed because this class won't be used to handle input after the screen switch
+					action = null;
 					game.setScreen(equipment_screen); break;
+				case 'i':
+					lastKeyCode = -1;
+					action = null;
+					game.setScreen(inventory_screen); break;
 				default:
 					return;
 			}

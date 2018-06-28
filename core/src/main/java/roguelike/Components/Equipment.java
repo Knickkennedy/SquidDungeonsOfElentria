@@ -20,6 +20,19 @@ public class Equipment implements Component{
 		}
 	}
 
+	public String get_item_name(Equipment_Slot slot){
+		if(equipment.get(slot) == null){
+			return "";
+		}
+		else{
+			return entityManager.gc(equipment.get(slot), Details.class).name;
+		}
+	}
+
+	public Integer get_slot(Equipment_Slot slot){
+		return equipment.get(slot);
+	}
+
 	public int[] total_armor(){
 
 		int piercing = 0;
@@ -39,21 +52,21 @@ public class Equipment implements Component{
 		return new int[]{piercing, slashing, crushing};
 	}
 
-	public ArrayList<Damage> get_base_damage(){
+	private ArrayList<Damage> get_base_damage(){
 		ArrayList<Damage> damages = new ArrayList<>();
 		damages.add(new Damage("crushing", new Dice(1, 3)));
 		return damages;
 	}
 
-	public ArrayList<Damage> get_left_damage(){
+	private ArrayList<Damage> get_left_damage(){
 		return entityManager.gc(equipment.get(Equipment_Slot.LEFT_HAND), Offensive_Component.class).damages;
 	}
 
-	public ArrayList<Damage> get_right_damage(){
+	private ArrayList<Damage> get_right_damage(){
 		return entityManager.gc(equipment.get(Equipment_Slot.RIGHT_HAND), Offensive_Component.class).damages;
 	}
 
-	public ArrayList<Damage> get_dual_wield_damages(){
+	private ArrayList<Damage> get_dual_wield_damages(){
 		ArrayList<Damage> temp = new ArrayList<>(entityManager.gc(equipment.get(Equipment_Slot.RIGHT_HAND), Offensive_Component.class).damages);
 		temp.addAll(entityManager.gc(equipment.get(Equipment_Slot.LEFT_HAND), Offensive_Component.class).damages);
 
@@ -109,5 +122,25 @@ public class Equipment implements Component{
 		else{
 			System.out.println("That doesn't go there.");
 		}
+	}
+
+	public void equip_item_from_inventory(Integer owner, Integer item, Equipment_Slot slot){
+
+		if(entityManager.gc(item, Equippable.class).slots.contains(slot) && equipment.get(slot) == null){
+			entityManager.gc(owner, Inventory.class).inventory.remove(item);
+			equipment.put(slot, item);
+		}
+		else if(entityManager.gc(item, Equippable.class).slots.contains(slot) && equipment.get(slot) != null){
+			entityManager.gc(owner, Inventory.class).add_item(equipment.remove(slot));
+		}
+		else{
+			System.out.println("That doesn't go there.");
+		}
+	}
+
+	public void unequip_item(Equipment_Slot slot, Integer owner){
+		Integer item = equipment.get(slot);
+		equipment.remove(slot, equipment.get(slot));
+		entityManager.gc(owner, Inventory.class).add_item(item);
 	}
 }

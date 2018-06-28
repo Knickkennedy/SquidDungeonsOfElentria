@@ -19,4 +19,8 @@ public class Details implements Component{
 
 		isPlayer = false;
 	}
+
+	public String getName(){
+		return name != null ? name : "";
+	}
 }

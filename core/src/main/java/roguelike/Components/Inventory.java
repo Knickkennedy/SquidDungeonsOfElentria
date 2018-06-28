@@ -1,6 +1,10 @@
 package roguelike.Components;
 
+import roguelike.Enums.Equipment_Slot;
+
 import java.util.ArrayList;
+
+import static roguelike.Generation.World.entityManager;
 
 public class Inventory implements Component{
 
@@ -10,6 +14,16 @@ public class Inventory implements Component{
 		inventory = new ArrayList<>();
 	}
 
+	public ArrayList<Integer> get_items_that_fit_slot(Equipment_Slot slot){
+		ArrayList<Integer> items = new ArrayList<>();
+
+		for(Integer item : inventory){
+			if(entityManager.gc(item, Equippable.class).slots.contains(slot))
+				items.add(item);
+		}
+
+		return items;
+	}
 	public void add_item(Integer item){
 		inventory.add(item);
 	}

@@ -38,9 +38,6 @@ public class Game extends com.badlogic.gdx.Game {
 
         stage = new Stage(mainViewport, batch);
 
-        game_screen = new Game_Screen(this);
-
-
 	    setScreen(new Start_Screen(this));
     }
     @Override

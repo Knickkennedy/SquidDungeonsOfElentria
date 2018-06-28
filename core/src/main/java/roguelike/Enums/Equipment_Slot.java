@@ -1,5 +1,7 @@
 package roguelike.Enums;
 
+import roguelike.utilities.Word;
+
 public enum Equipment_Slot {
 	HEAD,
 	CHEST,
@@ -22,6 +24,16 @@ public enum Equipment_Slot {
 	public String toString() {
 		String name = this.name().toLowerCase();
 		name = name.replace("_", " ");
-		return name;
+
+
+
+
+
+
+
+
+
+
+		return Word.capitalize_all(name);
 	}
 }
