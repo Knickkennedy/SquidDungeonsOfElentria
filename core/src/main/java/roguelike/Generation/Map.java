@@ -72,11 +72,19 @@ public class Map{
 	    this.isBuilt = true;
     }
 
+    public int width(){
+    	return tiles.length;
+    }
+
+    public int height(){
+    	return tiles[0].length;
+    }
+
     public void initializePathFinding() {
         pathfinding = new char[tiles.length][tiles[0].length];
         for (int i = 0; i < this.tiles.length; i++) {
             for (int j = 0; j < this.tiles[0].length; j++) {
-                this.pathfinding[i][j] = this.tiles[i][j].passable ? '.' : '#';
+                this.pathfinding[i][j] = tiles[i][j].sprite.character;
             }
         }
     }
@@ -104,6 +112,10 @@ public class Map{
 
     public boolean isPassable(Coord start, Coord direction){
     	return tiles[start.x + direction.x][start.y + direction.y].passable;
+	}
+
+	public boolean isSolid(int x, int y){
+    	return !tiles[x][y].passable;
 	}
 
 	public boolean isOpenable(Coord start, Coord direction){

@@ -71,6 +71,7 @@ public class Factory {
 			Integer new_enemy = create_new_entity("goblin");
 			entityManager.gc(new_enemy, Position.class).map = current_map;
 			entityManager.gc(new_enemy, Position.class).location = Coord.get(20 + i + 1, 20 );
+			entityManager.addComponent(new_enemy, new Vision(Coord.get(20 + i + 1, 20), current_map, 5.0));
 			current_map.entities.add(new_enemy);
 		}
 
