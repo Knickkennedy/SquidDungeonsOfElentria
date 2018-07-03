@@ -2,7 +2,6 @@ package roguelike.Systems;
 
 import roguelike.Actions.Move;
 import roguelike.Components.*;
-import roguelike.Enums.AI_MODE;
 import roguelike.utilities.Point;
 import roguelike.utilities.Roll;
 import squidpony.squidai.DijkstraMap;
@@ -60,7 +59,7 @@ public class AI_System implements Base_System {
 						new Move(current_actor, coords.get(0).subtract(entityManager.gc(current_actor, Position.class).location)));
 
 			}
-			else{
+			else if(!current_actor.equals(actor)){
 				entityManager.gc(current_actor, Action_Component.class).setAction(
 						new Move(current_actor, Point.direction.get(Roll.rand(0, Point.direction.size() - 1))));
 			}
@@ -72,7 +71,8 @@ public class AI_System implements Base_System {
 		Coord target_location = entityManager.gc(target, Position.class).location;
 
 		int range = (center.x - target_location.x)*(center.x - target_location.x) + (center.y - target_location.y)*(center.y - target_location.y);
-		double vision_radius = entityManager.gc(current_actor, Vision.class).getRange()*entityManager.gc(current_actor, Vision.class).getRange();
+		double vision_radius = entityManager.gc(current_actor, Vision.class).getRange();
+		vision_radius *= vision_radius;
 
 		if(entityManager.gc(current_actor, AI.class).
 				los.isReachable(entityManager.gc(current_actor, Position.class).map, center.x, center.y, target_location.x, target_location.y)){

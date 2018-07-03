@@ -4,17 +4,17 @@ import com.badlogic.gdx.Gdx;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import squidpony.squidgrid.mapping.DungeonUtility;
 import squidpony.squidmath.Coord;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class Map{
 
     private Tile[][] tiles;
     public char[][] pathfinding;
-
+    public double[][] res;
     private JSONObject tile_file;
 
     public ArrayList<Exit> exits;
@@ -82,11 +82,13 @@ public class Map{
 
     public void initializePathFinding() {
         pathfinding = new char[tiles.length][tiles[0].length];
-        for (int i = 0; i < this.tiles.length; i++) {
-            for (int j = 0; j < this.tiles[0].length; j++) {
-                this.pathfinding[i][j] = tiles[i][j].sprite.character;
+        for (int i = 0; i < tiles.length; i++) {
+            for (int j = 0; j < tiles[0].length; j++) {
+                pathfinding[i][j] = tiles[i][j].sprite.character;
             }
         }
+        res = DungeonUtility.generateSimpleResistances(pathfinding);
+
     }
 
     public boolean isExit(Coord location){

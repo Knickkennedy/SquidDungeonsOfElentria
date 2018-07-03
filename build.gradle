@@ -14,25 +14,18 @@ buildscript {
 allprojects {
   apply plugin: 'eclipse'
   apply plugin: 'idea'
-}
-
-configure(subprojects) {
-  apply plugin: 'java'
-  sourceCompatibility = 1.10
-  compileJava {
-    options.incremental = true
+  apply plugin: "java"
+  sourceCompatibility = 1.8
+  version = '1.0'
+  ext {
+    appName = "SquidDungeonsofElentria"
   }
-}
-
-subprojects {
-  version = '0.0.1-SNAPSHOT'
-  ext.appName = 'SquidDungeonsofElentria'
   repositories {
     mavenLocal()
     mavenCentral()
     jcenter()
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     maven { url 'https://jitpack.io' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
   }
 }
 

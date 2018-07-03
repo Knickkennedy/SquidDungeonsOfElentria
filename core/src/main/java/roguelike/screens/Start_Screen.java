@@ -25,8 +25,8 @@ public class Start_Screen extends ScreenAdapter {
     public Start_Screen(Game game_in){
         game = game_in;
         stage = game.stage;
-        display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getStretchableSlabFont());
-        display.font.tweakWidth(cellWidth + 1).tweakHeight(cellHeight + 1).setSmoothingMultiplier(1.6f).initBySize();
+        display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getCrispDejaVuFont());
+        display.font.tweakHeight(cellHeight *1.1f).initBySize();
         bgColor = SColor.DB_MIDNIGHT;
         display.fillBackground(bgColor);
 
