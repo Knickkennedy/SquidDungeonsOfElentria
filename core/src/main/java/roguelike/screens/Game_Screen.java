@@ -131,10 +131,10 @@ public class Game_Screen extends ScreenAdapter {
 	    	melee_damage.append(String.format("Type: %s %s", damage.type, damage.dice));
 	    }
 
-	    String meele_string = melee_damage.toString();
+	    String melee_string = melee_damage.toString();
 
     	display.put(gridWidth - armor_string.length() - 1, map_height_end, armor_string, Colors.getColor("gray"));
-	    display.put(gridWidth - meele_string.length() - 1, map_height_end + 1, meele_string, Colors.getColor("gray"));
+	    display.put(gridWidth - melee_string.length() - 1, map_height_end + 1, melee_string, Colors.getColor("gray"));
     }
 
     private void render_entities(){

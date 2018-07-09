@@ -21,6 +21,9 @@ public class Factory {
 	private JSONObject races;
 	private JSONObject items;
 	private JSONObject item_groups;
+	private JSONObject entity_modifiers;
+	private JSONObject entities;
+	private JSONObject entity_groups;
 
 	private Factory() {
 		JSONParser parser = new JSONParser();
@@ -28,6 +31,9 @@ public class Factory {
 			races = (JSONObject) parser.parse(Gdx.files.internal("races.json").reader());
 			items = (JSONObject) parser.parse(Gdx.files.internal("items.json").reader());
 			item_groups = (JSONObject) parser.parse(Gdx.files.internal("item_groups.json").reader());
+			entity_modifiers = (JSONObject) parser.parse(Gdx.files.internal("entity_modifiers.json").reader());
+			entities = (JSONObject)parser.parse(Gdx.files.internal("entities.json").reader());
+			entity_groups = (JSONObject)parser.parse(Gdx.files.internal("entity_groups.json").reader());
 		}
 		catch (Exception e)
 		{
@@ -72,7 +78,7 @@ public class Factory {
 
 
 		for(int i = 0; i < 5; i++){
-			Integer new_enemy = create_new_entity("goblin");
+			Integer new_enemy = create_new_entity("group:goblins");
 			entityManager.gc(new_enemy, Position.class).map = current_map;
 			entityManager.gc(new_enemy, Position.class).location = Coord.get(20 + i + 1, 20 );
 			entityManager.addComponent(new_enemy, new Vision(Coord.get(20 + i + 1, 20), current_map, 5.0));
@@ -89,22 +95,53 @@ public class Factory {
 	public Integer create_new_entity(String name){
 		Integer entity = entityManager.createEntity();
 
-		JSONObject entity_properties = (JSONObject)races.get(name);
+		JSONObject entity_type;
+		JSONObject base_entity = new JSONObject();
+		JSONArray additions = new JSONArray();
+
+		if(name.contains("group")){
+			String[] split = name.split(":");
+			JSONArray entity_array = (JSONArray) entity_groups.get(split[1]);
+			entity_type = (JSONObject) entities.get(entity_array.get(Roll.rand(0, entity_array.size() - 1)));
+		}
+		else {
+			entity_type = (JSONObject) entities.get(name);
+		}
+
+		for(Object o : entity_type.keySet()){
+			switch (o.toString()){
+				case "base":        base_entity = (JSONObject)races.get(entity_type.get("base")); break;
+				case "modifier":    additions = (JSONArray)(entity_type.get("modifier")); break;
+			}
+		}
 
 		entityManager.addComponent(entity, new Position());
 		entityManager.addComponent(entity, new Inventory());
 		entityManager.addComponent(entity, new Action_Component());
 		entityManager.addComponent(entity, new Active());
 
-		for(Object o : entity_properties.keySet()){
-
+		for(Object o : base_entity.keySet()){
 			switch (o.toString()){
-				case "sprite": entityManager.addComponent(entity, new Sprite((JSONObject)entity_properties.get(o.toString()))); break;
-				case "statistics": entityManager.addComponent(entity, new Statistics((JSONObject)entity_properties.get(o.toString()))); break;
-				case "details": entityManager.addComponent(entity, new Details((JSONObject)entity_properties.get(o.toString()))); break;
-				case "speed": entityManager.addComponent(entity, new Energy((int)(long)entity_properties.get(o.toString()))); break;
+				case "sprite": entityManager.addComponent(entity, new Sprite((JSONObject)base_entity.get(o.toString()))); break;
+				case "statistics": entityManager.addComponent(entity, new Statistics((JSONObject)base_entity.get(o.toString()))); break;
+				case "details": entityManager.addComponent(entity, new Details((JSONObject)base_entity.get(o.toString()))); break;
+				case "speed": entityManager.addComponent(entity, new Energy((int)(long)base_entity.get(o.toString()))); break;
 				case "ai": entityManager.addComponent(entity, new AI()); break;
-				case "equipment": entityManager.addComponent(entity, new Equipment((JSONObject)entity_properties.get(o.toString()))); break;
+				case "equipment": entityManager.addComponent(entity, new Equipment((JSONObject)base_entity.get(o.toString()))); break;
+			}
+		}
+
+		for (Object addition : additions) {
+			JSONObject temp = (JSONObject) entity_modifiers.get(addition);
+			for (Object o : temp.keySet()) {
+				switch (o.toString()) {
+					case "statistics":
+						entityManager.gc(entity, Statistics.class).update_base_stats((JSONObject) temp.get(o.toString()));
+						break;
+					case "name modifier":
+						entityManager.gc(entity, Details.class).update_name((JSONObject) temp.get(o.toString()));
+						break;
+				}
 			}
 		}
 

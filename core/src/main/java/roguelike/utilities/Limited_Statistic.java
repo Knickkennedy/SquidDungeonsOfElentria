@@ -32,6 +32,15 @@ public class Limited_Statistic {
 			this.current_value = value;
 	}
 
+	public void changeValue(int value){
+		if(current_value + value < minimum)
+			current_value = minimum;
+		else if(current_value + value > maximum)
+			current_value = maximum;
+		else
+			current_value += value;
+	}
+
 	@Override
 	public String toString(){
 		return String.valueOf(current_value);

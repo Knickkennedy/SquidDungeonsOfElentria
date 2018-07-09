@@ -18,15 +18,36 @@ public class Statistics implements Component{
 
 		for(Object o : object.keySet()){
 			switch (o.toString()){
-				case "health": health = new Limited_Statistic((int)(long)object.get(o.toString()), (int)(long)object.get(o.toString())); break;
-
-				case "strength": strength = new Limited_Statistic((int)(long)object.get(o.toString())); break;
-				case "intelligence": intelligence = new Limited_Statistic((int)(long)object.get(o.toString())); break;
-				case "willpower": willpower = new Limited_Statistic((int)(long)object.get(o.toString())); break;
-				case "constitution": constitution = new Limited_Statistic((int)(long)object.get(o.toString())); break;
-				case "dexterity": dexterity = new Limited_Statistic((int)(long)object.get(o.toString())); break;
-				case "charisma": charisma = new Limited_Statistic((int)(long)object.get(o.toString())); break;
+				case "health"       : health = new Limited_Statistic((int)(long)object.get(o.toString()), (int)(long)object.get(o.toString())); break;
+				case "strength"     : strength = new Limited_Statistic((int)(long)object.get(o.toString())); break;
+				case "intelligence" : intelligence = new Limited_Statistic((int)(long)object.get(o.toString())); break;
+				case "willpower"    : willpower = new Limited_Statistic((int)(long)object.get(o.toString())); break;
+				case "constitution" : constitution = new Limited_Statistic((int)(long)object.get(o.toString())); break;
+				case "dexterity"    : dexterity = new Limited_Statistic((int)(long)object.get(o.toString())); break;
+				case "charisma"     : charisma = new Limited_Statistic((int)(long)object.get(o.toString())); break;
 			}
 		}
+	}
+
+	public void update_base_stats(JSONObject object){
+
+		for(Object o : object.keySet()){
+			switch (o.toString()){
+				case "health"       : health.changeValue((int)(long)object.get(o.toString())); break;
+				case "strength"     : strength.changeValue((int)(long)object.get(o.toString())); break;
+				case "intelligence" : intelligence.changeValue((int)(long)object.get(o.toString())); break;
+				case "willpower"    : willpower.changeValue((int)(long)object.get(o.toString())); break;
+				case "constitution" : constitution.changeValue((int)(long)object.get(o.toString())); break;
+				case "dexterity"    : dexterity.changeValue((int)(long)object.get(o.toString())); break;
+				case "charisma"     : charisma.changeValue((int)(long)object.get(o.toString())); break;
+			}
+		}
+
+		System.out.println(this);
+	}
+
+	@Override
+	public String toString(){
+		return String.format("%s, %s, %s, %s, %s, %s", strength, intelligence, willpower, constitution, dexterity, charisma);
 	}
 }
