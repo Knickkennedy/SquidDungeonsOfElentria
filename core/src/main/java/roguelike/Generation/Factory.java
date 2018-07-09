@@ -1,11 +1,13 @@
 package roguelike.Generation;
 
 import com.badlogic.gdx.Gdx;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import roguelike.Components.*;
 import roguelike.Enums.Equipment_Slot;
 import roguelike.engine.Game;
+import roguelike.utilities.Roll;
 import squidpony.squidmath.Coord;
 
 import static roguelike.Generation.World.entityManager;
@@ -18,12 +20,14 @@ public class Factory {
 
 	private JSONObject races;
 	private JSONObject items;
+	private JSONObject item_groups;
 
 	private Factory() {
 		JSONParser parser = new JSONParser();
 		try {
-			races = (JSONObject) parser.parse(Gdx.files.internal("races.txt").reader());
-			items = (JSONObject) parser.parse(Gdx.files.internal("items.txt").reader());
+			races = (JSONObject) parser.parse(Gdx.files.internal("races.json").reader());
+			items = (JSONObject) parser.parse(Gdx.files.internal("items.json").reader());
+			item_groups = (JSONObject) parser.parse(Gdx.files.internal("item_groups.json").reader());
 		}
 		catch (Exception e)
 		{
@@ -67,7 +71,7 @@ public class Factory {
 
 
 
-		for(int i = 0; i < 1; i++){
+		for(int i = 0; i < 5; i++){
 			Integer new_enemy = create_new_entity("goblin");
 			entityManager.gc(new_enemy, Position.class).map = current_map;
 			entityManager.gc(new_enemy, Position.class).location = Coord.get(20 + i + 1, 20 );
@@ -89,7 +93,6 @@ public class Factory {
 
 		entityManager.addComponent(entity, new Position());
 		entityManager.addComponent(entity, new Inventory());
-		entityManager.addComponent(entity, new Equipment());
 		entityManager.addComponent(entity, new Action_Component());
 		entityManager.addComponent(entity, new Active());
 
@@ -101,9 +104,7 @@ public class Factory {
 				case "details": entityManager.addComponent(entity, new Details((JSONObject)entity_properties.get(o.toString()))); break;
 				case "speed": entityManager.addComponent(entity, new Energy((int)(long)entity_properties.get(o.toString()))); break;
 				case "ai": entityManager.addComponent(entity, new AI()); break;
-				case "equipped item": JSONObject temp = (JSONObject)entity_properties.get(o.toString());
-					entityManager.gc(entity, Equipment.class).equip_item(entity,
-						create_new_item((String)temp.get("name")), Equipment_Slot.find_slot((String)temp.get("slot"))); break;
+				case "equipment": entityManager.addComponent(entity, new Equipment((JSONObject)entity_properties.get(o.toString()))); break;
 			}
 		}
 
@@ -113,7 +114,17 @@ public class Factory {
 	public Integer create_new_item(String name){
 		Integer item = entityManager.createEntity();
 
-		JSONObject item_properties = (JSONObject)items.get(name);
+		JSONObject item_properties;
+
+		if(name.contains("group")){
+			String[] split = name.split(":");
+			JSONArray item_array = (JSONArray) item_groups.get(split[1]);
+			item_properties = (JSONObject) items.get(item_array.get(Roll.rand(0, item_array.size() - 1)));
+		}
+		else {
+			item_properties = (JSONObject) items.get(name);
+		}
+
 
 		for(Object o : item_properties.keySet()) {
 			switch (o.toString()) {

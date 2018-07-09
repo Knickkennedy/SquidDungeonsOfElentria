@@ -22,35 +22,17 @@ public class Move extends Action{
 
 	@Override
 	public boolean perform() {
-		Set<Integer> active_actors = entityManager.getAllEntitiesPossessingComponent(Active.class);
 
-		if(direction == Point.WAIT){
+		if(entityManager.gc(entity, Position.class).map.entityAt(entityManager.gc(entity, Position.class).location.add(direction)) != null
+				&& direction != Point.WAIT){
 
-			if(entityManager.gc(entity, Energy.class).energy < cost)
-				return true;
-
-			entityManager.gc(entity, Energy.class).energy -= cost;
-
-			Message_Log.getInstance().add_formatted_message("wait", entity);
-
-			entityManager.gc(entity, Action_Component.class).setAction(null);
-			return true;
+			entityManager.gc(entity, Action_Component.class).setAction(
+					new Melee_Attack(entity, entityManager.gc(entity, Position.class).map
+							.entityAt(entityManager.gc(entity, Position.class).location.add(direction))));
+			return false;
 		}
-
-		for(Integer actor : active_actors){
-
-			Coord attacker_location = entityManager.gc(entity, Position.class).location;
-			attacker_location = attacker_location.add(direction);
-			Coord victim_location = entityManager.gc(actor, Position.class).location;
-
-			if(attacker_location.equals(victim_location) && !entity.equals(actor)){
-				entityManager.gc(entity, Action_Component.class).setAction(new Melee_Attack(entity, actor));
-
-				return false;
-			}
-		}
-
-		if(entityManager.gc(entity, Position.class).map.isPassable(entityManager.gc(entity, Position.class).location, direction)){
+		else if(entityManager.gc(entity, Position.class).map.
+				isPassable(entityManager.gc(entity, Position.class).location, direction)){
 
 			if(entityManager.gc(entity, Energy.class).energy < cost)
 				return true;

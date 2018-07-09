@@ -50,20 +50,43 @@ public class AI_System implements Base_System {
 	}
 
 	public void perform_hunt_attempt(Integer current_actor, DijkstraMap path){
+
+		ArrayList<Coord> monster_locations = new ArrayList<>();
+
 		for(Integer actor : actors){
-			if(entityManager.gc(actor, Details.class).isPlayer && can_see(current_actor, actor)){
+			if(!entityManager.gc(actor, Details.class).isPlayer && !current_actor.equals(actor)){
+				monster_locations.add(entityManager.gc(actor, Position.class).location);
+			}
+		}
+
+		for(Integer actor : actors){
+
+			if(entityManager.gc(current_actor, AI.class).has_seen && entityManager.gc(current_actor, AI.class).current_target.equals(actor)){
 				path.setGoal(entityManager.gc(actor, Position.class).location);
 				ArrayList<Coord> coords =
-								path.findPath(8, null, null,
+						path.findPath(1, monster_locations, null,
+								entityManager.gc(current_actor, Position.class).location, entityManager.gc(actor, Position.class).location);
+				entityManager.gc(current_actor, Action_Component.class).setAction(
+								new Move(current_actor, coords.get(0).subtract(entityManager.gc(current_actor, Position.class).location)));
+				break;
+			}
+			else if(entityManager.gc(actor, Details.class).isPlayer && can_see(current_actor, actor)){
+
+				if(!entityManager.gc(current_actor, AI.class).has_seen) {
+					entityManager.gc(current_actor, AI.class).has_seen = true;
+					entityManager.gc(current_actor, AI.class).current_target = actor;
+				}
+
+				path.setGoal(entityManager.gc(actor, Position.class).location);
+				ArrayList<Coord> coords =
+								path.findPath(1, monster_locations, null,
 								entityManager.gc(current_actor, Position.class).location, entityManager.gc(actor, Position.class).location);
 				entityManager.gc(current_actor, Action_Component.class).setAction(
 						new Move(current_actor, coords.get(0).subtract(entityManager.gc(current_actor, Position.class).location)));
-
+				break;
 			}
-			else{
-				entityManager.gc(current_actor, Action_Component.class).setAction(
+			entityManager.gc(current_actor, Action_Component.class).setAction(
 						new Move(current_actor, Point.direction.get(Roll.rand(0, Point.direction.size() - 1))));
-			}
 		}
 	}
 
@@ -74,8 +97,10 @@ public class AI_System implements Base_System {
 		int range = (center.x - target_location.x)*(center.x - target_location.x) + (center.y - target_location.y)*(center.y - target_location.y);
 		double vision_radius = entityManager.gc(current_actor, Vision.class).getRange()*entityManager.gc(current_actor, Vision.class).getRange();
 
-		if(entityManager.gc(current_actor, AI.class).
-				los.isReachable(entityManager.gc(current_actor, Position.class).map, center.x, center.y, target_location.x, target_location.y)){
+		boolean is_reachable = entityManager.gc(current_actor, AI.class).
+				los.isReachable(entityManager.gc(current_actor, Position.class).map, center.x, center.y, target_location.x, target_location.y);
+
+		if(is_reachable){
 			return vision_radius > range;
 		}
 

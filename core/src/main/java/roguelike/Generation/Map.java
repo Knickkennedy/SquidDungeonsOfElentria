@@ -4,11 +4,14 @@ import com.badlogic.gdx.Gdx;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import roguelike.Components.Position;
 import squidpony.squidmath.Coord;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+
+import static roguelike.Generation.World.entityManager;
 
 public class Map{
 
@@ -35,7 +38,7 @@ public class Map{
 
 	    JSONParser parser = new JSONParser();
 	    try {
-		    this.tile_file = (JSONObject)parser.parse(Gdx.files.internal("tiles.txt").reader());
+		    this.tile_file = (JSONObject)parser.parse(Gdx.files.internal("tiles.json").reader());
 	    } catch (IOException | ParseException e) {
 		    e.printStackTrace();
 	    }
@@ -87,6 +90,16 @@ public class Map{
                 this.pathfinding[i][j] = tiles[i][j].sprite.character;
             }
         }
+    }
+
+    public Integer entityAt(Coord location){
+    	for(Integer actor : entities){
+    		if (location.equals(entityManager.gc(actor, Position.class).location)){
+    			return actor;
+		    }
+	    }
+
+	    return null;
     }
 
     public boolean isExit(Coord location){
