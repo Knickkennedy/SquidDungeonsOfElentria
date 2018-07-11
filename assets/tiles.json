@@ -1,0 +1,121 @@
+{
+	"cave":{
+		"sprite":{
+			"glyph": "*",
+			"color": "gray"
+		},
+		"description": "a hole leading deep into the ground",
+		"movement cost": 1500,
+		"passable": true
+	},
+	
+	"door - closed":{
+		"sprite":{
+			"glyph": "+",
+			"color": "brown"
+		},
+		"description": "sturdy, yet dirty. An unlikeable combination in an obstacle.",
+		"movement cost": 1500,
+		"passable": false,
+		"openable": true
+	},
+	
+	"door - open":{
+		"sprite":{
+			"glyph": "/",
+			"color": "gray"
+		},
+		"description": "sturdy, yet dirty. An unlikeable combination in an obstacle.",
+		"movement cost": 1000,
+		"passable": true
+	},
+	
+	"floor - dungeon":{
+		"sprite":{
+			"glyph": ".",
+			"color": "brown"
+		},
+		"description": "a dusty floor, perhaps a broom?",
+		"movement cost": 1000,
+		"passable": true
+	},
+	
+	"forest":{
+		"sprite":{
+			"glyph": "&",
+			"color": "dark green"
+		},
+		"description": "a multitude of trees",
+		"movement cost": 1200,
+		"passable": true
+	},
+	
+	"grass":{
+		"sprite":{
+			"glyph": "\"",
+			"color": "green"
+		},
+		"description": "tall, swiftly moving grass",
+		"movement cost": 1000,
+		"passable": true
+	},
+	
+	"mountain":{
+		"sprite":{
+			"glyph": "^",
+			"color": "gray"
+		},
+		"description": "enormous ridges block your view",
+		"movement cost": 1500,
+		"passable": false
+	},
+	
+	"road":{
+		"sprite":{
+			"glyph": ".",
+			"color": "brown"
+		},
+		"description": "a well-paved walkway",
+		"movement cost": 1000,
+		"passable": true
+	},
+	
+	"stairs - down":{
+		"sprite":{
+			"glyph": ">",
+			"color": "gray"
+		},
+		"description": "a well-worn staircase leading downwards",
+		"movement cost": 1000,
+		"passable": true
+	},
+	
+	"stairs - up":{
+		"sprite":{
+			"glyph": "<",
+			"color": "gray"
+		},
+		"description": "a well-worn staircase leading upwards",
+		"movement cost": 1000,
+		"passable": true
+	},
+
+	"wall":{
+		"sprite":{
+			"glyph": "#",
+			"color": "gray"
+		},
+		"description": "a surprisingly well-constructed structure for a dungeon",
+		"passable": false
+	},
+	
+	"water":{
+		"sprite":{
+			"glyph": "~",
+			"color": "blue"
+		},
+		"description": "worryingly deep, cold water",
+		"movement cost": 1200,
+		"passable": true
+	}
+}
