@@ -1,7 +1,9 @@
 package roguelike.Components;
 
+import org.json.simple.JSONObject;
 import roguelike.Effects.Damage;
 import roguelike.Enums.Equipment_Slot;
+import roguelike.Generation.Factory;
 import roguelike.utilities.Dice;
 
 import java.util.ArrayList;
@@ -17,6 +19,21 @@ public class Equipment implements Component{
 
 		for(Equipment_Slot slot : Equipment_Slot.values()){
 			equipment.put(slot, null);
+		}
+	}
+
+	public Equipment(JSONObject object){
+
+		equipment = new HashMap<>();
+
+		for(Object o : object.keySet()){
+
+			switch (o.toString()){
+				case "head": equipment.put(Equipment_Slot.HEAD, Factory.getInstance().create_new_item((String)object.get(o.toString()))); break;
+				case "chest": equipment.put(Equipment_Slot.CHEST, Factory.getInstance().create_new_item((String)object.get(o.toString()))); break;
+				case "left hand": equipment.put(Equipment_Slot.LEFT_HAND, Factory.getInstance().create_new_item((String)object.get(o.toString()))); break;
+				case "right hand": equipment.put(Equipment_Slot.RIGHT_HAND, Factory.getInstance().create_new_item((String)object.get(o.toString()))); break;
+			}
 		}
 	}
 

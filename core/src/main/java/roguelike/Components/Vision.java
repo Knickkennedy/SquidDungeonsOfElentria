@@ -20,14 +20,16 @@ public class Vision implements Component{
 		this.map = map;
 		this.range = range;
 		if(map.res == null) {
-			map.res = DungeonUtility.generateSimpleResistances(map.pathfinding);
+			map.res = DungeonUtility.generateResistances(map.pathfinding);
 		}
 		fov = new double[map.res.length][map.res[0].length];
 		FOV.reuseFOV(map.res, this.fov, this.location.x, this.location.y, this.range, Radius.CIRCLE);
 	}
 
-	public void setLocation(Coord mapPosition){
-		location = mapPosition;
-		FOV.reuseFOV(map.res, fov, location.x, location.y, range, Radius.CIRCLE);
+	public void setLocation(Coord mapPosition) {
+		if (mapPosition.isWithin(map.width(), map.height())) {
+			location = mapPosition;
+			FOV.reuseFOV(map.res, fov, location.x, location.y, range, Radius.CIRCLE);
+		}
 	}
 }

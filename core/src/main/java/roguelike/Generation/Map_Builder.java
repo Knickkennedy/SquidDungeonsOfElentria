@@ -54,7 +54,7 @@ public class Map_Builder {
         this.revealed = new boolean[width][height];
 		JSONParser parser = new JSONParser();
 	    try {
-		    this.tile_file = (JSONObject)parser.parse(Gdx.files.internal("tiles.txt").reader());
+		    this.tile_file = (JSONObject)parser.parse(Gdx.files.internal("tiles.json").reader());
 	    } catch (IOException | ParseException e) {
 		    e.printStackTrace();
 	    }

@@ -14,6 +14,21 @@
 		}
 	},
 	
+	"leather helmet":{
+		"details": {
+			"name": "leather helmet",
+			"description": "soft leather meant to turn a strike"
+		},
+		"equippable": {
+			"head": true
+		},
+		"defenses": {
+			"piercing": 1,
+			"slashing": 2,
+			"crushing": 1
+		}
+	},
+	
 	"iron helm": {
 		"details": {
 			"name": "iron helm",
@@ -25,7 +40,7 @@
 		"defenses":{
 			"piercing": 1,
 			"slashing": 1,
-			"crushing": 1
+			"crushing": 2
 		}
 	},
 	

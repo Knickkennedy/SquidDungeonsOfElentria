@@ -1,9 +1,6 @@
 package roguelike.Actions;
 
-import roguelike.Components.Action_Component;
-import roguelike.Components.Energy;
-import roguelike.Components.Position;
-import roguelike.Components.Vision;
+import roguelike.Components.*;
 import squidpony.squidmath.Coord;
 
 import static roguelike.Generation.World.entityManager;
@@ -20,13 +17,17 @@ public class Open_Door extends Action{
 
 	@Override
 	public boolean perform() {
-
 		entityManager.gc(entity, Energy.class).energy -= cost;
 
-		entityManager.gc(entity, Position.class).map.open_door(entityManager.gc(entity, Position.class).location, direction);
+		Coord location = entityManager.gc(entity, Position.class).location;
+		entityManager.display.slide(entityManager.gc(entity, Sprite.class)
+						.makeGlyph(entityManager.display, location.x, location.y + 2), location.x, location.y + 2, location.x, location.y + 2, 0.2f, () ->
+				{
+					entityManager.gc(entity, Position.class).map.open_door(location, direction);
+					entityManager.gc(entity, Vision.class).setLocation(location);
+				}
+		);
 
-		entityManager.gc(entity, Position.class).update_location(direction);
-		entityManager.gc(entity, Vision.class).setLocation(entityManager.gc(entity, Position.class).location);
 		entityManager.gc(entity, Action_Component.class).setAction(null);
 
 		return true;

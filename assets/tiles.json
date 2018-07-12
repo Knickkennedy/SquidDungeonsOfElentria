@@ -14,7 +14,7 @@
 			"glyph": "+",
 			"color": "brown"
 		},
-		"description": "sturdy, yet dirty. An unlikeable combination in an obstacle."
+		"description": "sturdy, yet dirty. An unlikeable combination in an obstacle.",
 		"movement cost": 1500,
 		"passable": false,
 		"openable": true
@@ -25,7 +25,7 @@
 			"glyph": "/",
 			"color": "gray"
 		},
-		"description": "sturdy, yet dirty. An unlikeable combination in an obstacle."
+		"description": "sturdy, yet dirty. An unlikeable combination in an obstacle.",
 		"movement cost": 1000,
 		"passable": true
 	},

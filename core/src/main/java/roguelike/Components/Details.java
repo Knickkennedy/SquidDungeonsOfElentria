@@ -23,4 +23,17 @@ public class Details implements Component{
 	public String getName(){
 		return name != null ? name : "";
 	}
+
+	public void update_name(JSONObject object){
+
+		boolean isPrefix = (boolean)object.get("prefix");
+		if(isPrefix){
+			String temp = (String)object.get("modifier");
+			name = String.format("%s %s", temp, name);
+		}
+		else{
+			String temp = (String)object.get("modifier");
+			name = String.format("%s %s", name, temp);
+		}
+	}
 }

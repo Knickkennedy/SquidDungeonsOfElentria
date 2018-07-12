@@ -13,6 +13,7 @@ import roguelike.utilities.Colors;
 import squidpony.squidgrid.gui.gdx.DefaultResources;
 import squidpony.squidgrid.gui.gdx.SColor;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
+import squidpony.squidgrid.gui.gdx.TextCellFactory;
 import squidpony.squidmath.Coord;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ public class Game_Screen extends ScreenAdapter {
 
     private Game game;
     private Stage stage;
-    private SparseLayers display;
+    public SparseLayers display;
 
     private Color bgColor;
 
@@ -49,6 +50,7 @@ public class Game_Screen extends ScreenAdapter {
         //display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getStretchableCodeFont());
         bgColor = SColor.DB_MIDNIGHT;
         display.fillBackground(bgColor);
+        entityManager.display = display;
         map_height_start = message_buffer;
         map_height_end = gridHeight - statistics_height + message_buffer;
         if(world != null)
@@ -68,8 +70,8 @@ public class Game_Screen extends ScreenAdapter {
         render_statistics();
         render_messages();
 
-        stage.draw();
         stage.act();
+        stage.draw();
     }
 
 	private void render_messages(){
@@ -126,8 +128,8 @@ public class Game_Screen extends ScreenAdapter {
                 //String.format("Con:%d Dex:%d Char:%d", temp.constitution.current_value, temp.dexterity.current_value, temp.charisma.current_value);
 
 	    display.put(1, map_height_end, health, green, black);
-    	display.put(gridWidth / 2 - first.length() / 2, map_height_end, first, Colors.getColor("white"), SColor.BLACK);
-    	display.put(gridWidth / 2 - second.length() / 2, map_height_end + 1, second, Colors.getColor("white"), SColor.BLACK);
+    	display.put(gridWidth / 2 - first.length() / 2, map_height_end, first, white, black);
+    	display.put(gridWidth / 2 - second.length() / 2, map_height_end + 1, second, white, black);
 
     	int[] armor = entityManager.gc(world.getPlayer(), Equipment.class).total_armor();
     	String armor_string = "Pierce:" + armor[0] + " Slash:" + armor[1] + " Crush:" + armor[2]; 
@@ -149,6 +151,8 @@ public class Game_Screen extends ScreenAdapter {
     }
 
     private void render_entities(){
+        if(display.hasActiveAnimations())
+            return;
         Set <Integer> entities = entityManager.getAllEntitiesPossessingComponent(Active.class);
         for(Integer entity : entities){
             place_entity(entity, entityManager.gc(entity, Position.class).location);
@@ -156,7 +160,8 @@ public class Game_Screen extends ScreenAdapter {
     }
 
     private void place_entity(Integer entity, Coord point){
-        display.put(point.x, point.y + message_buffer, entityManager.gc(entity, Sprite.class).character, entityManager.gc(entity, Sprite.class).foregroundColor);
+        Sprite sprite = entityManager.gc(entity, Sprite.class);
+        sprite.makeGlyph(display, point.x, point.y + message_buffer);
     }
 
     @Override

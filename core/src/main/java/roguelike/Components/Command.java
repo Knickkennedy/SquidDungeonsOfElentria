@@ -56,7 +56,7 @@ public class Command extends SquidInput implements Component {
 			 */
 			@Override
 			public void handle(char key, boolean alt, boolean ctrl, boolean shift) {
-			switch(key){
+				switch(key){
 				case DOWN_LEFT_ARROW:
 					action = new Move(entity, Point.SOUTH_WEST); break;
 				case DOWN_ARROW:

@@ -45,7 +45,7 @@ public class World {
 
 		JSONParser parser = new JSONParser();
 		try {
-			tiles = (JSONObject)parser.parse(Gdx.files.internal("tiles.txt").reader());
+			tiles = (JSONObject)parser.parse(Gdx.files.internal("tiles.json").reader());
 		} catch (Exception e)
 		{
 			e.printStackTrace();

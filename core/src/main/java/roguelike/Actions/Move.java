@@ -1,11 +1,8 @@
 package roguelike.Actions;
 
 import roguelike.Components.*;
-import roguelike.engine.Message_Log;
 import roguelike.utilities.Point;
 import squidpony.squidmath.Coord;
-
-import java.util.Set;
 
 import static roguelike.Generation.World.entityManager;
 
@@ -22,46 +19,34 @@ public class Move extends Action{
 
 	@Override
 	public boolean perform() {
-		Set<Integer> active_actors = entityManager.getAllEntitiesPossessingComponent(Active.class);
+		Coord location = entityManager.gc(entity, Position.class).location;
+		if(entityManager.gc(entity, Position.class).map.entityAt(location.add(direction)) != null
+				&& direction != Point.WAIT){
 
-		if(direction == Point.WAIT){
+			entityManager.gc(entity, Action_Component.class).setAction(
+					new Melee_Attack(entity, entityManager.gc(entity, Position.class).map
+							.entityAt(location.add(direction))));
+			return false;
+		}
+		else if(entityManager.gc(entity, Position.class).map.
+				isPassable(location, direction)){
 
 			if(entityManager.gc(entity, Energy.class).energy < cost)
 				return true;
-
 			entityManager.gc(entity, Energy.class).energy -= cost;
+			entityManager.display.slide(entityManager.gc(entity, Sprite.class)
+					.makeGlyph(entityManager.display, location.x, location.y), location.x, location.y + 2, location.x + direction.x, location.y + direction.y + 2, 0.2f, () ->
+					{
 
-			Message_Log.getInstance().add_formatted_message("wait", entity);
 
-			entityManager.gc(entity, Action_Component.class).setAction(null);
-			return true;
-		}
+						entityManager.gc(entity, Position.class).update_location(direction);
 
-		for(Integer actor : active_actors){
+						if (entityManager.gc(entity, Vision.class) != null) {
+							entityManager.gc(entity, Vision.class).setLocation(entityManager.gc(entity, Position.class).location);
+						}
+					}
+			);
 
-			Coord attacker_location = entityManager.gc(entity, Position.class).location;
-			attacker_location = attacker_location.add(direction);
-			Coord victim_location = entityManager.gc(actor, Position.class).location;
-
-			if(attacker_location.equals(victim_location) && !entity.equals(actor)){
-				entityManager.gc(entity, Action_Component.class).setAction(new Melee_Attack(entity, actor));
-
-				return false;
-			}
-		}
-
-		if(entityManager.gc(entity, Position.class).map.isPassable(entityManager.gc(entity, Position.class).location, direction)){
-
-			if(entityManager.gc(entity, Energy.class).energy < cost)
-				return true;
-
-			entityManager.gc(entity, Energy.class).energy -= cost;
-
-			entityManager.gc(entity, Position.class).update_location(direction);
-
-			if(entityManager.gc(entity, Vision.class) != null) {
-				entityManager.gc(entity, Vision.class).setLocation(entityManager.gc(entity, Position.class).location);
-			}
 			entityManager.gc(entity, Action_Component.class).setAction(null);
 
 			return true;
