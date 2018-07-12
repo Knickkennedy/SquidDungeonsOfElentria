@@ -46,6 +46,19 @@ public class Statistics implements Component{
 		System.out.println(this);
 	}
 
+	public Limited_Statistic get_stat(String type){
+		switch (type){
+			case "health"       :   return health;
+			case "strength"     :   return strength;
+			case "intelligence" :   return intelligence;
+			case "willpower"    :   return willpower;
+			case "constitution" :   return constitution;
+			case "dexterity"    :   return dexterity;
+			case "charisma"     :   return charisma;
+			default: return null;
+		}
+	}
+
 	@Override
 	public String toString(){
 		return String.format("%s, %s, %s, %s, %s, %s", strength, intelligence, willpower, constitution, dexterity, charisma);

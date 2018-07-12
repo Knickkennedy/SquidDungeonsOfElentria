@@ -1,5 +1,7 @@
 package roguelike.utilities;
 
+import roguelike.engine.Message_Log;
+
 public class Limited_Statistic {
 	public int minimum;
 	public int maximum;
@@ -12,13 +14,13 @@ public class Limited_Statistic {
 	}
 
 	public Limited_Statistic(int current_value, int maximum){
-		this.minimum = 1;
+		this.minimum = 0;
 		this.maximum = maximum;
 		this.current_value = current_value;
 	}
 
 	public Limited_Statistic(int current_value){
-		this.minimum = 1;
+		this.minimum = 0;
 		this.maximum = 999;
 		this.current_value = current_value;
 	}
@@ -39,6 +41,10 @@ public class Limited_Statistic {
 			current_value = maximum;
 		else
 			current_value += value;
+	}
+
+	public boolean isMinimum(){
+		return current_value == minimum;
 	}
 
 	@Override

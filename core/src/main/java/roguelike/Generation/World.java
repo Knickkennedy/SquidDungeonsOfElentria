@@ -9,6 +9,7 @@ import roguelike.Components.Command;
 import roguelike.Components.Position;
 import roguelike.Systems.Turn_System;
 import roguelike.engine.EntityManager;
+import roguelike.engine.Message_Log;
 import squidpony.squidmath.Coord;
 
 import java.util.ArrayList;
@@ -132,6 +133,17 @@ public class World {
 		turn_system.process();
 
 		current_map = entityManager.gc(player, Position.class).map;
+		perform_deaths();
+	}
+
+	public void perform_deaths(){
+
+		while (!Factory.getInstance().death_queue.isEmpty()){
+			Integer entity = Factory.getInstance().death_queue.poll();
+			Message_Log.getInstance().add_formatted_message("die", entity);
+			entityManager.gc(entity, Position.class).map.entities.remove(entity);
+			entityManager.killEntity(entity);
+		}
 	}
 
 	private static Scanner openFile(String fileName) {

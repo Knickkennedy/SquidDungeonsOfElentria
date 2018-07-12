@@ -1,3 +1,4 @@
 {
-	"goblins":[ "goblin", "angry goblin", "goblin rockthrower" ]
+	"goblins":[ "goblin", "angry goblin", "goblin rockthrower" ],
+    "rockthrowers":[ "goblin rockthrower", "human rockthrower" ]
 }

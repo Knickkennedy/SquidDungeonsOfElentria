@@ -69,6 +69,53 @@ public class Equipment implements Component{
 		return new int[]{piercing, slashing, crushing};
 	}
 
+	public int get_resistance_from_type(String type){
+
+		switch (type){
+			case "piercing": return get_piercing_resistance();
+			case "slashing": return get_slashing_resistance();
+			case "crushing": return get_crushing_resistance();
+			default: return 0;
+		}
+
+	}
+
+	private int get_piercing_resistance(){
+		int amount = 0;
+		for(Equipment_Slot slot : Equipment_Slot.values()){
+			if(equipment.get(slot) != null){
+				if(entityManager.gc(equipment.get(slot), Armor.class) != null) {
+					amount += entityManager.gc(equipment.get(slot), Armor.class).piercing;
+				}
+			}
+		}
+		return amount;
+	}
+
+	private int get_slashing_resistance(){
+		int amount = 0;
+		for(Equipment_Slot slot : Equipment_Slot.values()){
+			if(equipment.get(slot) != null){
+				if(entityManager.gc(equipment.get(slot), Armor.class) != null) {
+					amount += entityManager.gc(equipment.get(slot), Armor.class).slashing;
+				}
+			}
+		}
+		return amount;
+	}
+
+	private int get_crushing_resistance(){
+		int amount = 0;
+		for(Equipment_Slot slot : Equipment_Slot.values()){
+			if(equipment.get(slot) != null){
+				if(entityManager.gc(equipment.get(slot), Armor.class) != null) {
+					amount += entityManager.gc(equipment.get(slot), Armor.class).crushing;
+				}
+			}
+		}
+		return amount;
+	}
+
 	private ArrayList<Damage> get_base_damage(){
 		ArrayList<Damage> damages = new ArrayList<>();
 		damages.add(new Damage("crushing", new Dice(1, 3)));

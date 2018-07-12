@@ -24,11 +24,22 @@ public class Move extends Action{
 	public boolean perform() {
 
 		if(entityManager.gc(entity, Position.class).map.entityAt(entityManager.gc(entity, Position.class).location.add(direction)) != null
-				&& direction != Point.WAIT){
+				&& direction != Point.WAIT
+				&& entityManager.gc(entity, Details.class)
+					.is_hostile_towards(entityManager.gc(entity, Position.class).map
+							.entityAt(entityManager.gc(entity, Position.class).location.add(direction)))){
 
 			entityManager.gc(entity, Action_Component.class).setAction(
 					new Melee_Attack(entity, entityManager.gc(entity, Position.class).map
 							.entityAt(entityManager.gc(entity, Position.class).location.add(direction))));
+			return false;
+		}
+		else if(entityManager.gc(entity, Position.class).map.entityAt(entityManager.gc(entity, Position.class).location.add(direction)) != null
+				&& direction != Point.WAIT
+				&& !entityManager.gc(entity, Details.class)
+				.is_hostile_towards(entityManager.gc(entity, Position.class).map
+						.entityAt(entityManager.gc(entity, Position.class).location.add(direction)))){
+			entityManager.gc(entity, Action_Component.class).setAction(null);
 			return false;
 		}
 		else if(entityManager.gc(entity, Position.class).map.

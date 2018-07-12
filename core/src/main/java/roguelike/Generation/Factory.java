@@ -6,9 +6,12 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import roguelike.Components.*;
 import roguelike.Enums.Equipment_Slot;
+import roguelike.Enums.Race;
 import roguelike.engine.Game;
 import roguelike.utilities.Roll;
 import squidpony.squidmath.Coord;
+
+import java.util.PriorityQueue;
 
 import static roguelike.Generation.World.entityManager;
 
@@ -25,8 +28,11 @@ public class Factory {
 	private JSONObject entities;
 	private JSONObject entity_groups;
 
+	public PriorityQueue<Integer> death_queue;
+
 	private Factory() {
 		JSONParser parser = new JSONParser();
+		death_queue = new PriorityQueue<>();
 		try {
 			races = (JSONObject) parser.parse(Gdx.files.internal("races.json").reader());
 			items = (JSONObject) parser.parse(Gdx.files.internal("items.json").reader());
@@ -65,20 +71,21 @@ public class Factory {
 		entityManager.addComponent(player, new Statistics((JSONObject)human.get("statistics")));
 		entityManager.addComponent(player, new Details((JSONObject)human.get("details")));
 		entityManager.gc(player, Details.class).isPlayer = true;
+		entityManager.gc(player, Details.class).race = Race.PLAYER;
 		entityManager.addComponent(player, new Active());
 		entityManager.addComponent(player, new Action_Component());
 		entityManager.addComponent(player, new Energy(100));
 		entityManager.addComponent(player, new Command(player, game));
 		entityManager.addComponent(player, new Inventory());
 		entityManager.addComponent(player, new Equipment());
-		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("leather armor"), Equipment_Slot.CHEST);
+		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("iron breastplate"), Equipment_Slot.CHEST);
 		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("iron helm"), Equipment_Slot.HEAD);
 		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("iron shortsword"), Equipment_Slot.LEFT_HAND);
 
 
 
 		for(int i = 0; i < 5; i++){
-			Integer new_enemy = create_new_entity("group:goblins");
+			Integer new_enemy = create_new_entity("group:rockthrowers");
 			entityManager.gc(new_enemy, Position.class).map = current_map;
 			entityManager.gc(new_enemy, Position.class).location = Coord.get(20 + i + 1, 20 );
 			entityManager.addComponent(new_enemy, new Vision(Coord.get(20 + i + 1, 20), current_map, 5.0));
