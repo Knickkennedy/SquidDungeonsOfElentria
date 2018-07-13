@@ -13,7 +13,6 @@ import roguelike.utilities.Colors;
 import squidpony.squidgrid.gui.gdx.DefaultResources;
 import squidpony.squidgrid.gui.gdx.SColor;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
-import squidpony.squidgrid.gui.gdx.TextCellFactory;
 import squidpony.squidmath.Coord;
 
 import java.util.ArrayList;
@@ -66,6 +65,8 @@ public class Game_Screen extends ScreenAdapter {
         display.clear();
         world.update();
 	    render_map();
+	    if(game.getScreen() != this)
+	        return;
         render_entities();
         render_statistics();
         render_messages();
@@ -101,7 +102,13 @@ public class Game_Screen extends ScreenAdapter {
     }
 
     private void render_map(){
-        double[][] fov = entityManager.gc(world.getPlayer(), Vision.class).getFov();
+        Vision vision = entityManager.gc(world.getPlayer(), Vision.class);
+        if(vision == null)
+        {
+            game.setScreen(new Start_Screen(game));
+            return;
+        }
+        double[][] fov = vision.getFov();
         for(int i  = 0; i < gridWidth; i++){
             for(int j = map_height_start; j < map_height_end; j++){
                 Sprite sprite = world.getCurrent_map().getTileAt(i, j - message_buffer).sprite;
@@ -115,6 +122,7 @@ public class Game_Screen extends ScreenAdapter {
 
     private void render_statistics(){
 	    Statistics temp = entityManager.gc(world.getPlayer(), Statistics.class);
+	    if(temp == null) return;
 	    int x = 1, y = map_height_end;
         SColor green = Colors.getColor("green");
         SColor white = Colors.getColor("white");
@@ -161,7 +169,11 @@ public class Game_Screen extends ScreenAdapter {
 
     private void place_entity(Integer entity, Coord point){
         Sprite sprite = entityManager.gc(entity, Sprite.class);
-        sprite.makeGlyph(display, point.x, point.y + message_buffer);
+        Position position = entityManager.gc(entity, Position.class);
+        if(position == null)
+            return;
+        if(sprite != null && position.map.equals(world.getCurrent_map())) 
+            sprite.makeGlyph(display, point.x, point.y + message_buffer);
     }
 
     @Override

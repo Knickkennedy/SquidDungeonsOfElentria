@@ -1,15 +1,17 @@
 {
 	"human":{
-		"details": { "name": "human", "description": "a valiant hero" },
+		"details": { "name": "human", "description": "a valiant hero", "hostile towards": ["player", "goblin"] },
 		"sprite": { "glyph": "@", "color": "white" },
-		"speed": 			100,
-		"statistics": { "health": 10, "strength": 10, "intelligence": 10, "willpower": 10, "constitution": 10, "dexterity": 10, "charisma": 10 }},
+		"speed": 100,
+		"statistics": { "health": 10, "strength": 10, "intelligence": 10, "willpower": 10, "constitution": 10, "dexterity": 10, "charisma": 10 },
+        "ai": true,
+        "equipment":{ "head": "group:very common headgear", "chest": "group:very common chestpieces", "right hand": "group:very common weapons" }},
 	
 	"goblin":{
-		"details": { "name": "goblin", "description": "a tiny gobbo" },
+		"details": { "name": "goblin", "description": "a tiny gobbo", "hostile towards": ["player", "human"] },
 		"sprite": { "glyph": "g", "color": "blue" },
 		"speed": 100,
 		"statistics": { "health": 8, "strength": 9, "intelligence": 9, "willpower": 9, "constitution": 9, "dexterity": 15, "charisma": 9 },
 		"ai": true, 
-		"equipment":{ "head": "group:very common headgear", "chest": "group:very common chestpieces", "right hand": "group:very common weapons" }}
+		"equipment":{ "head": "group:very common headgear", "chest": "leather armor", "right hand": "group:very common weapons" }}
 }

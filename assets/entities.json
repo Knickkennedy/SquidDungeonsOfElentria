@@ -2,5 +2,6 @@
 	"goblin":{ "base": "goblin"},
 	"goblin rockthrower":{ "base": "goblin", "modifier": ["rockthrower"]},
 	"angry goblin":{ "base": "goblin", "modifier": ["angry"]},
-	"angry goblin rockthrower":{ "base": "goblin", "modifier": ["angry", "rockthrower"]}
+	"angry goblin rockthrower":{ "base": "goblin", "modifier": ["angry", "rockthrower"]},
+    "human rockthrower":{ "base": "human", "modifier": ["rockthrower"]}
 }

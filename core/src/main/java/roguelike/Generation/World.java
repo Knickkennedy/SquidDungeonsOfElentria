@@ -7,8 +7,10 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import roguelike.Components.Command;
 import roguelike.Components.Position;
+import roguelike.Components.Sprite;
 import roguelike.Systems.Turn_System;
 import roguelike.engine.EntityManager;
+import roguelike.engine.Message_Log;
 import squidpony.squidmath.Coord;
 
 import java.util.ArrayList;
@@ -19,6 +21,7 @@ import java.util.Scanner;
 public class World {
 
 	public static EntityManager entityManager = new EntityManager();
+	public Integer player;
 
 	private int map_width;
 	private int map_height;
@@ -29,7 +32,6 @@ public class World {
 	private Map current_map;
 	private Dungeon first_dungeon;
 
-	private Integer player;
 	private Coord starting_location;
 
 	public static Coord first_dungeon_location;
@@ -57,7 +59,7 @@ public class World {
 		initialize_exits();
 
 		current_map = surface;
-		player = Factory.getInstance().initialize_player();
+		player = entityManager.player = Factory.getInstance().initialize_player();
 		Factory.getInstance().build_player(player, starting_location, surface);
 		turn_system = new Turn_System();
 		reload();
@@ -132,6 +134,20 @@ public class World {
 		turn_system.process();
 
 		current_map = entityManager.gc(player, Position.class).map;
+		perform_deaths();
+	}
+
+	public void perform_deaths(){
+
+		while (!Factory.getInstance().death_queue.isEmpty()){
+			Integer entity = Factory.getInstance().death_queue.poll();
+			Message_Log.getInstance().add_formatted_message("die", entity);
+			entityManager.gc(entity, Position.class).map.entities.remove(entity);
+			Sprite sprite = entityManager.gc(entity, Sprite.class);
+			if(sprite != null && sprite.glyph != null) 
+				entityManager.display.removeGlyph(sprite.glyph);
+			entityManager.killEntity(entity);
+		}
 	}
 
 	private static Scanner openFile(String fileName) {

@@ -6,6 +6,7 @@ import roguelike.Generation.Map;
 import roguelike.utilities.Point;
 import squidpony.squidmath.Coord;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import static roguelike.Generation.World.entityManager;
@@ -33,7 +34,7 @@ public class Exit_Through extends Action{
 //			for (; !entityManager.display.glyphs.isEmpty();) {
 //				entityManager.display.removeGlyph(entityManager.display.glyphs.get(entityManager.display.glyphs.size()-1));
 //			}
-			Set<Integer> ents = entityManager.getAllEntitiesPossessingComponent(Sprite.class);
+			Set<Integer> ents = new HashSet<>(entityManager.getAllEntitiesPossessingComponent(Sprite.class));
 			for(Integer i : ents)
 			{
 				if(entity.equals(i))
@@ -43,6 +44,7 @@ public class Exit_Through extends Action{
 				{
 					entityManager.display.removeGlyph(sprite.glyph);
 					sprite.glyph = null;
+//					entityManager.remove_component(i, Sprite.class);
 				}
 			}
 			entityManager.gc(entity, Position.class).map.findExit(temp_position).set_player_location();

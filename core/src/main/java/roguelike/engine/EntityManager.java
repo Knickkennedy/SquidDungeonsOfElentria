@@ -12,7 +12,7 @@ public class EntityManager
 	private List<Integer> allEntities;
 	private HashMap<Class<?>, HashMap<Integer, Component>> componentStores;
 	public SparseLayers display = null;
-
+	public Integer player = 0;
 	public EntityManager()
 	{
 		allEntities = new LinkedList<>();
@@ -122,5 +122,9 @@ public class EntityManager
 				throw new Error("ERROR: no available Entity IDs; too many entities!" );
 			}
 		}
+	}
+
+	public Integer getPlayer() {
+		return player;
 	}
 }

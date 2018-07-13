@@ -19,39 +19,51 @@ public class Move extends Action{
 
 	@Override
 	public boolean perform() {
-		Coord location = entityManager.gc(entity, Position.class).location;
+		Position position = entityManager.gc(entity, Position.class);
+		if(position == null) return true;
+		if(!position.map.equals(entityManager.gc(entityManager.getPlayer(), Position.class).map))
+			return true;
+		Coord location = position.location;
 		if(entityManager.gc(entity, Position.class).map.entityAt(location.add(direction)) != null
-				&& direction != Point.WAIT){
-
+				&& direction != Point.WAIT
+				&& entityManager.gc(entity, Details.class)
+					.is_hostile_towards(entityManager.gc(entity, Position.class).map
+							.entityAt(location.add(direction)))){
 			entityManager.gc(entity, Action_Component.class).setAction(
 					new Melee_Attack(entity, entityManager.gc(entity, Position.class).map
 							.entityAt(location.add(direction))));
 			return false;
 		}
+		else if(entityManager.gc(entity, Position.class).map.entityAt(location.add(direction)) != null
+				&& direction != Point.WAIT
+				&& !entityManager.gc(entity, Details.class)
+				.is_hostile_towards(entityManager.gc(entity, Position.class).map
+						.entityAt(location.add(direction)))){
+			entityManager.gc(entity, Action_Component.class).setAction(null);
+			return false;
+		}
 		else if(entityManager.gc(entity, Position.class).map.
-				isPassable(location, direction)){
+				isPassable(location, direction)) {
 
-			if(entityManager.gc(entity, Energy.class).energy < cost)
+			if (entityManager.gc(entity, Energy.class).energy < cost)
 				return true;
 			entityManager.gc(entity, Energy.class).energy -= cost;
-			entityManager.display.slide(entityManager.gc(entity, Sprite.class)
-					.makeGlyph(entityManager.display, location.x, location.y), location.x, location.y + 2, location.x + direction.x, location.y + direction.y + 2, 0.2f, () ->
-					{
+			Sprite sprite = entityManager.gc(entity, Sprite.class);
+			if(sprite != null && sprite.glyph != null) 
+				entityManager.display.slide(sprite.glyph, location.x, location.y + 2,
+					location.x + direction.x, location.y + direction.y + 2, 0.15f, null);
+			Position pos = entityManager.gc(entity, Position.class);
+			if (pos != null)
+				pos.update_location(direction);
 
-
-						entityManager.gc(entity, Position.class).update_location(direction);
-
-						if (entityManager.gc(entity, Vision.class) != null) {
-							entityManager.gc(entity, Vision.class).setLocation(entityManager.gc(entity, Position.class).location);
-						}
-					}
-			);
-
+			if (entityManager.gc(entity, Vision.class) != null) {
+				entityManager.gc(entity, Vision.class).setLocation(location);
+			}
 			entityManager.gc(entity, Action_Component.class).setAction(null);
 
 			return true;
 		}
-		else if(entityManager.gc(entity, Position.class).map.isOpenable(entityManager.gc(entity, Position.class).location, direction)){
+		else if(entityManager.gc(entity, Position.class).map.isOpenable(location, direction)){
 			entityManager.gc(entity, Action_Component.class).setAction(new Open_Door(entity, direction));
 
 			return false;

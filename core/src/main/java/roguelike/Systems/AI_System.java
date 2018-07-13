@@ -53,7 +53,7 @@ public class AI_System implements Base_System {
 		ArrayList<Coord> monster_locations = new ArrayList<>();
 
 		for(Integer actor : actors){
-			if(!entityManager.gc(actor, Details.class).isPlayer && !current_actor.equals(actor)){
+			if(!entityManager.gc(current_actor, Details.class).is_hostile_towards(actor) && !current_actor.equals(actor)){
 				monster_locations.add(entityManager.gc(actor, Position.class).location);
 			}
 		}
@@ -70,7 +70,7 @@ public class AI_System implements Base_System {
 								new Move(current_actor, coords.get(0).subtract(entityManager.gc(current_actor, Position.class).location)));
 				break;
 			}
-			else if(entityManager.gc(actor, Details.class).isPlayer && !current_actor.equals(actor) && can_see(current_actor, actor)){
+			else if(!current_actor.equals(actor) && entityManager.gc(current_actor, Details.class).is_hostile_towards(actor) && can_see(current_actor, actor)){
 
 				if(!entityManager.gc(current_actor, AI.class).has_seen) {
 					entityManager.gc(current_actor, AI.class).has_seen = true;
@@ -81,8 +81,8 @@ public class AI_System implements Base_System {
 				ArrayList<Coord> coords =
 								path.findPath(1, monster_locations, null,
 								entityManager.gc(current_actor, Position.class).location, entityManager.gc(actor, Position.class).location);
-
-				entityManager.gc(current_actor, Action_Component.class).setAction(
+				if(!coords.isEmpty()) 
+					entityManager.gc(current_actor, Action_Component.class).setAction(
 						new Move(current_actor, coords.get(0).subtract(entityManager.gc(current_actor, Position.class).location)));
 				break;
 			}

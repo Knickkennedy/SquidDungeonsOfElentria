@@ -55,7 +55,7 @@
 		},
 		"attack":{
 			"physical":{
-				"type": "piercing/slashing",
+				"type": "piercing/slashing/crushing",
 				"dice":{
 					"number of": 1,
 					"size": 6
