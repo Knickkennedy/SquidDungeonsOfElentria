@@ -85,8 +85,9 @@ public class Command extends SquidInput implements Component {
 					lastKeyCode = -1;
 					action = null;
 					game.setScreen(inventory_screen); break;
-				case ESCAPE: // may want to add a confirm menu or save before exiting
-					Gdx.app.exit();
+				case 'q': // ctrl-q exits
+					if(ctrl) 
+						Gdx.app.exit(); // may want to add a confirm menu or save before exiting
 					break;
 				default:
 					action = null; // needed during debugging because pressing F7, F8, F9, etc. would trigger actions
