@@ -4,11 +4,11 @@ import com.badlogic.gdx.Gdx;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import squidpony.squidgrid.mapping.DungeonUtility;
 import roguelike.Components.Position;
 import squidpony.squidmath.Coord;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static roguelike.Generation.World.entityManager;
@@ -17,7 +17,7 @@ public class Map{
 
     private Tile[][] tiles;
     public char[][] pathfinding;
-    public double[][] res;
+
     private JSONObject tile_file;
 
     public ArrayList<Exit> exits;
@@ -85,12 +85,11 @@ public class Map{
 
     public void initializePathFinding() {
         pathfinding = new char[tiles.length][tiles[0].length];
-        for (int i = 0; i < tiles.length; i++) {
-            for (int j = 0; j < tiles[0].length; j++) {
-                pathfinding[i][j] = tiles[i][j].sprite.character;
+        for (int i = 0; i < this.tiles.length; i++) {
+            for (int j = 0; j < this.tiles[0].length; j++) {
+                this.pathfinding[i][j] = tiles[i][j].sprite.character;
             }
         }
-        res = DungeonUtility.generateResistances(pathfinding);
     }
 
     public Integer entityAt(Coord location){
@@ -138,7 +137,6 @@ public class Map{
 
 	public void open_door(Coord start, Coord direction){
     	tiles[start.x + direction.x][start.y + direction.y] = new Tile((JSONObject)tile_file.get("door - open"));
-    	res[start.x + direction.x][start.y + direction.y] = 0.15;
 	}
 
 	public int getCost(Coord start, Coord direction){

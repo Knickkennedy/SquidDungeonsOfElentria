@@ -41,8 +41,8 @@ public class Inventory_Screen extends ScreenAdapter {
 		viewport = new StretchViewport(gridWidth * cellWidth, gridHeight * cellHeight);
 		viewport.setScreenBounds(0, 0, gridWidth * cellWidth, gridHeight * cellHeight);
 		stage = new Stage(viewport, batch);
-		display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getCrispDejaVuFont());
-		display.font.tweakHeight(cellHeight *1.1f).initBySize();
+		display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getStretchableSlabFont());
+		display.font.tweakWidth(cellWidth + 1).tweakHeight(cellHeight + 1).setSmoothingMultiplier(1.6f).initBySize();
 		bgColor = SColor.DB_MIDNIGHT;
 		display.fillBackground(bgColor);
 	}

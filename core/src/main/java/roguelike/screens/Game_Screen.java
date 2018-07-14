@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import roguelike.Components.*;
 import roguelike.Effects.Damage;
+import roguelike.Enums.Equipment_Slot;
 import roguelike.Generation.Factory;
 import roguelike.Generation.World;
 import roguelike.engine.Game;
@@ -13,6 +14,7 @@ import roguelike.utilities.Colors;
 import squidpony.squidgrid.gui.gdx.DefaultResources;
 import squidpony.squidgrid.gui.gdx.SColor;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
+import squidpony.squidgrid.gui.gdx.TextCellFactory;
 import squidpony.squidmath.Coord;
 
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ public class Game_Screen extends ScreenAdapter {
 
     private Game game;
     private Stage stage;
-    public SparseLayers display;
+    private SparseLayers display;
 
     private Color bgColor;
 
@@ -44,12 +46,11 @@ public class Game_Screen extends ScreenAdapter {
         stage = game.stage;
         stage.clear();
         display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getCrispDejaVuFont());
-        display.font.tweakHeight(cellHeight *1.1f).initBySize();
+        display.font.tweakWidth(cellWidth + 1).tweakHeight(cellHeight + 1).setSmoothingMultiplier(1.6f).initBySize();
         //display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getStretchableTypewriterFont());
         //display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getStretchableCodeFont());
         bgColor = SColor.DB_MIDNIGHT;
         display.fillBackground(bgColor);
-        entityManager.display = display;
         map_height_start = message_buffer;
         map_height_end = gridHeight - statistics_height + message_buffer;
         if(world != null)
@@ -65,14 +66,12 @@ public class Game_Screen extends ScreenAdapter {
         display.clear();
         world.update();
 	    render_map();
-	    if(game.getScreen() != this)
-	        return;
         render_entities();
         render_statistics();
         render_messages();
 
-        stage.act();
         stage.draw();
+        stage.act();
     }
 
 	private void render_messages(){
@@ -102,13 +101,7 @@ public class Game_Screen extends ScreenAdapter {
     }
 
     private void render_map(){
-        Vision vision = entityManager.gc(world.getPlayer(), Vision.class);
-        if(vision == null)
-        {
-            game.setScreen(new Start_Screen(game));
-            return;
-        }
-        double[][] fov = vision.getFov();
+        double[][] fov = entityManager.gc(world.getPlayer(), Vision.class).getFov();
         for(int i  = 0; i < gridWidth; i++){
             for(int j = map_height_start; j < map_height_end; j++){
                 Sprite sprite = world.getCurrent_map().getTileAt(i, j - message_buffer).sprite;
@@ -122,45 +115,30 @@ public class Game_Screen extends ScreenAdapter {
 
     private void render_statistics(){
 	    Statistics temp = entityManager.gc(world.getPlayer(), Statistics.class);
-	    if(temp == null) return;
-	    int x = 1, y = map_height_end;
-        SColor green = Colors.getColor("green");
-        SColor white = Colors.getColor("white");
-        SColor gray = Colors.getColor("gray");
-        SColor black = SColor.BLACK;
-	    String health = "HP:" + temp.health.current_value + "/" + temp.health.maximum; 
-                //String.format("HP:%d/%d", temp.health.current_value, temp.health.maximum);
-	    String first = "Str:"+ temp.strength.current_value+" Int:"+ temp.intelligence.current_value +" Will:"+ temp.willpower.current_value;
-                //String.format("Str:%d Int:%d Will:%d", temp.strength.current_value, temp.intelligence.current_value, temp.willpower.current_value);
-	    String second = "Con:"+ temp.constitution.current_value+" Dex:"+ temp.dexterity.current_value +" Char:"+ temp.charisma.current_value;
-                //String.format("Con:%d Dex:%d Char:%d", temp.constitution.current_value, temp.dexterity.current_value, temp.charisma.current_value);
+	    String health = String.format("HP:%s/%s", temp.health.current_value, temp.health.maximum);
+	    String first = String.format("Str:%s Int:%s Will:%s", temp.strength, temp.intelligence, temp.willpower);
+	    String second = String.format("Con:%s Dex:%s Char:%s", temp.constitution, temp.dexterity, temp.charisma);
 
-	    display.put(1, map_height_end, health, green, black);
-    	display.put(gridWidth / 2 - first.length() / 2, map_height_end, first, white, black);
-    	display.put(gridWidth / 2 - second.length() / 2, map_height_end + 1, second, white, black);
+	    display.put(1, map_height_end, health, Colors.getColor("green"));
+    	display.put(gridWidth / 2 - first.length() / 2, map_height_end, first, Colors.getColor("white"));
+    	display.put(gridWidth / 2 - second.length() / 2, map_height_end + 1, second, Colors.getColor("white"));
 
     	int[] armor = entityManager.gc(world.getPlayer(), Equipment.class).total_armor();
-    	String armor_string = "Pierce:" + armor[0] + " Slash:" + armor[1] + " Crush:" + armor[2]; 
-                //String.format("Pierce:%d Slash:%d Crush:%d", armor[0], armor[1], armor[2]);
+    	String armor_string = String.format("Pierce:%d Slash:%d Crush:%d", armor[0], armor[1], armor[2]);
 
 	    ArrayList<Damage> damage_list = entityManager.gc(world.getPlayer(), Equipment.class).get_melee_damages();
 	    StringBuilder melee_damage = new StringBuilder();
-        for (int i = 0; i < damage_list.size();) {
-            Damage damage = damage_list.get(i);
-	    	melee_damage.append("Type: ").append(damage.type).append(' ').append(damage.dice);
-	    	if(++i < damage_list.size()) // if we aren't the last item
-	    	    melee_damage.append(", ");
+	    for(Damage damage : damage_list){
+	    	melee_damage.append(String.format("Type: %s %s", damage.type, damage.dice));
 	    }
 
 	    String melee_string = melee_damage.toString();
 
-    	display.put(gridWidth - armor_string.length() - 1, map_height_end, armor_string, gray, black);
-	    display.put(gridWidth - melee_string.length() - 1, map_height_end + 1, melee_string, gray, black);
+    	display.put(gridWidth - armor_string.length() - 1, map_height_end, armor_string, Colors.getColor("gray"));
+	    display.put(gridWidth - melee_string.length() - 1, map_height_end + 1, melee_string, Colors.getColor("gray"));
     }
 
     private void render_entities(){
-        if(display.hasActiveAnimations())
-            return;
         Set <Integer> entities = entityManager.getAllEntitiesPossessingComponent(Active.class);
         for(Integer entity : entities){
             place_entity(entity, entityManager.gc(entity, Position.class).location);
@@ -168,12 +146,7 @@ public class Game_Screen extends ScreenAdapter {
     }
 
     private void place_entity(Integer entity, Coord point){
-        Sprite sprite = entityManager.gc(entity, Sprite.class);
-        Position position = entityManager.gc(entity, Position.class);
-        if(position == null)
-            return;
-        if(sprite != null && position.map.equals(world.getCurrent_map())) 
-            sprite.makeGlyph(display, point.x, point.y + message_buffer);
+        display.put(point.x, point.y + message_buffer, entityManager.gc(entity, Sprite.class).character, entityManager.gc(entity, Sprite.class).foregroundColor);
     }
 
     @Override

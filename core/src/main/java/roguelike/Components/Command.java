@@ -1,6 +1,5 @@
 package roguelike.Components;
 
-import com.badlogic.gdx.Gdx;
 import lombok.Getter;
 import roguelike.Actions.Action;
 import roguelike.Actions.Exit_Through;
@@ -56,7 +55,7 @@ public class Command extends SquidInput implements Component {
 			 */
 			@Override
 			public void handle(char key, boolean alt, boolean ctrl, boolean shift) {
-				switch(key){
+			switch(key){
 				case DOWN_LEFT_ARROW:
 					action = new Move(entity, Point.SOUTH_WEST); break;
 				case DOWN_ARROW:
@@ -85,11 +84,7 @@ public class Command extends SquidInput implements Component {
 					lastKeyCode = -1;
 					action = null;
 					game.setScreen(inventory_screen); break;
-				case ESCAPE: // may want to add a confirm menu or save before exiting
-					Gdx.app.exit();
-					break;
 				default:
-					action = null; // needed during debugging because pressing F7, F8, F9, etc. would trigger actions
 					return;
 			}
 

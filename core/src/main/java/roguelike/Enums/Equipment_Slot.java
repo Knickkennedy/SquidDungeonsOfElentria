@@ -36,6 +36,4 @@ public enum Equipment_Slot {
 
 		return Word.capitalize_all(name);
 	}
-	
-	public static final Equipment_Slot[] ALL = values();
 }

@@ -56,7 +56,7 @@ public class Equipment implements Component{
 		int slashing = 0;
 		int crushing = 0;
 
-		for(Equipment_Slot slot : Equipment_Slot.ALL){ // uses one array instead of values() copying one every frame
+		for(Equipment_Slot slot : Equipment_Slot.values()){
 			if(equipment.get(slot) != null){
 				if(entityManager.gc(equipment.get(slot), Armor.class) != null) {
 					piercing += entityManager.gc(equipment.get(slot), Armor.class).piercing;

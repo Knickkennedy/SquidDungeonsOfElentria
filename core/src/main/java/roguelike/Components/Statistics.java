@@ -43,7 +43,7 @@ public class Statistics implements Component{
 			}
 		}
 
-		//System.out.println(this);
+		System.out.println(this);
 	}
 
 	public Limited_Statistic get_stat(String type){

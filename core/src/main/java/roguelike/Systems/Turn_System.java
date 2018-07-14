@@ -28,9 +28,10 @@ public class Turn_System implements Base_System {
 		this.AI_System = new AI_System(actors);
 
 		while(true){
+
 			AI_System.process();
 			Command command = entityManager.gc(current_actor, Command.class);
-			if(command != null && !entityManager.display.hasActiveAnimations() && command.hasNext())
+			if(command != null && command.hasNext())
 			{
 				command.next();
 			}
