@@ -2,7 +2,6 @@ package roguelike.Systems;
 
 import roguelike.Actions.Move;
 import roguelike.Components.*;
-import roguelike.Enums.AI_MODE;
 import roguelike.utilities.Point;
 import roguelike.utilities.Roll;
 import squidpony.squidai.DijkstraMap;
@@ -66,11 +65,12 @@ public class AI_System implements Base_System {
 				ArrayList<Coord> coords =
 						path.findPath(1, monster_locations, null,
 								entityManager.gc(current_actor, Position.class).location, entityManager.gc(actor, Position.class).location);
-				entityManager.gc(current_actor, Action_Component.class).setAction(
+				if(!coords.isEmpty()) 
+					entityManager.gc(current_actor, Action_Component.class).setAction(
 								new Move(current_actor, coords.get(0).subtract(entityManager.gc(current_actor, Position.class).location)));
 				break;
 			}
-			else if(entityManager.gc(current_actor, Details.class).is_hostile_towards(actor) && can_see(current_actor, actor)){
+			else if(!current_actor.equals(actor) && entityManager.gc(current_actor, Details.class).is_hostile_towards(actor) && can_see(current_actor, actor)){
 
 				if(!entityManager.gc(current_actor, AI.class).has_seen) {
 					entityManager.gc(current_actor, AI.class).has_seen = true;
@@ -81,7 +81,8 @@ public class AI_System implements Base_System {
 				ArrayList<Coord> coords =
 								path.findPath(1, monster_locations, null,
 								entityManager.gc(current_actor, Position.class).location, entityManager.gc(actor, Position.class).location);
-				entityManager.gc(current_actor, Action_Component.class).setAction(
+				if(!coords.isEmpty()) 
+					entityManager.gc(current_actor, Action_Component.class).setAction(
 						new Move(current_actor, coords.get(0).subtract(entityManager.gc(current_actor, Position.class).location)));
 				break;
 			}
@@ -95,7 +96,8 @@ public class AI_System implements Base_System {
 		Coord target_location = entityManager.gc(target, Position.class).location;
 
 		int range = (center.x - target_location.x)*(center.x - target_location.x) + (center.y - target_location.y)*(center.y - target_location.y);
-		double vision_radius = entityManager.gc(current_actor, Vision.class).getRange()*entityManager.gc(current_actor, Vision.class).getRange();
+		double vision_radius = entityManager.gc(current_actor, Vision.class).getRange();
+		vision_radius *= vision_radius;
 
 		boolean is_reachable = entityManager.gc(current_actor, AI.class).
 				los.isReachable(entityManager.gc(current_actor, Position.class).map, center.x, center.y, target_location.x, target_location.y);

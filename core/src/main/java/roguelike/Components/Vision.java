@@ -13,19 +13,23 @@ public class Vision implements Component{
 	private Coord location;
 	private Map map;
 	private double range;
-	private double[][] res, fov;
+	private double[][] fov;
 
 	public Vision(Coord point, Map map, double range){
 		this.location = point;
 		this.map = map;
 		this.range = range;
-		res = DungeonUtility.generateSimpleResistances(map.pathfinding);
-		fov = new double[res.length][res[0].length];
-		FOV.reuseFOV(this.res, this.fov, this.location.x, this.location.y, this.range, Radius.CIRCLE);
+		if(map.res == null) {
+			map.res = DungeonUtility.generateResistances(map.pathfinding);
+		}
+		fov = new double[map.res.length][map.res[0].length];
+		FOV.reuseFOV(map.res, this.fov, this.location.x, this.location.y, this.range, Radius.CIRCLE);
 	}
 
-	public void setLocation(Coord mapPosition){
-		location = mapPosition;
-		FOV.reuseFOV(res, fov, location.x, location.y, range, Radius.CIRCLE);
+	public void setLocation(Coord mapPosition) {
+		if (mapPosition.isWithin(map.width(), map.height())) {
+			location = mapPosition;
+			FOV.reuseFOV(map.res, fov, location.x, location.y, range, Radius.CIRCLE);
+		}
 	}
 }
