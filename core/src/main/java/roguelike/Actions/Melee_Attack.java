@@ -58,8 +58,10 @@ public class Melee_Attack extends Action{
 
 		Message_Log.getInstance().add_formatted_message("attack", attacker, target, damage);
 
-		new Death_System(attacker, target, "health", -damage).process();
+		entityManager.gc(attacker, Energy.class).energy -= cost;
 
+		new Death_System(attacker, target, "health", -damage).process();
+		
 		entityManager.gc(attacker, Action_Component.class).setAction(null);
 
 		return true;

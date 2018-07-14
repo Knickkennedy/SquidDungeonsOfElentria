@@ -17,7 +17,7 @@ public class Equipment implements Component{
 	public Equipment(){
 		equipment = new HashMap<>();
 
-		for(Equipment_Slot slot : Equipment_Slot.values()){
+		for(Equipment_Slot slot : Equipment_Slot.ALL){  // uses one array instead of values() copying one each time
 			equipment.put(slot, null);
 		}
 	}
@@ -56,7 +56,7 @@ public class Equipment implements Component{
 		int slashing = 0;
 		int crushing = 0;
 
-		for(Equipment_Slot slot : Equipment_Slot.ALL){ // uses one array instead of values() copying one every frame
+		for(Equipment_Slot slot : Equipment_Slot.ALL){
 			if(equipment.get(slot) != null){
 				if(entityManager.gc(equipment.get(slot), Armor.class) != null) {
 					piercing += entityManager.gc(equipment.get(slot), Armor.class).piercing;
@@ -82,7 +82,7 @@ public class Equipment implements Component{
 
 	private int get_piercing_resistance(){
 		int amount = 0;
-		for(Equipment_Slot slot : Equipment_Slot.values()){
+		for(Equipment_Slot slot : Equipment_Slot.ALL){
 			if(equipment.get(slot) != null){
 				if(entityManager.gc(equipment.get(slot), Armor.class) != null) {
 					amount += entityManager.gc(equipment.get(slot), Armor.class).piercing;
@@ -94,7 +94,7 @@ public class Equipment implements Component{
 
 	private int get_slashing_resistance(){
 		int amount = 0;
-		for(Equipment_Slot slot : Equipment_Slot.values()){
+		for(Equipment_Slot slot : Equipment_Slot.ALL){
 			if(equipment.get(slot) != null){
 				if(entityManager.gc(equipment.get(slot), Armor.class) != null) {
 					amount += entityManager.gc(equipment.get(slot), Armor.class).slashing;
@@ -106,7 +106,7 @@ public class Equipment implements Component{
 
 	private int get_crushing_resistance(){
 		int amount = 0;
-		for(Equipment_Slot slot : Equipment_Slot.values()){
+		for(Equipment_Slot slot : Equipment_Slot.ALL){
 			if(equipment.get(slot) != null){
 				if(entityManager.gc(equipment.get(slot), Armor.class) != null) {
 					amount += entityManager.gc(equipment.get(slot), Armor.class).crushing;
