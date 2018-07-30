@@ -6,6 +6,7 @@ import roguelike.Enums.AI_MODE;
 import roguelike.utilities.Point;
 import roguelike.utilities.Roll;
 import squidpony.squidai.DijkstraMap;
+import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidmath.Coord;
 
 import java.util.ArrayList;
@@ -15,10 +16,12 @@ import static roguelike.Generation.World.entityManager;
 public class AI_System implements Base_System {
 
 	public ArrayList<Integer> actors;
+	private SparseLayers display;
 	public DijkstraMap path;
 
-	public AI_System(ArrayList<Integer> actors){
+	public AI_System(ArrayList<Integer> actors, SparseLayers display){
 		this.actors = actors;
+		this.display = display;
 	}
 
 	@Override
@@ -34,11 +37,11 @@ public class AI_System implements Base_System {
 
 					switch (entityManager.gc(current_actor, AI.class).mode) {
 						case PASSIVE:
-							entityManager.gc(current_actor, Action_Component.class).setAction(new Move(current_actor, Point.WAIT));
+							entityManager.gc(current_actor, Action_Component.class).setAction(new Move(current_actor, Point.WAIT, display));
 							break;
 						case NEUTRAL:
 							entityManager.gc(current_actor, Action_Component.class).setAction(
-									new Move(current_actor, Point.direction.get(Roll.rand(0, Point.direction.size() - 1))));
+									new Move(current_actor, Point.direction.get(Roll.rand(0, Point.direction.size() - 1)), display));
 							break;
 						case AGGRESSIVE:
 							perform_hunt_attempt(current_actor, path);
@@ -67,7 +70,7 @@ public class AI_System implements Base_System {
 						path.findPath(1, monster_locations, null,
 								entityManager.gc(current_actor, Position.class).location, entityManager.gc(actor, Position.class).location);
 				entityManager.gc(current_actor, Action_Component.class).setAction(
-								new Move(current_actor, coords.get(0).subtract(entityManager.gc(current_actor, Position.class).location)));
+								new Move(current_actor, coords.get(0).subtract(entityManager.gc(current_actor, Position.class).location), display));
 				break;
 			}
 			else if(entityManager.gc(current_actor, Details.class).is_hostile_towards(actor) && can_see(current_actor, actor)){
@@ -82,11 +85,11 @@ public class AI_System implements Base_System {
 								path.findPath(1, monster_locations, null,
 								entityManager.gc(current_actor, Position.class).location, entityManager.gc(actor, Position.class).location);
 				entityManager.gc(current_actor, Action_Component.class).setAction(
-						new Move(current_actor, coords.get(0).subtract(entityManager.gc(current_actor, Position.class).location)));
+						new Move(current_actor, coords.get(0).subtract(entityManager.gc(current_actor, Position.class).location), display));
 				break;
 			}
 			entityManager.gc(current_actor, Action_Component.class).setAction(
-						new Move(current_actor, Point.direction.get(Roll.rand(0, Point.direction.size() - 1))));
+						new Move(current_actor, Point.direction.get(Roll.rand(0, Point.direction.size() - 1)), display));
 		}
 	}
 

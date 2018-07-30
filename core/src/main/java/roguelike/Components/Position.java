@@ -1,6 +1,7 @@
 package roguelike.Components;
 
 import roguelike.Generation.Map;
+import squidpony.squidgrid.gui.gdx.SquidPanel;
 import squidpony.squidmath.Coord;
 
 public class Position implements Component{

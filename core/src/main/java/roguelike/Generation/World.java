@@ -7,9 +7,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import roguelike.Components.Command;
 import roguelike.Components.Position;
+import roguelike.Components.Sprite;
 import roguelike.Systems.Turn_System;
 import roguelike.engine.EntityManager;
 import roguelike.engine.Message_Log;
+import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidmath.Coord;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import java.util.Scanner;
 public class World {
 
 	public static EntityManager entityManager = new EntityManager();
+	private SparseLayers display;
 
 	private int map_width;
 	private int map_height;
@@ -38,9 +41,11 @@ public class World {
 
 	public ArrayList<Exit> surface_exits;
 
-	public World(int map_width, int map_height) {
+	public World(int map_width, int map_height, SparseLayers display) {
 		this.map_width = map_width;
 		this.map_height = map_height;
+
+		this.display = display;
 
 		surface_exits = new ArrayList<>();
 
@@ -58,9 +63,10 @@ public class World {
 		initialize_exits();
 
 		current_map = surface;
+		Factory.getInstance().setDisplay(display);
 		player = Factory.getInstance().initialize_player();
 		Factory.getInstance().build_player(player, starting_location, surface);
-		turn_system = new Turn_System();
+		turn_system = new Turn_System(display);
 		reload();
 	}
 	public void reload()
@@ -68,7 +74,7 @@ public class World {
 		Gdx.input.setInputProcessor(entityManager.gc(player, Command.class));
 	}
 
-	public void initialize_exits(){
+	private void initialize_exits(){
 		surface.exits.addAll(surface_exits);
 	}
 
@@ -133,16 +139,22 @@ public class World {
 		turn_system.process();
 
 		current_map = entityManager.gc(player, Position.class).map;
+
 		perform_deaths();
 	}
 
-	public void perform_deaths(){
+	private void perform_deaths(){
 
 		while (!Factory.getInstance().death_queue.isEmpty()){
 			Integer entity = Factory.getInstance().death_queue.poll();
 			Message_Log.getInstance().add_formatted_message("die", entity);
-			entityManager.gc(entity, Position.class).map.entities.remove(entity);
-			entityManager.killEntity(entity);
+
+			if(entity != null) {
+				Sprite sprite = entityManager.gc(entity, Sprite.class);
+				display.removeGlyph(sprite.getGlyph());
+				entityManager.gc(entity, Position.class).map.entities.remove(entity);
+				entityManager.killEntity(entity);
+			}
 		}
 	}
 

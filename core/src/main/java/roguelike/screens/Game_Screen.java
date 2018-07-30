@@ -2,7 +2,11 @@ package roguelike.screens;
 
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.utils.Align;
 import roguelike.Components.*;
 import roguelike.Effects.Damage;
 import roguelike.Enums.Equipment_Slot;
@@ -11,11 +15,9 @@ import roguelike.Generation.World;
 import roguelike.engine.Game;
 import roguelike.engine.Message_Log;
 import roguelike.utilities.Colors;
-import squidpony.squidgrid.gui.gdx.DefaultResources;
-import squidpony.squidgrid.gui.gdx.SColor;
-import squidpony.squidgrid.gui.gdx.SparseLayers;
-import squidpony.squidgrid.gui.gdx.TextCellFactory;
+import squidpony.squidgrid.gui.gdx.*;
 import squidpony.squidmath.Coord;
+import squidpony.squidmath.GreasedRegion;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -25,7 +27,7 @@ import static roguelike.engine.Game.*;
 
 public class Game_Screen extends ScreenAdapter {
 
-    private Game game;
+    //private Game game;
     private Stage stage;
     private SparseLayers display;
 
@@ -36,19 +38,18 @@ public class Game_Screen extends ScreenAdapter {
     private int map_height_start;
     private int map_height_end;
 
-    public Game_Screen(Game game_in){
-        game = game_in;
+    public Game_Screen(Game game_in, Stage stage_in){
+        //game = game_in;
+	    stage = stage_in;
         Factory.getInstance().setGame(game_in);
     }
 
     @Override
     public void show(){
-        stage = game.stage;
+        //stage = game.stage;
         stage.clear();
         display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getCrispDejaVuFont());
         display.font.tweakWidth(cellWidth + 1).tweakHeight(cellHeight + 1).setSmoothingMultiplier(1.6f).initBySize();
-        //display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getStretchableTypewriterFont());
-        //display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getStretchableCodeFont());
         bgColor = SColor.DB_MIDNIGHT;
         display.fillBackground(bgColor);
         map_height_start = message_buffer;
@@ -56,22 +57,28 @@ public class Game_Screen extends ScreenAdapter {
         if(world != null)
             world.reload();
         else
-            world = new World(gridWidth, gridHeight - statistics_height);
+            world = new World(gridWidth, gridHeight - statistics_height, display);
         stage.addActor(display);
-
+	    /*GreasedRegion greasedRegion = new GreasedRegion(gridWidth, gridHeight);
+	    greasedRegion.allOn();
+	    display.addAction(new PanelEffect.ProjectileEffect(display, 5f, greasedRegion, Coord.get(10, 10), Coord.get(10, 15), '/', SColor.BROWN));
+    */
     }
 
     @Override
     public void render(float delta){
         display.clear();
+
         world.update();
-	    render_map();
+        render_map();
         render_entities();
         render_statistics();
         render_messages();
 
-        stage.draw();
-        stage.act();
+
+	    stage.act();
+	    stage.draw();
+
     }
 
 	private void render_messages(){
@@ -139,6 +146,9 @@ public class Game_Screen extends ScreenAdapter {
     }
 
     private void render_entities(){
+
+    	if(display.hasActiveAnimations())
+    		return;
         Set <Integer> entities = entityManager.getAllEntitiesPossessingComponent(Active.class);
         for(Integer entity : entities){
             place_entity(entity, entityManager.gc(entity, Position.class).location);
@@ -147,6 +157,9 @@ public class Game_Screen extends ScreenAdapter {
 
     private void place_entity(Integer entity, Coord point){
         display.put(point.x, point.y + message_buffer, entityManager.gc(entity, Sprite.class).character, entityManager.gc(entity, Sprite.class).foregroundColor);
+        Sprite sprite = entityManager.gc(entity, Sprite.class);
+        Position position = entityManager.gc(entity, Position.class);
+        sprite.makeGlyph(display, position.location.x, position.location.y + message_buffer);
     }
 
     @Override

@@ -4,6 +4,7 @@ import roguelike.Components.*;
 import roguelike.Generation.Exit;
 import roguelike.Generation.Map;
 import roguelike.utilities.Point;
+import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidmath.Coord;
 
 import static roguelike.Generation.World.entityManager;
@@ -11,9 +12,11 @@ import static roguelike.Generation.World.entityManager;
 public class Exit_Through extends Action{
 
 	private Integer entity;
+	private SparseLayers display;
 
-	public Exit_Through(Integer entity){
+	public Exit_Through(Integer entity, SparseLayers display){
 		this.entity = entity;
+		this.display = display;
 		this.cost = entityManager.gc(entity, Position.class).map.getCost(entityManager.gc(entity, Position.class).location, Point.WAIT);
 	}
 
@@ -53,6 +56,8 @@ public class Exit_Through extends Action{
 
 	public void remove_active_flag(Map map){
 		for(Integer entity : map.entities){
+			Sprite sprite = entityManager.gc(entity, Sprite.class);
+			display.removeGlyph(sprite.getGlyph());
 			entityManager.remove_component(entity, Active.class);
 		}
 	}

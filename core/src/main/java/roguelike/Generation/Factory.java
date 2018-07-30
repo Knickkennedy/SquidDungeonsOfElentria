@@ -9,6 +9,7 @@ import roguelike.Enums.Equipment_Slot;
 import roguelike.Enums.Race;
 import roguelike.engine.Game;
 import roguelike.utilities.Roll;
+import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidmath.Coord;
 
 import java.util.PriorityQueue;
@@ -20,6 +21,7 @@ public class Factory {
 	public static Factory factory;
 
 	public Game game;
+	private SparseLayers display;
 
 	private JSONObject races;
 	private JSONObject items;
@@ -57,6 +59,7 @@ public class Factory {
 	public void setGame(Game game){
 		this.game = game;
 	}
+	public void setDisplay(SparseLayers display){ this.display = display; }
 
 	public Integer initialize_player(){
 		return entityManager.createEntity();
@@ -75,7 +78,7 @@ public class Factory {
 		entityManager.addComponent(player, new Active());
 		entityManager.addComponent(player, new Action_Component());
 		entityManager.addComponent(player, new Energy(100));
-		entityManager.addComponent(player, new Command(player, game));
+		entityManager.addComponent(player, initializeCommandDisplay(player, display));
 		entityManager.addComponent(player, new Inventory());
 		entityManager.addComponent(player, new Equipment());
 		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("iron breastplate"), Equipment_Slot.CHEST);
@@ -97,6 +100,10 @@ public class Factory {
 
 
 		current_map.entities.add(player);
+	}
+
+	public Command initializeCommandDisplay(Integer entity, SparseLayers display){
+		return new Command(entity, game, display);
 	}
 
 	public Integer create_new_entity(String name){

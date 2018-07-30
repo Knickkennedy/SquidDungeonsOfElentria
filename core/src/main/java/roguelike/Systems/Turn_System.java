@@ -5,6 +5,7 @@ import roguelike.Components.Action_Component;
 import roguelike.Components.Active;
 import roguelike.Components.Command;
 import roguelike.Components.Energy;
+import squidpony.squidgrid.gui.gdx.SparseLayers;
 
 import java.util.ArrayList;
 
@@ -12,10 +13,12 @@ import static roguelike.Generation.World.entityManager;
 
 public class Turn_System implements Base_System {
 
+	private SparseLayers display;
 	private Energy_System energy_system;
 	private AI_System AI_System;
 
-	public Turn_System(){
+	public Turn_System(SparseLayers display){
+		this.display = display;
 		this.energy_system = new Energy_System();
 	}
 
@@ -25,13 +28,13 @@ public class Turn_System implements Base_System {
 		actors.sort((a, b) -> a < b ? -1 : a.equals(b) ? 0 : 1);
 		int current_actor = actors.get(0);
 
-		this.AI_System = new AI_System(actors);
+		this.AI_System = new AI_System(actors, display);
 
 		while(true){
 
 			AI_System.process();
 			Command command = entityManager.gc(current_actor, Command.class);
-			if(command != null && command.hasNext())
+			if(command != null && !display.hasActiveAnimations() && command.hasNext())
 			{
 				command.next();
 			}

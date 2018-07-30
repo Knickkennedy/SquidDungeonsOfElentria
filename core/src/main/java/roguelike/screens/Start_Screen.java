@@ -39,7 +39,7 @@ public class Start_Screen extends ScreenAdapter {
 
 		    switch(key) {
                 case SquidInput.ENTER: {
-	                game.setGame_screen(new Game_Screen(game));
+	                /*game.setGame_screen(new Game_Screen(game));*/
                     game.setScreen(game.getGame_screen());
                     break;
                 }

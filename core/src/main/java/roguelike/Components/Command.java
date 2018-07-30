@@ -9,6 +9,7 @@ import roguelike.engine.Message_Log;
 import roguelike.screens.Equipment_Screen;
 import roguelike.screens.Inventory_Screen;
 import roguelike.utilities.Point;
+import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidgrid.gui.gdx.SquidInput;
 
 import static roguelike.Generation.World.entityManager;
@@ -18,15 +19,17 @@ public class Command extends SquidInput implements Component {
 
 	private Integer entity;
 	private Game game;
+	private SparseLayers display;
 	private Action action;
 
 	private Equipment_Screen equipment_screen;
 	private Inventory_Screen inventory_screen;
 
-	public Command(final Integer entity, Game game) {
+	public Command(final Integer entity, Game game, SparseLayers display) {
 		super();
 		this.entity = entity;
 		this.game = game;
+		this.display = display;
 		setKeyHandler(new KH());
 		setRepeatGap(160);
 
@@ -36,48 +39,32 @@ public class Command extends SquidInput implements Component {
 
 	private class KH implements KeyHandler
 	{
-			/**
-			 * The only method you need to implement yourself in KeyHandler, this should react to keys such as
-			 * 'a' (produced by pressing the A key while not holding Shift), 'E' (produced by pressing the E key while
-			 * holding Shift), and '\u2190' (left arrow in unicode, also available as a constant in SquidInput, produced by
-			 * pressing the left arrow key even though that key does not have a default unicode representation). Capital
-			 * letters will be capitalized when they are passed to this, but they may or may not have the shift argument as
-			 * true depending on how this method was called. Symbols that may be produced by holding Shift and pressing a
-			 * number or a symbol key can vary between keyboards (some may require Shift to be held down, others may not).
-			 * <br>
-			 * This can react to the input in whatever way you find appropriate for your game.
-			 *
-			 * @param key   a char of the "typed" representation of the key, such as 'a' or 'E', or if there is no Unicode
-			 *              character for the key, an appropriate alternate character as documented in SquidInput.fromKey()
-			 * @param alt   true if the Alt modifier was being held while this key was entered, false otherwise.
-			 * @param ctrl  true if the Ctrl modifier was being held while this key was entered, false otherwise.
-			 * @param shift true if the Shift modifier was being held while this key was entered, false otherwise.
-			 */
+
 			@Override
 			public void handle(char key, boolean alt, boolean ctrl, boolean shift) {
 			switch(key){
 				case DOWN_LEFT_ARROW:
-					action = new Move(entity, Point.SOUTH_WEST); break;
+					action = new Move(entity, Point.SOUTH_WEST, display); break;
 				case DOWN_ARROW:
-					action = new Move(entity, Point.SOUTH); break;
+					action = new Move(entity, Point.SOUTH, display); break;
 				case DOWN_RIGHT_ARROW:
-					action = new Move(entity, Point.SOUTH_EAST); break;
+					action = new Move(entity, Point.SOUTH_EAST, display); break;
 				case LEFT_ARROW:
-					action = new Move(entity, Point.WEST); break;
+					action = new Move(entity, Point.WEST, display); break;
 				case CENTER_ARROW:
-					action = new Move(entity, Point.WAIT); break;
+					action = new Move(entity, Point.WAIT, display); break;
 				case RIGHT_ARROW:
-					action = new Move(entity, Point.EAST); break;
+					action = new Move(entity, Point.EAST, display); break;
 				case UP_LEFT_ARROW:
-					action = new Move(entity, Point.NORTH_WEST); break;
+					action = new Move(entity, Point.NORTH_WEST, display); break;
 				case UP_ARROW:
-					action = new Move(entity, Point.NORTH); break;
+					action = new Move(entity, Point.NORTH, display); break;
 				case UP_RIGHT_ARROW:
-					action = new Move(entity, Point.NORTH_EAST); break;
+					action = new Move(entity, Point.NORTH_EAST, display); break;
 				case ENTER:
-					action = new Exit_Through(entity); break;
+					action = new Exit_Through(entity, display); break;
 				case 'e':
-					lastKeyCode = -1; // needed because this class won't be used to handle input after the screen switch
+					lastKeyCode = -1;
 					action = null;
 					game.setScreen(equipment_screen); break;
 				case 'i':

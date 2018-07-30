@@ -26,6 +26,7 @@ public class Game extends com.badlogic.gdx.Game {
     public static final int cellHeight = 20;
 
     public Stage stage;
+    public Stage stage2;
     private ScreenAdapter game_screen;
 
     @Override
@@ -34,9 +35,15 @@ public class Game extends com.badlogic.gdx.Game {
         batch = new SpriteBatch();
 
         StretchViewport mainViewport = new StretchViewport(gridWidth * cellWidth, gridHeight * cellHeight);
-        mainViewport.setScreenBounds(0, 0, gridWidth * cellWidth, gridHeight * cellHeight);
+                        mainViewport.setScreenBounds(0, 0, gridWidth * cellWidth, gridHeight * cellHeight);
+
+        StretchViewport gameViewPort = new StretchViewport(gridWidth * cellWidth, gridHeight * cellHeight);
+		gameViewPort.setScreenBounds(0, 0, gridWidth * cellWidth, gridHeight * cellHeight);
 
         stage = new Stage(mainViewport, batch);
+        stage2 = new Stage(gameViewPort, batch);
+
+        game_screen = new Game_Screen(this, stage2);
 
 	    setScreen(new Start_Screen(this));
     }
