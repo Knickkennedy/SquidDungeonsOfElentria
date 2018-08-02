@@ -8,13 +8,14 @@ import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidmath.Coord;
 
 import static roguelike.Generation.World.entityManager;
+import static roguelike.engine.Game.message_buffer;
 
-public class Exit_Through extends Action{
+public class ExitThrough extends Action{
 
 	private Integer entity;
 	private SparseLayers display;
 
-	public Exit_Through(Integer entity, SparseLayers display){
+	public ExitThrough(Integer entity, SparseLayers display){
 		this.entity = entity;
 		this.display = display;
 		this.cost = entityManager.gc(entity, Position.class).map.getCost(entityManager.gc(entity, Position.class).location, Point.WAIT);
@@ -44,12 +45,12 @@ public class Exit_Through extends Action{
 			Vision vision = new Vision(position.location, position.map, 5);
 			entityManager.addComponent(entity, vision);
 
-			entityManager.gc(entity, Action_Component.class).setAction(null);
+			entityManager.gc(entity, ActionComponent.class).setAction(null);
 			return true;
 		}
 
 
-		entityManager.gc(entity, Action_Component.class).setAction(null);
+		entityManager.gc(entity, ActionComponent.class).setAction(null);
 
 		return false;
 	}
@@ -65,6 +66,9 @@ public class Exit_Through extends Action{
 	public void add_active_flag(Map map){
 		for(Integer entity : map.entities){
 			entityManager.addComponent(entity, new Active());
+			Position position = entityManager.gc(entity, Position.class);
+			Sprite sprite = entityManager.gc(entity, Sprite.class);
+			sprite.makeGlyph(display, position.location.x, position.location.y + message_buffer);
 		}
 	}
 }

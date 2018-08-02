@@ -6,13 +6,13 @@ import java.util.LinkedList;
 
 import static roguelike.Generation.World.entityManager;
 
-public class Message_Log {
+public class MessageLog {
 
-	public static Message_Log message_log = null;
+	public static MessageLog message_log = null;
 	public LinkedList<String> messages;
 	public int ticks;
 
-	private Message_Log(){
+	private MessageLog(){
 		messages = new LinkedList<>();
 	}
 
@@ -80,9 +80,9 @@ public class Message_Log {
 		return word.toLowerCase().matches(".*(s|sh|x|ch|z)");
 	}
 
-	public static Message_Log getInstance(){
+	public static MessageLog getInstance(){
 		if(message_log == null){
-			message_log = new Message_Log();
+			message_log = new MessageLog();
 		}
 
 		return message_log;

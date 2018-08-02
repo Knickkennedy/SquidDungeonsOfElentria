@@ -2,7 +2,7 @@ package roguelike.Components;
 
 import org.json.simple.JSONObject;
 import roguelike.Effects.Damage;
-import roguelike.Enums.Equipment_Slot;
+import roguelike.Enums.EquipmentSlot;
 import roguelike.Generation.Factory;
 import roguelike.utilities.Dice;
 
@@ -12,12 +12,12 @@ import java.util.HashMap;
 import static roguelike.Generation.World.entityManager;
 
 public class Equipment implements Component{
-	public HashMap<Equipment_Slot, Integer> equipment;
+	public HashMap<EquipmentSlot, Integer> equipment;
 
 	public Equipment(){
 		equipment = new HashMap<>();
 
-		for(Equipment_Slot slot : Equipment_Slot.values()){
+		for(EquipmentSlot slot : EquipmentSlot.values()){
 			equipment.put(slot, null);
 		}
 	}
@@ -29,15 +29,15 @@ public class Equipment implements Component{
 		for(Object o : object.keySet()){
 
 			switch (o.toString()){
-				case "head": equipment.put(Equipment_Slot.HEAD, Factory.getInstance().create_new_item((String)object.get(o.toString()))); break;
-				case "chest": equipment.put(Equipment_Slot.CHEST, Factory.getInstance().create_new_item((String)object.get(o.toString()))); break;
-				case "left hand": equipment.put(Equipment_Slot.LEFT_HAND, Factory.getInstance().create_new_item((String)object.get(o.toString()))); break;
-				case "right hand": equipment.put(Equipment_Slot.RIGHT_HAND, Factory.getInstance().create_new_item((String)object.get(o.toString()))); break;
+				case "head": equipment.put(EquipmentSlot.HEAD, Factory.getInstance().create_new_item((String)object.get(o.toString()))); break;
+				case "chest": equipment.put(EquipmentSlot.CHEST, Factory.getInstance().create_new_item((String)object.get(o.toString()))); break;
+				case "left hand": equipment.put(EquipmentSlot.LEFT_HAND, Factory.getInstance().create_new_item((String)object.get(o.toString()))); break;
+				case "right hand": equipment.put(EquipmentSlot.RIGHT_HAND, Factory.getInstance().create_new_item((String)object.get(o.toString()))); break;
 			}
 		}
 	}
 
-	public String get_item_name(Equipment_Slot slot){
+	public String get_item_name(EquipmentSlot slot){
 		if(equipment.get(slot) == null){
 			return "";
 		}
@@ -46,7 +46,7 @@ public class Equipment implements Component{
 		}
 	}
 
-	public Integer get_slot(Equipment_Slot slot){
+	public Integer get_slot(EquipmentSlot slot){
 		return equipment.get(slot);
 	}
 
@@ -56,7 +56,7 @@ public class Equipment implements Component{
 		int slashing = 0;
 		int crushing = 0;
 
-		for(Equipment_Slot slot : Equipment_Slot.values()){
+		for(EquipmentSlot slot : EquipmentSlot.values()){
 			if(equipment.get(slot) != null){
 				if(entityManager.gc(equipment.get(slot), Armor.class) != null) {
 					piercing += entityManager.gc(equipment.get(slot), Armor.class).piercing;
@@ -82,7 +82,7 @@ public class Equipment implements Component{
 
 	private int get_piercing_resistance(){
 		int amount = 0;
-		for(Equipment_Slot slot : Equipment_Slot.values()){
+		for(EquipmentSlot slot : EquipmentSlot.values()){
 			if(equipment.get(slot) != null){
 				if(entityManager.gc(equipment.get(slot), Armor.class) != null) {
 					amount += entityManager.gc(equipment.get(slot), Armor.class).piercing;
@@ -94,7 +94,7 @@ public class Equipment implements Component{
 
 	private int get_slashing_resistance(){
 		int amount = 0;
-		for(Equipment_Slot slot : Equipment_Slot.values()){
+		for(EquipmentSlot slot : EquipmentSlot.values()){
 			if(equipment.get(slot) != null){
 				if(entityManager.gc(equipment.get(slot), Armor.class) != null) {
 					amount += entityManager.gc(equipment.get(slot), Armor.class).slashing;
@@ -106,7 +106,7 @@ public class Equipment implements Component{
 
 	private int get_crushing_resistance(){
 		int amount = 0;
-		for(Equipment_Slot slot : Equipment_Slot.values()){
+		for(EquipmentSlot slot : EquipmentSlot.values()){
 			if(equipment.get(slot) != null){
 				if(entityManager.gc(equipment.get(slot), Armor.class) != null) {
 					amount += entityManager.gc(equipment.get(slot), Armor.class).crushing;
@@ -123,49 +123,49 @@ public class Equipment implements Component{
 	}
 
 	private ArrayList<Damage> get_left_damage(){
-		return entityManager.gc(equipment.get(Equipment_Slot.LEFT_HAND), Offensive_Component.class).damages;
+		return entityManager.gc(equipment.get(EquipmentSlot.LEFT_HAND), OffensiveComponent.class).damages;
 	}
 
 	private ArrayList<Damage> get_right_damage(){
-		return entityManager.gc(equipment.get(Equipment_Slot.RIGHT_HAND), Offensive_Component.class).damages;
+		return entityManager.gc(equipment.get(EquipmentSlot.RIGHT_HAND), OffensiveComponent.class).damages;
 	}
 
 	private ArrayList<Damage> get_dual_wield_damages(){
-		ArrayList<Damage> temp = new ArrayList<>(entityManager.gc(equipment.get(Equipment_Slot.RIGHT_HAND), Offensive_Component.class).damages);
-		temp.addAll(entityManager.gc(equipment.get(Equipment_Slot.LEFT_HAND), Offensive_Component.class).damages);
+		ArrayList<Damage> temp = new ArrayList<>(entityManager.gc(equipment.get(EquipmentSlot.RIGHT_HAND), OffensiveComponent.class).damages);
+		temp.addAll(entityManager.gc(equipment.get(EquipmentSlot.LEFT_HAND), OffensiveComponent.class).damages);
 
 		return temp;
 	}
 
 	public ArrayList<Damage> get_melee_damages(){
 
-		if(equipment.get(Equipment_Slot.LEFT_HAND) != null && equipment.get(Equipment_Slot.RIGHT_HAND) != null){
+		if(equipment.get(EquipmentSlot.LEFT_HAND) != null && equipment.get(EquipmentSlot.RIGHT_HAND) != null){
 
-			if(entityManager.gc(equipment.get(Equipment_Slot.LEFT_HAND), Offensive_Component.class) != null
-					&& entityManager.gc(equipment.get(Equipment_Slot.RIGHT_HAND), Offensive_Component.class) != null){
+			if(entityManager.gc(equipment.get(EquipmentSlot.LEFT_HAND), OffensiveComponent.class) != null
+					&& entityManager.gc(equipment.get(EquipmentSlot.RIGHT_HAND), OffensiveComponent.class) != null){
 				return get_dual_wield_damages();
 			}
-			else if(entityManager.gc(equipment.get(Equipment_Slot.RIGHT_HAND), Offensive_Component.class) != null
-					&& entityManager.gc(equipment.get(Equipment_Slot.LEFT_HAND), Offensive_Component.class) == null){
+			else if(entityManager.gc(equipment.get(EquipmentSlot.RIGHT_HAND), OffensiveComponent.class) != null
+					&& entityManager.gc(equipment.get(EquipmentSlot.LEFT_HAND), OffensiveComponent.class) == null){
 				return get_right_damage();
 			}
-			else if(entityManager.gc(equipment.get(Equipment_Slot.LEFT_HAND), Offensive_Component.class) != null
-					&& entityManager.gc(equipment.get(Equipment_Slot.RIGHT_HAND), Offensive_Component.class) == null){
+			else if(entityManager.gc(equipment.get(EquipmentSlot.LEFT_HAND), OffensiveComponent.class) != null
+					&& entityManager.gc(equipment.get(EquipmentSlot.RIGHT_HAND), OffensiveComponent.class) == null){
 				return get_left_damage();
 			}
 			else
 				return get_base_damage();
 
 		}
-		else if(equipment.get(Equipment_Slot.LEFT_HAND) != null && equipment.get(Equipment_Slot.RIGHT_HAND) == null){
-			if(entityManager.gc(equipment.get(Equipment_Slot.LEFT_HAND), Offensive_Component.class) != null){
+		else if(equipment.get(EquipmentSlot.LEFT_HAND) != null && equipment.get(EquipmentSlot.RIGHT_HAND) == null){
+			if(entityManager.gc(equipment.get(EquipmentSlot.LEFT_HAND), OffensiveComponent.class) != null){
 				return get_left_damage();
 			}
 			else
 				return get_base_damage();
 		}
-		else if(equipment.get(Equipment_Slot.RIGHT_HAND) != null && equipment.get(Equipment_Slot.LEFT_HAND) == null){
-			if(entityManager.gc(equipment.get(Equipment_Slot.RIGHT_HAND), Offensive_Component.class) != null){
+		else if(equipment.get(EquipmentSlot.RIGHT_HAND) != null && equipment.get(EquipmentSlot.LEFT_HAND) == null){
+			if(entityManager.gc(equipment.get(EquipmentSlot.RIGHT_HAND), OffensiveComponent.class) != null){
 				return get_right_damage();
 			}
 			else
@@ -175,7 +175,7 @@ public class Equipment implements Component{
 			return get_base_damage();
 	}
 
-	public void equip_item(Integer owner, Integer item, Equipment_Slot slot){
+	public void equip_item(Integer owner, Integer item, EquipmentSlot slot){
 
 		if(entityManager.gc(item, Equippable.class).slots.contains(slot) && equipment.get(slot) == null){
 			equipment.put(slot, item);
@@ -188,7 +188,7 @@ public class Equipment implements Component{
 		}
 	}
 
-	public void equip_item_from_inventory(Integer owner, Integer item, Equipment_Slot slot){
+	public void equip_item_from_inventory(Integer owner, Integer item, EquipmentSlot slot){
 
 		if(entityManager.gc(item, Equippable.class).slots.contains(slot) && equipment.get(slot) == null){
 			entityManager.gc(owner, Inventory.class).inventory.remove(item);
@@ -202,7 +202,7 @@ public class Equipment implements Component{
 		}
 	}
 
-	public void unequip_item(Equipment_Slot slot, Integer owner){
+	public void unequip_item(EquipmentSlot slot, Integer owner){
 		Integer item = equipment.get(slot);
 		equipment.remove(slot, equipment.get(slot));
 		entityManager.gc(owner, Inventory.class).add_item(item);

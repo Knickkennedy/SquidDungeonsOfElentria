@@ -1,6 +1,6 @@
 package roguelike.Enums;
 
-public enum AI_MODE {
+public enum AIMODE {
 	PASSIVE,
 	NEUTRAL,
 	AGGRESSIVE;

@@ -19,7 +19,7 @@ import static roguelike.engine.Game.*;
 import static roguelike.engine.Game.cellHeight;
 import static roguelike.engine.Game.cellWidth;
 
-public class Inventory_Screen extends ScreenAdapter {
+public class InventoryScreen extends ScreenAdapter {
 
 	private Integer entity;
 	private Game game;
@@ -33,7 +33,7 @@ public class Inventory_Screen extends ScreenAdapter {
 
 	private SquidInput input;
 
-	public Inventory_Screen(Integer entity, Game game){
+	public InventoryScreen(Integer entity, Game game){
 		this.entity = entity;
 		this.game = game;
 
@@ -41,7 +41,7 @@ public class Inventory_Screen extends ScreenAdapter {
 		viewport = new StretchViewport(gridWidth * cellWidth, gridHeight * cellHeight);
 		viewport.setScreenBounds(0, 0, gridWidth * cellWidth, gridHeight * cellHeight);
 		stage = new Stage(viewport, batch);
-		display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getStretchableSlabFont());
+		display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getCrispDejaVuFont());
 		display.font.tweakWidth(cellWidth + 1).tweakHeight(cellHeight + 1).setSmoothingMultiplier(1.6f).initBySize();
 		bgColor = SColor.DB_MIDNIGHT;
 		display.fillBackground(bgColor);

@@ -1,6 +1,6 @@
 package roguelike.Systems;
 
-public class Energy_System implements Base_System {
+public class EnergySystem implements BaseSystem {
 
 	@Override
 	public void process() {

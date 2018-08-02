@@ -8,7 +8,6 @@ import roguelike.Components.Position;
 import squidpony.squidmath.Coord;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static roguelike.Generation.World.entityManager;
@@ -22,7 +21,7 @@ public class Map{
 
     public ArrayList<Exit> exits;
 
-    private Map_Builder builder;
+    private MapBuilder builder;
     public Coord stairs_down;
     public Coord stairs_up;
 
@@ -46,7 +45,7 @@ public class Map{
     }
 
     public Map(final int width, final int height) {
-        builder = new Map_Builder(width, height);
+        builder = new MapBuilder(width, height);
         tile_file = builder.tile_file;
         this.isBuilt = false;
 	    entities = new ArrayList<>();

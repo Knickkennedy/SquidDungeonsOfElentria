@@ -2,13 +2,13 @@ package roguelike.Enums;
 
 import roguelike.utilities.Word;
 
-public enum Equipment_Slot {
+public enum EquipmentSlot {
 	HEAD,
 	CHEST,
 	LEFT_HAND,
 	RIGHT_HAND;
 
-	public static Equipment_Slot find_slot(String name){
+	public static EquipmentSlot find_slot(String name){
 
 		switch (name){
 			case "head": return HEAD;

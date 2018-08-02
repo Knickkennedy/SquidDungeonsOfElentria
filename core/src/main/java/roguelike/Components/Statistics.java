@@ -1,30 +1,30 @@
 package roguelike.Components;
 
 import org.json.simple.JSONObject;
-import roguelike.utilities.Limited_Statistic;
+import roguelike.utilities.LimitedStatistic;
 
 public class Statistics implements Component{
 
-	public Limited_Statistic health;
+	public LimitedStatistic health;
 
-	public Limited_Statistic strength;
-	public Limited_Statistic intelligence;
-	public Limited_Statistic willpower;
-	public Limited_Statistic constitution;
-	public Limited_Statistic dexterity;
-	public Limited_Statistic charisma;
+	public LimitedStatistic strength;
+	public LimitedStatistic intelligence;
+	public LimitedStatistic willpower;
+	public LimitedStatistic constitution;
+	public LimitedStatistic dexterity;
+	public LimitedStatistic charisma;
 
 	public Statistics(JSONObject object){
 
 		for(Object o : object.keySet()){
 			switch (o.toString()){
-				case "health"       : health = new Limited_Statistic((int)(long)object.get(o.toString()), (int)(long)object.get(o.toString())); break;
-				case "strength"     : strength = new Limited_Statistic((int)(long)object.get(o.toString())); break;
-				case "intelligence" : intelligence = new Limited_Statistic((int)(long)object.get(o.toString())); break;
-				case "willpower"    : willpower = new Limited_Statistic((int)(long)object.get(o.toString())); break;
-				case "constitution" : constitution = new Limited_Statistic((int)(long)object.get(o.toString())); break;
-				case "dexterity"    : dexterity = new Limited_Statistic((int)(long)object.get(o.toString())); break;
-				case "charisma"     : charisma = new Limited_Statistic((int)(long)object.get(o.toString())); break;
+				case "health"       : health = new LimitedStatistic((int)(long)object.get(o.toString()), (int)(long)object.get(o.toString())); break;
+				case "strength"     : strength = new LimitedStatistic((int)(long)object.get(o.toString())); break;
+				case "intelligence" : intelligence = new LimitedStatistic((int)(long)object.get(o.toString())); break;
+				case "willpower"    : willpower = new LimitedStatistic((int)(long)object.get(o.toString())); break;
+				case "constitution" : constitution = new LimitedStatistic((int)(long)object.get(o.toString())); break;
+				case "dexterity"    : dexterity = new LimitedStatistic((int)(long)object.get(o.toString())); break;
+				case "charisma"     : charisma = new LimitedStatistic((int)(long)object.get(o.toString())); break;
 			}
 		}
 	}
@@ -46,7 +46,7 @@ public class Statistics implements Component{
 		System.out.println(this);
 	}
 
-	public Limited_Statistic get_stat(String type){
+	public LimitedStatistic get_stat(String type){
 		switch (type){
 			case "health"       :   return health;
 			case "strength"     :   return strength;

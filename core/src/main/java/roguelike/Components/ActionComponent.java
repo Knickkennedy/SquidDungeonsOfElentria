@@ -4,10 +4,10 @@ import lombok.Setter;
 import roguelike.Actions.Action;
 
 @Setter
-public class Action_Component implements Component{
+public class ActionComponent implements Component{
 	private Action action;
 
-	public Action_Component(){ }
+	public ActionComponent(){ }
 
 	public Action getAction(){
 		return action;

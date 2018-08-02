@@ -4,11 +4,11 @@ import roguelike.Generation.Map;
 import squidpony.squidgrid.LOS;
 import squidpony.squidgrid.Radius;
 
-public class Line_Of_Sight extends LOS {
+public class LineOfSight extends LOS {
 
 	public double[][] resMap;
 
-	public Line_Of_Sight(){
+	public LineOfSight(){
 		super();
 	}
 

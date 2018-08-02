@@ -7,11 +7,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import lombok.Getter;
-import roguelike.Components.Details;
 import roguelike.Components.Equipment;
-import roguelike.Enums.Equipment_Slot;
+import roguelike.Enums.EquipmentSlot;
 import roguelike.engine.Game;
-import roguelike.utilities.Roll;
 import roguelike.utilities.Word;
 import squidpony.squidgrid.gui.gdx.DefaultResources;
 import squidpony.squidgrid.gui.gdx.SColor;
@@ -22,7 +20,7 @@ import static roguelike.Generation.World.entityManager;
 import static roguelike.engine.Game.*;
 
 @Getter
-public class Equipment_Screen extends ScreenAdapter {
+public class EquipmentScreen extends ScreenAdapter {
 
 	private Game game;
 
@@ -38,11 +36,11 @@ public class Equipment_Screen extends ScreenAdapter {
 	private Integer entity;
 	private String alphabet = "abcdefghijklmnopqrstuvwxyz";
 
-	private Equipment_Slot[] slots;
+	private EquipmentSlot[] slots;
 
-	private Equip_From_Inventory_Screen equip_from_inventory_screen;
+	private EquipFromInventoryScreen equip_from_inventory_screen;
 
-	public Equipment_Screen(Integer entity, Game game){
+	public EquipmentScreen(Integer entity, Game game){
 		this.game = game;
 		this.entity = entity;
 
@@ -50,13 +48,13 @@ public class Equipment_Screen extends ScreenAdapter {
 		viewport = new StretchViewport(gridWidth * cellWidth, gridHeight * cellHeight);
 		viewport.setScreenBounds(0, 0, gridWidth * cellWidth, gridHeight * cellHeight);
 		stage = new Stage(viewport, batch);
-		display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getStretchableSlabFont());
+		display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getCrispDejaVuFont());
 		display.font.tweakWidth(cellWidth + 1).tweakHeight(cellHeight + 1).setSmoothingMultiplier(1.6f).initBySize();
 		bgColor = SColor.DB_MIDNIGHT;
 		display.fillBackground(bgColor);
-		slots = Equipment_Slot.values();
+		slots = EquipmentSlot.values();
 
-		equip_from_inventory_screen = new Equip_From_Inventory_Screen(game, entity, this);
+		equip_from_inventory_screen = new EquipFromInventoryScreen(game, entity, this);
 	}
 
 	@Override
@@ -71,14 +69,6 @@ public class Equipment_Screen extends ScreenAdapter {
 			switch(key) {
 				case SquidInput.ESCAPE:
 					game.setScreen(game.getGame_screen()); break;
-				/*case 'a':
-					attempt_equip_or_unequip(slots[0]); break;
-				case 'b':
-					attempt_equip_or_unequip(slots[1]); break;
-				case 'c':
-					attempt_equip_or_unequip(slots[2]); break;
-				case 'd':
-					attempt_equip_or_unequip(slots[3]); break;*/
 			}
 		});
 
@@ -86,7 +76,7 @@ public class Equipment_Screen extends ScreenAdapter {
 
 	}
 
-	public void attempt_equip_or_unequip(Equipment_Slot slot){
+	public void attempt_equip_or_unequip(EquipmentSlot slot){
 		if(entityManager.gc(entity, Equipment.class).get_slot(slot) == null){
 			equip_from_inventory_screen.set_slot(slot);
 			game.setScreen(equip_from_inventory_screen);
@@ -111,7 +101,7 @@ public class Equipment_Screen extends ScreenAdapter {
 
 		int current_letter = 0;
 
-		for(Equipment_Slot slot : Equipment_Slot.values()){
+		for(EquipmentSlot slot : EquipmentSlot.values()){
 			String item_name = entityManager.gc(entity, Equipment.class).get_item_name(slot);
 			if(item_name.length() > 0){
 				item_name = String.format("[%s]", Word.capitalize_all(item_name));
@@ -131,10 +121,12 @@ public class Equipment_Screen extends ScreenAdapter {
 	public void render(float delta) {
 		display.clear();
 		display_equipment();
-		stage.draw();
-		stage.act();
+
 		if(input.hasNext())
 			input.next();
+
+		stage.act();
+		stage.draw();
 	}
 
 	@Override

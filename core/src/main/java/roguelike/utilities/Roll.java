@@ -12,7 +12,7 @@ public class Roll {
     // class-level initialization for variables, a seeded sequence may change.
     // For most usage it's fine to use the zero-arg constructor, which gets some
     // random starting values from Math.random() and is different every time.
-    private static LinnormRNG random = new LinnormRNG();
+    private static LinnormRNG random = new LinnormRNG("Dungeons of Elentria");
     
     public static RNG rng = new RNG(random);
 

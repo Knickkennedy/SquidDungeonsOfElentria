@@ -2,16 +2,15 @@ package roguelike.Systems;
 
 import roguelike.Components.Statistics;
 import roguelike.Generation.Factory;
-import roguelike.engine.Message_Log;
 
 import static roguelike.Generation.World.entityManager;
 
-public class Death_System implements Base_System{
+public class DeathSystem implements BaseSystem {
 
 	public Integer attacker, defender, amount;
 	public String stat_affected;
 
-	public Death_System(Integer attacker, Integer defender, String stat_affected, Integer amount){
+	public DeathSystem(Integer attacker, Integer defender, String stat_affected, Integer amount){
 		this.attacker = attacker;
 		this.defender = defender;
 		this.stat_affected = stat_affected;

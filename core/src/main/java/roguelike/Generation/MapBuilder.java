@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Getter @Setter
-public class Map_Builder {
+public class MapBuilder {
 
     private Tile[][] map;
     private char[][] pathfinding;
@@ -43,7 +43,7 @@ public class Map_Builder {
     private boolean[][] connected;
     private boolean[][] revealed;
 
-    public Map_Builder(int width, int height){
+    public MapBuilder(int width, int height){
         this.pathfinding = new char[width][height];
         this.map = new Tile[width][height];
         this.minRoomSize = 3;

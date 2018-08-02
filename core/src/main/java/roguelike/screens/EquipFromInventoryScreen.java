@@ -11,7 +11,7 @@ import lombok.Setter;
 import roguelike.Components.Details;
 import roguelike.Components.Equipment;
 import roguelike.Components.Inventory;
-import roguelike.Enums.Equipment_Slot;
+import roguelike.Enums.EquipmentSlot;
 import roguelike.engine.Game;
 import squidpony.squidgrid.gui.gdx.DefaultResources;
 import squidpony.squidgrid.gui.gdx.SColor;
@@ -26,11 +26,11 @@ import static roguelike.engine.Game.cellHeight;
 import static roguelike.engine.Game.cellWidth;
 
 @Getter @Setter
-public class Equip_From_Inventory_Screen extends ScreenAdapter {
+public class EquipFromInventoryScreen extends ScreenAdapter {
 
 	private Game game;
 	private Integer entity;
-	private Equipment_Screen equipment_screen;
+	private EquipmentScreen equipment_screen;
 
 	private SpriteBatch batch;
 	private StretchViewport viewport;
@@ -41,11 +41,11 @@ public class Equip_From_Inventory_Screen extends ScreenAdapter {
 	private SquidInput input;
 
 	private ArrayList<Integer> items;
-	private Equipment_Slot slot;
+	private EquipmentSlot slot;
 
 	private String alphabet = "abcdefghijklmnopqrstuvwxyz";
 
-	public Equip_From_Inventory_Screen(Game game, Integer entity, Equipment_Screen equipment_screen){
+	public EquipFromInventoryScreen(Game game, Integer entity, EquipmentScreen equipment_screen){
 		this.game = game;
 		this.entity = entity;
 		this.equipment_screen = equipment_screen;
@@ -54,13 +54,13 @@ public class Equip_From_Inventory_Screen extends ScreenAdapter {
 		viewport = new StretchViewport(gridWidth * cellWidth, gridHeight * cellHeight);
 		viewport.setScreenBounds(0, 0, gridWidth * cellWidth, gridHeight * cellHeight);
 		stage = new Stage(viewport, batch);
-		display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getStretchableSlabFont());
+		display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getCrispDejaVuFont());
 		display.font.tweakWidth(cellWidth + 1).tweakHeight(cellHeight + 1).setSmoothingMultiplier(1.6f).initBySize();
 		bgColor = SColor.DB_MIDNIGHT;
 		display.fillBackground(bgColor);
 	}
 
-	public void set_slot(Equipment_Slot slot){
+	public void set_slot(EquipmentSlot slot){
 		this.slot = slot;
 		items = new ArrayList<>(entityManager.gc(entity, Inventory.class).get_items_that_fit_slot(slot));
 	}

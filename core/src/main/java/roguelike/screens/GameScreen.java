@@ -2,22 +2,16 @@ package roguelike.screens;
 
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.utils.Align;
 import roguelike.Components.*;
 import roguelike.Effects.Damage;
-import roguelike.Enums.Equipment_Slot;
 import roguelike.Generation.Factory;
 import roguelike.Generation.World;
 import roguelike.engine.Game;
-import roguelike.engine.Message_Log;
+import roguelike.engine.MessageLog;
 import roguelike.utilities.Colors;
 import squidpony.squidgrid.gui.gdx.*;
 import squidpony.squidmath.Coord;
-import squidpony.squidmath.GreasedRegion;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -25,11 +19,11 @@ import java.util.Set;
 import static roguelike.Generation.World.entityManager;
 import static roguelike.engine.Game.*;
 
-public class Game_Screen extends ScreenAdapter {
+public class GameScreen extends ScreenAdapter {
 
     //private Game game;
-    private Stage stage;
-    private SparseLayers display;
+    public Stage stage;
+    public SparseLayers display;
 
     private Color bgColor;
 
@@ -38,7 +32,7 @@ public class Game_Screen extends ScreenAdapter {
     private int map_height_start;
     private int map_height_end;
 
-    public Game_Screen(Game game_in, Stage stage_in){
+    public GameScreen(Game game_in, Stage stage_in){
         //game = game_in;
 	    stage = stage_in;
         Factory.getInstance().setGame(game_in);
@@ -81,17 +75,17 @@ public class Game_Screen extends ScreenAdapter {
 
     }
 
-	private void render_messages(){
+	public void render_messages(){
     	String[] temp = new String[] {"", ""};
-    	for(String message : Message_Log.getInstance().messages){
+    	for(String message : MessageLog.getInstance().messages){
 
     		if(temp[0].concat(message).length() < gridWidth){
 			    temp[0] = temp[0].concat(" ");
 			    temp[0] = temp[0].concat(message);
 		    }
 		    else if(temp[1].concat(message).length() >= gridWidth){
-			    Message_Log.getInstance().messages.clear();
-			    Message_Log.getInstance().messages.add(message);
+			    MessageLog.getInstance().messages.clear();
+			    MessageLog.getInstance().messages.add(message);
 			    break;
 		    }
 		    else{
@@ -107,7 +101,7 @@ public class Game_Screen extends ScreenAdapter {
 
     }
 
-    private void render_map(){
+    public void render_map(){
         double[][] fov = entityManager.gc(world.getPlayer(), Vision.class).getFov();
         for(int i  = 0; i < gridWidth; i++){
             for(int j = map_height_start; j < map_height_end; j++){
@@ -120,7 +114,7 @@ public class Game_Screen extends ScreenAdapter {
         }
     }
 
-    private void render_statistics(){
+    public void render_statistics(){
 	    Statistics temp = entityManager.gc(world.getPlayer(), Statistics.class);
 	    String health = String.format("HP:%s/%s", temp.health.current_value, temp.health.maximum);
 	    String first = String.format("Str:%s Int:%s Will:%s", temp.strength, temp.intelligence, temp.willpower);
@@ -145,7 +139,7 @@ public class Game_Screen extends ScreenAdapter {
 	    display.put(gridWidth - melee_string.length() - 1, map_height_end + 1, melee_string, Colors.getColor("gray"));
     }
 
-    private void render_entities(){
+    public void render_entities(){
 
     	if(display.hasActiveAnimations())
     		return;
@@ -158,8 +152,7 @@ public class Game_Screen extends ScreenAdapter {
     private void place_entity(Integer entity, Coord point){
         display.put(point.x, point.y + message_buffer, entityManager.gc(entity, Sprite.class).character, entityManager.gc(entity, Sprite.class).foregroundColor);
         Sprite sprite = entityManager.gc(entity, Sprite.class);
-        Position position = entityManager.gc(entity, Position.class);
-        sprite.makeGlyph(display, position.location.x, position.location.y + message_buffer);
+        sprite.makeGlyph(display, point.x, point.y + message_buffer);
     }
 
     @Override

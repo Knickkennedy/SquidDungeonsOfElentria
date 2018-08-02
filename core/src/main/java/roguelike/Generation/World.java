@@ -8,9 +8,9 @@ import org.json.simple.parser.JSONParser;
 import roguelike.Components.Command;
 import roguelike.Components.Position;
 import roguelike.Components.Sprite;
-import roguelike.Systems.Turn_System;
+import roguelike.Systems.TurnSystem;
 import roguelike.engine.EntityManager;
-import roguelike.engine.Message_Log;
+import roguelike.engine.MessageLog;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidmath.Coord;
 
@@ -37,7 +37,7 @@ public class World {
 	private Coord starting_location;
 
 	public static Coord first_dungeon_location;
-	private Turn_System turn_system;
+	private TurnSystem turn_system;
 
 	public ArrayList<Exit> surface_exits;
 
@@ -64,9 +64,10 @@ public class World {
 
 		current_map = surface;
 		Factory.getInstance().setDisplay(display);
+		Factory.getInstance().setWorld(this);
 		player = Factory.getInstance().initialize_player();
 		Factory.getInstance().build_player(player, starting_location, surface);
-		turn_system = new Turn_System(display);
+		turn_system = new TurnSystem(display);
 		reload();
 	}
 	public void reload()
@@ -147,7 +148,7 @@ public class World {
 
 		while (!Factory.getInstance().death_queue.isEmpty()){
 			Integer entity = Factory.getInstance().death_queue.poll();
-			Message_Log.getInstance().add_formatted_message("die", entity);
+			MessageLog.getInstance().add_formatted_message("die", entity);
 
 			if(entity != null) {
 				Sprite sprite = entityManager.gc(entity, Sprite.class);

@@ -1,13 +1,10 @@
 package roguelike.Actions;
 
 import roguelike.Components.*;
-import roguelike.engine.Message_Log;
 import roguelike.utilities.Point;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidgrid.gui.gdx.TextCellFactory;
 import squidpony.squidmath.Coord;
-
-import java.util.Set;
 
 import static roguelike.Generation.World.entityManager;
 import static roguelike.engine.Game.message_buffer;
@@ -36,8 +33,8 @@ public class Move extends Action{
 					.is_hostile_towards(entityManager.gc(entity, Position.class).map
 							.entityAt(entityManager.gc(entity, Position.class).location.add(direction)))){
 
-			entityManager.gc(entity, Action_Component.class).setAction(
-					new Melee_Attack(entity, entityManager.gc(entity, Position.class).map
+			entityManager.gc(entity, ActionComponent.class).setAction(
+					new MeleeAttack(entity, entityManager.gc(entity, Position.class).map
 							.entityAt(entityManager.gc(entity, Position.class).location.add(direction)), display));
 			return false;
 		}
@@ -46,7 +43,7 @@ public class Move extends Action{
 				&& !entityManager.gc(entity, Details.class)
 				.is_hostile_towards(entityManager.gc(entity, Position.class).map
 						.entityAt(entityManager.gc(entity, Position.class).location.add(direction)))){
-			entityManager.gc(entity, Action_Component.class).setAction(null);
+			entityManager.gc(entity, ActionComponent.class).setAction(null);
 			return false;
 		}
 		else if(entityManager.gc(entity, Position.class).map.
@@ -71,18 +68,18 @@ public class Move extends Action{
 			if(entityManager.gc(entity, Vision.class) != null) {
 				entityManager.gc(entity, Vision.class).setLocation(entityManager.gc(entity, Position.class).location);
 			}
-			entityManager.gc(entity, Action_Component.class).setAction(null);
+			entityManager.gc(entity, ActionComponent.class).setAction(null);
 
 			return true;
 		}
 		else if(entityManager.gc(entity, Position.class).map.isOpenable(entityManager.gc(entity, Position.class).location, direction)){
-			entityManager.gc(entity, Action_Component.class).setAction(new Open_Door(entity, direction));
+			entityManager.gc(entity, ActionComponent.class).setAction(new OpenDoor(entity, direction));
 
 			return false;
 		}
 		else{
 
-			entityManager.gc(entity, Action_Component.class).setAction(null);
+			entityManager.gc(entity, ActionComponent.class).setAction(null);
 			return false;
 		}
 	}

@@ -9,8 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import lombok.Getter;
 import lombok.Setter;
-import roguelike.screens.Game_Screen;
-import roguelike.screens.Start_Screen;
+import roguelike.screens.GameScreen;
+import roguelike.screens.StartScreen;
 
 @Getter @Setter
 public class Game extends com.badlogic.gdx.Game {
@@ -27,7 +27,7 @@ public class Game extends com.badlogic.gdx.Game {
 
     public Stage stage;
     public Stage stage2;
-    private ScreenAdapter game_screen;
+    private GameScreen game_screen;
 
     @Override
     public void create () {
@@ -43,9 +43,9 @@ public class Game extends com.badlogic.gdx.Game {
         stage = new Stage(mainViewport, batch);
         stage2 = new Stage(gameViewPort, batch);
 
-        game_screen = new Game_Screen(this, stage2);
+        game_screen = new GameScreen(this, stage2);
 
-	    setScreen(new Start_Screen(this));
+	    setScreen(new StartScreen(this));
     }
     @Override
     public void render () {

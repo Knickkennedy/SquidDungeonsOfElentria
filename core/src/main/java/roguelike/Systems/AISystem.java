@@ -2,7 +2,6 @@ package roguelike.Systems;
 
 import roguelike.Actions.Move;
 import roguelike.Components.*;
-import roguelike.Enums.AI_MODE;
 import roguelike.utilities.Point;
 import roguelike.utilities.Roll;
 import squidpony.squidai.DijkstraMap;
@@ -13,13 +12,13 @@ import java.util.ArrayList;
 
 import static roguelike.Generation.World.entityManager;
 
-public class AI_System implements Base_System {
+public class AISystem implements BaseSystem {
 
 	public ArrayList<Integer> actors;
 	private SparseLayers display;
 	public DijkstraMap path;
 
-	public AI_System(ArrayList<Integer> actors, SparseLayers display){
+	public AISystem(ArrayList<Integer> actors, SparseLayers display){
 		this.actors = actors;
 		this.display = display;
 	}
@@ -29,7 +28,7 @@ public class AI_System implements Base_System {
 
 		for (Integer current_actor : actors) {
 			if (entityManager.gc(current_actor, AI.class) != null) {
-				if(entityManager.gc(current_actor, Action_Component.class).getAction() == null) {
+				if(entityManager.gc(current_actor, ActionComponent.class).getAction() == null) {
 
 					if(path == null){
 						path = new DijkstraMap(entityManager.gc(current_actor, Position.class).map.pathfinding, DijkstraMap.Measurement.EUCLIDEAN);
@@ -37,10 +36,10 @@ public class AI_System implements Base_System {
 
 					switch (entityManager.gc(current_actor, AI.class).mode) {
 						case PASSIVE:
-							entityManager.gc(current_actor, Action_Component.class).setAction(new Move(current_actor, Point.WAIT, display));
+							entityManager.gc(current_actor, ActionComponent.class).setAction(new Move(current_actor, Point.WAIT, display));
 							break;
 						case NEUTRAL:
-							entityManager.gc(current_actor, Action_Component.class).setAction(
+							entityManager.gc(current_actor, ActionComponent.class).setAction(
 									new Move(current_actor, Point.direction.get(Roll.rand(0, Point.direction.size() - 1)), display));
 							break;
 						case AGGRESSIVE:
@@ -69,7 +68,7 @@ public class AI_System implements Base_System {
 				ArrayList<Coord> coords =
 						path.findPath(1, monster_locations, null,
 								entityManager.gc(current_actor, Position.class).location, entityManager.gc(actor, Position.class).location);
-				entityManager.gc(current_actor, Action_Component.class).setAction(
+				entityManager.gc(current_actor, ActionComponent.class).setAction(
 								new Move(current_actor, coords.get(0).subtract(entityManager.gc(current_actor, Position.class).location), display));
 				break;
 			}
@@ -84,11 +83,11 @@ public class AI_System implements Base_System {
 				ArrayList<Coord> coords =
 								path.findPath(1, monster_locations, null,
 								entityManager.gc(current_actor, Position.class).location, entityManager.gc(actor, Position.class).location);
-				entityManager.gc(current_actor, Action_Component.class).setAction(
+				entityManager.gc(current_actor, ActionComponent.class).setAction(
 						new Move(current_actor, coords.get(0).subtract(entityManager.gc(current_actor, Position.class).location), display));
 				break;
 			}
-			entityManager.gc(current_actor, Action_Component.class).setAction(
+			entityManager.gc(current_actor, ActionComponent.class).setAction(
 						new Move(current_actor, Point.direction.get(Roll.rand(0, Point.direction.size() - 1)), display));
 		}
 	}

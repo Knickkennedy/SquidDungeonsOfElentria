@@ -1,25 +1,23 @@
 package roguelike.utilities;
 
-import roguelike.engine.Message_Log;
-
-public class Limited_Statistic {
+public class LimitedStatistic {
 	public int minimum;
 	public int maximum;
 	public int current_value;
 
-	public Limited_Statistic(int minimum, int maximum, int current_value){
+	public LimitedStatistic(int minimum, int maximum, int current_value){
 		this.minimum = minimum;
 		this.maximum = maximum;
 		this.current_value = current_value;
 	}
 
-	public Limited_Statistic(int current_value, int maximum){
+	public LimitedStatistic(int current_value, int maximum){
 		this.minimum = 0;
 		this.maximum = maximum;
 		this.current_value = current_value;
 	}
 
-	public Limited_Statistic(int current_value){
+	public LimitedStatistic(int current_value){
 		this.minimum = 0;
 		this.maximum = 999;
 		this.current_value = current_value;

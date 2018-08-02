@@ -1,6 +1,6 @@
 package roguelike.Components;
 
-import roguelike.Enums.Equipment_Slot;
+import roguelike.Enums.EquipmentSlot;
 
 import java.util.ArrayList;
 
@@ -14,7 +14,7 @@ public class Inventory implements Component{
 		inventory = new ArrayList<>();
 	}
 
-	public ArrayList<Integer> get_items_that_fit_slot(Equipment_Slot slot){
+	public ArrayList<Integer> get_items_that_fit_slot(EquipmentSlot slot){
 		ArrayList<Integer> items = new ArrayList<>();
 
 		for(Integer item : inventory){

@@ -5,11 +5,11 @@ import roguelike.Effects.Damage;
 
 import java.util.ArrayList;
 
-public class Offensive_Component implements Component{
+public class OffensiveComponent implements Component{
 
 	public ArrayList<Damage> damages;
 
-	public Offensive_Component(JSONObject object){
+	public OffensiveComponent(JSONObject object){
 
 		damages = new ArrayList<>();
 

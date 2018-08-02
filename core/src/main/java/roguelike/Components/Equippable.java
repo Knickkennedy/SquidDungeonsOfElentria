@@ -1,23 +1,22 @@
 package roguelike.Components;
 
 import org.json.simple.JSONObject;
-import roguelike.Enums.Equipment_Slot;
+import roguelike.Enums.EquipmentSlot;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 public class Equippable implements Component{
-	public ArrayList<Equipment_Slot> slots;
+	public ArrayList<EquipmentSlot> slots;
 
 	public Equippable(JSONObject object){
 		slots = new ArrayList<>();
 
 		for(Object o : object.keySet()){
 			switch (o.toString()){
-				case "head": slots.add(Equipment_Slot.HEAD); break;
-				case "chest": slots.add(Equipment_Slot.CHEST); break;
-				case "left hand": slots.add(Equipment_Slot.LEFT_HAND); break;
-				case "right hand": slots.add(Equipment_Slot.RIGHT_HAND); break;
+				case "head": slots.add(EquipmentSlot.HEAD); break;
+				case "chest": slots.add(EquipmentSlot.CHEST); break;
+				case "left hand": slots.add(EquipmentSlot.LEFT_HAND); break;
+				case "right hand": slots.add(EquipmentSlot.RIGHT_HAND); break;
 			}
 		}
 	}

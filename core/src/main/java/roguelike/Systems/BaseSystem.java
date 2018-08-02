@@ -1,5 +1,5 @@
 package roguelike.Systems;
 
-public interface Base_System {
+public interface BaseSystem {
 	void process();
 }

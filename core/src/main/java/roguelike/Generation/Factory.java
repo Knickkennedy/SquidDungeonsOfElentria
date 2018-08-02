@@ -5,7 +5,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import roguelike.Components.*;
-import roguelike.Enums.Equipment_Slot;
+import roguelike.Enums.EquipmentSlot;
 import roguelike.Enums.Race;
 import roguelike.engine.Game;
 import roguelike.utilities.Roll;
@@ -22,6 +22,7 @@ public class Factory {
 
 	public Game game;
 	private SparseLayers display;
+	private World world;
 
 	private JSONObject races;
 	private JSONObject items;
@@ -60,6 +61,7 @@ public class Factory {
 		this.game = game;
 	}
 	public void setDisplay(SparseLayers display){ this.display = display; }
+	public void setWorld(World world){ this.world = world; }
 
 	public Integer initialize_player(){
 		return entityManager.createEntity();
@@ -76,14 +78,14 @@ public class Factory {
 		entityManager.gc(player, Details.class).isPlayer = true;
 		entityManager.gc(player, Details.class).race = Race.PLAYER;
 		entityManager.addComponent(player, new Active());
-		entityManager.addComponent(player, new Action_Component());
+		entityManager.addComponent(player, new ActionComponent());
 		entityManager.addComponent(player, new Energy(100));
-		entityManager.addComponent(player, initializeCommandDisplay(player, display));
+		entityManager.addComponent(player, initializeCommandDisplay(player, display, world));
 		entityManager.addComponent(player, new Inventory());
 		entityManager.addComponent(player, new Equipment());
-		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("iron breastplate"), Equipment_Slot.CHEST);
-		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("iron helm"), Equipment_Slot.HEAD);
-		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("iron shortsword"), Equipment_Slot.LEFT_HAND);
+		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("iron breastplate"), EquipmentSlot.CHEST);
+		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("iron helm"), EquipmentSlot.HEAD);
+		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("iron shortsword"), EquipmentSlot.LEFT_HAND);
 
 
 
@@ -102,8 +104,8 @@ public class Factory {
 		current_map.entities.add(player);
 	}
 
-	public Command initializeCommandDisplay(Integer entity, SparseLayers display){
-		return new Command(entity, game, display);
+	public Command initializeCommandDisplay(Integer entity, SparseLayers display, World world){
+		return new Command(entity, game, display, world);
 	}
 
 	public Integer create_new_entity(String name){
@@ -131,7 +133,7 @@ public class Factory {
 
 		entityManager.addComponent(entity, new Position());
 		entityManager.addComponent(entity, new Inventory());
-		entityManager.addComponent(entity, new Action_Component());
+		entityManager.addComponent(entity, new ActionComponent());
 		entityManager.addComponent(entity, new Active());
 
 		for(Object o : base_entity.keySet()){
@@ -186,7 +188,7 @@ public class Factory {
 				case "defenses":
 					entityManager.addComponent(item, new Armor((JSONObject)item_properties.get(o))); break;
 				case "attack":
-					entityManager.addComponent(item, new Offensive_Component((JSONObject)item_properties.get(o))); break;
+					entityManager.addComponent(item, new OffensiveComponent((JSONObject)item_properties.get(o))); break;
 			}
 		}
 

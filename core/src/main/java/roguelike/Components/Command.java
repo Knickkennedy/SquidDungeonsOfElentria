@@ -2,12 +2,14 @@ package roguelike.Components;
 
 import lombok.Getter;
 import roguelike.Actions.Action;
-import roguelike.Actions.Exit_Through;
+import roguelike.Actions.ExitThrough;
 import roguelike.Actions.Move;
+import roguelike.Generation.World;
 import roguelike.engine.Game;
-import roguelike.engine.Message_Log;
-import roguelike.screens.Equipment_Screen;
-import roguelike.screens.Inventory_Screen;
+import roguelike.engine.MessageLog;
+import roguelike.screens.EquipmentScreen;
+import roguelike.screens.InventoryScreen;
+import roguelike.screens.TargetingScreen;
 import roguelike.utilities.Point;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidgrid.gui.gdx.SquidInput;
@@ -20,21 +22,25 @@ public class Command extends SquidInput implements Component {
 	private Integer entity;
 	private Game game;
 	private SparseLayers display;
+	private World world;
 	private Action action;
 
-	private Equipment_Screen equipment_screen;
-	private Inventory_Screen inventory_screen;
+	private EquipmentScreen equipment_screen;
+	private InventoryScreen inventory_screen;
+	private TargetingScreen targetingScreen;
 
-	public Command(final Integer entity, Game game, SparseLayers display) {
+	public Command(final Integer entity, Game game, SparseLayers display, World world) {
 		super();
 		this.entity = entity;
 		this.game = game;
 		this.display = display;
+		this.world = world;
 		setKeyHandler(new KH());
 		setRepeatGap(160);
 
-		this.equipment_screen = new Equipment_Screen(entity, game);
-		this.inventory_screen = new Inventory_Screen(entity, game);
+		this.equipment_screen = new EquipmentScreen(entity, game);
+		this.inventory_screen = new InventoryScreen(entity, game);
+		this.targetingScreen = new TargetingScreen(game, world, entity);
 	}
 
 	private class KH implements KeyHandler
@@ -62,7 +68,7 @@ public class Command extends SquidInput implements Component {
 				case UP_RIGHT_ARROW:
 					action = new Move(entity, Point.NORTH_EAST, display); break;
 				case ENTER:
-					action = new Exit_Through(entity, display); break;
+					action = new ExitThrough(entity, display); break;
 				case 'e':
 					lastKeyCode = -1;
 					action = null;
@@ -71,13 +77,17 @@ public class Command extends SquidInput implements Component {
 					lastKeyCode = -1;
 					action = null;
 					game.setScreen(inventory_screen); break;
+				case 't':
+					lastKeyCode = -1;
+					action = null;
+					game.setScreen(targetingScreen); break;
 				default:
 					return;
 			}
 
-			Message_Log.getInstance().ticks++;
-			Message_Log.getInstance().check_ticks();
-			entityManager.gc(entity, Action_Component.class).setAction(action);
+			MessageLog.getInstance().ticks++;
+			MessageLog.getInstance().check_ticks();
+			entityManager.gc(entity, ActionComponent.class).setAction(action);
 		}
 	}
 }

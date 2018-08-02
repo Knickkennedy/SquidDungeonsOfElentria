@@ -12,7 +12,7 @@ import squidpony.squidgrid.gui.gdx.SquidInput;
 
 import static roguelike.engine.Game.*;
 
-public class Start_Screen extends ScreenAdapter {
+public class StartScreen extends ScreenAdapter {
 
     private Game game;
     private Stage stage;
@@ -22,10 +22,10 @@ public class Start_Screen extends ScreenAdapter {
 
     private SquidInput input;
 
-    public Start_Screen(Game game_in){
+    public StartScreen(Game game_in){
         game = game_in;
         stage = game.stage;
-        display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getStretchableSlabFont());
+        display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getCrispDejaVuFont());
         display.font.tweakWidth(cellWidth + 1).tweakHeight(cellHeight + 1).setSmoothingMultiplier(1.6f).initBySize();
         bgColor = SColor.DB_MIDNIGHT;
         display.fillBackground(bgColor);
@@ -39,7 +39,7 @@ public class Start_Screen extends ScreenAdapter {
 
 		    switch(key) {
                 case SquidInput.ENTER: {
-	                /*game.setGame_screen(new Game_Screen(game));*/
+	                /*game.setGame_screen(new GameScreen(game));*/
                     game.setScreen(game.getGame_screen());
                     break;
                 }
