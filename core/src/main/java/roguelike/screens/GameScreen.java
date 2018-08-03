@@ -36,13 +36,14 @@ public class GameScreen extends ScreenAdapter {
         game = game_in;
 	    stage = stage_in;
         Factory.getInstance().setGame(game_in);
+	    display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getCrispDejaVuFont());
+
     }
 
     @Override
     public void show(){
         stage = game.stage;
         stage.clear();
-        display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getCrispDejaVuFont());
         display.font.tweakWidth(cellWidth + 1).tweakHeight(cellHeight + 1).setSmoothingMultiplier(1.6f).initBySize();
         bgColor = SColor.DB_MIDNIGHT;
         display.fillBackground(bgColor);
@@ -153,6 +154,8 @@ public class GameScreen extends ScreenAdapter {
         display.put(point.x, point.y + message_buffer, entityManager.gc(entity, Sprite.class).character, entityManager.gc(entity, Sprite.class).foregroundColor);
         Sprite sprite = entityManager.gc(entity, Sprite.class);
         Position position = entityManager.gc(entity, Position.class);
+        if(position == null)
+        	return;
         if(sprite != null && position.map.equals(world.getCurrent_map()))
             sprite.makeGlyph(display, point.x, point.y + message_buffer);
     }

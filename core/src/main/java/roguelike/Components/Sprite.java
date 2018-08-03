@@ -30,7 +30,7 @@ public class Sprite implements Component {
 		if (glyph == null)
 			glyph = display.glyph(character, foregroundColor, gridX, gridY);
 		else {
-			if (! display.glyphs.contains(glyph))
+			if (!display.glyphs.contains(glyph))
 				display.glyphs.add(glyph);
 			glyph.setPosition(display.worldX(gridX), display.worldY(gridY));
 		}
