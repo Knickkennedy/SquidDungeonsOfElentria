@@ -2,12 +2,13 @@ package roguelike.Components;
 
 import com.badlogic.gdx.graphics.Color;
 import lombok.Getter;
+import lombok.Setter;
 import org.json.simple.JSONObject;
 import roguelike.utilities.Colors;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidgrid.gui.gdx.TextCellFactory;
 
-@Getter
+@Getter @Setter
 public class Sprite implements Component {
     public char character;
     public Color backgroundColor;

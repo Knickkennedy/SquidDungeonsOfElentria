@@ -42,8 +42,6 @@ public class Statistics implements Component{
 				case "charisma"     : charisma.changeValue((int)(long)object.get(o.toString())); break;
 			}
 		}
-
-		System.out.println(this);
 	}
 
 	public LimitedStatistic get_stat(String type){

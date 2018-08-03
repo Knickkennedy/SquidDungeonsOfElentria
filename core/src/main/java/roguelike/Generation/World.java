@@ -152,7 +152,9 @@ public class World {
 
 			if(entity != null) {
 				Sprite sprite = entityManager.gc(entity, Sprite.class);
-				display.removeGlyph(sprite.getGlyph());
+				if(sprite != null && sprite.getGlyph() != null) {
+					display.removeGlyph(sprite.getGlyph());
+				}
 				entityManager.gc(entity, Position.class).map.entities.remove(entity);
 				entityManager.killEntity(entity);
 			}

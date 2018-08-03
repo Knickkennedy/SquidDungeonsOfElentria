@@ -21,7 +21,7 @@ import static roguelike.engine.Game.*;
 
 public class GameScreen extends ScreenAdapter {
 
-    //private Game game;
+    private Game game;
     public Stage stage;
     public SparseLayers display;
 
@@ -33,14 +33,14 @@ public class GameScreen extends ScreenAdapter {
     private int map_height_end;
 
     public GameScreen(Game game_in, Stage stage_in){
-        //game = game_in;
+        game = game_in;
 	    stage = stage_in;
         Factory.getInstance().setGame(game_in);
     }
 
     @Override
     public void show(){
-        //stage = game.stage;
+        stage = game.stage;
         stage.clear();
         display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getCrispDejaVuFont());
         display.font.tweakWidth(cellWidth + 1).tweakHeight(cellHeight + 1).setSmoothingMultiplier(1.6f).initBySize();
@@ -152,7 +152,9 @@ public class GameScreen extends ScreenAdapter {
     private void place_entity(Integer entity, Coord point){
         display.put(point.x, point.y + message_buffer, entityManager.gc(entity, Sprite.class).character, entityManager.gc(entity, Sprite.class).foregroundColor);
         Sprite sprite = entityManager.gc(entity, Sprite.class);
-        sprite.makeGlyph(display, point.x, point.y + message_buffer);
+        Position position = entityManager.gc(entity, Position.class);
+        if(sprite != null && position.map.equals(world.getCurrent_map()))
+            sprite.makeGlyph(display, point.x, point.y + message_buffer);
     }
 
     @Override

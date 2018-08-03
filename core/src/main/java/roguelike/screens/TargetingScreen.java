@@ -168,12 +168,23 @@ public class TargetingScreen extends ScreenAdapter {
 
 	private void renderTargetLine(){
 		line = Bresenham.line2D(start, end);
-
+		Position position = entityManager.gc(entity, Position.class);
 		for(Coord location : line){
 
-			if(entityManager.gc(entity, Position.class).location != location) {
-				display.clear(location.x, location.y + message_buffer);
-				display.put(location.x, location.y + message_buffer, 'X', SColor.BROWN);
+			if(position.location != location) {
+				if(!position.map.isSolid(location.x, location.y)) {
+					display.clear(location.x, location.y + message_buffer);
+					display.put(location.x, location.y + message_buffer, '/', SColor.BROWN);
+				}
+				else{
+					display.clear(location.x, location.y + message_buffer);
+					display.put(location.x, location.y + message_buffer, 'X', SColor.RED);
+				}
+
+				if(position.map.entityAt(location) != null){
+					display.clear(location.x, location.y + message_buffer);
+					display.put(location.x, location.y + message_buffer, '*', SColor.BRIGHT_GREEN);
+				}
 			}
 		}
 	}

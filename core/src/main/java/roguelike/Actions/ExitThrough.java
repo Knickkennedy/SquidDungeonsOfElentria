@@ -7,6 +7,8 @@ import roguelike.utilities.Point;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidmath.Coord;
 
+import java.util.Set;
+
 import static roguelike.Generation.World.entityManager;
 import static roguelike.engine.Game.message_buffer;
 
@@ -31,6 +33,15 @@ public class ExitThrough extends Action{
 
 			remove_active_flag(entityManager.gc(entity, Position.class).map);
 			entityManager.gc(entity, Position.class).map.entities.remove(entity);
+
+			Set<Integer> entities = entityManager.getAllEntitiesPossessingComponent(Active.class);
+			for(Integer ent : entities){
+				Sprite sprite = entityManager.gc(ent, Sprite.class);
+				if(sprite != null && sprite.getGlyph() != null){
+					display.removeGlyph(sprite.getGlyph());
+					sprite.setGlyph(null);
+				}
+			}
 
 			entityManager.gc(entity, Position.class).map.findExit(temp_position).set_player_location();
 			Exit exit = entityManager.gc(entity, Position.class).map.findExit(temp_position);
