@@ -9,6 +9,7 @@ import roguelike.engine.Game;
 import roguelike.engine.MessageLog;
 import roguelike.screens.EquipmentScreen;
 import roguelike.screens.InventoryScreen;
+import roguelike.screens.StartScreen;
 import roguelike.screens.TargetingScreen;
 import roguelike.utilities.Point;
 import squidpony.squidgrid.gui.gdx.SparseLayers;

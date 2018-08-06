@@ -2,7 +2,9 @@ package roguelike.screens;
 
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import roguelike.Components.*;
 import roguelike.Effects.Damage;
 import roguelike.Generation.Factory;
@@ -23,6 +25,8 @@ public class GameScreen extends ScreenAdapter {
 
     private Game game;
     public Stage stage;
+    public StretchViewport gameViewPort;
+    public SpriteBatch batch;
     public SparseLayers display;
 
     private Color bgColor;
@@ -32,9 +36,12 @@ public class GameScreen extends ScreenAdapter {
     private int map_height_start;
     private int map_height_end;
 
-    public GameScreen(Game game_in, Stage stage_in){
+    public GameScreen(Game game_in){
         game = game_in;
-	    stage = stage_in;
+        batch = new SpriteBatch();
+        gameViewPort = new StretchViewport(gridWidth * cellWidth, gridHeight * cellHeight);
+        gameViewPort.setScreenBounds(0, 0, gridWidth * cellWidth, gridHeight * cellHeight);
+        stage = new Stage(gameViewPort, batch);
         Factory.getInstance().setGame(game_in);
 	    display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getCrispDejaVuFont());
 
@@ -42,10 +49,9 @@ public class GameScreen extends ScreenAdapter {
 
     @Override
     public void show(){
-        stage = game.stage;
         stage.clear();
         display.font.tweakWidth(cellWidth + 1).tweakHeight(cellHeight + 1).setSmoothingMultiplier(1.6f).initBySize();
-        bgColor = SColor.DB_MIDNIGHT;
+        bgColor = SColor.BLACK;
         display.fillBackground(bgColor);
         map_height_start = message_buffer;
         map_height_end = gridHeight - statistics_height + message_buffer;
@@ -108,7 +114,7 @@ public class GameScreen extends ScreenAdapter {
             for(int j = map_height_start; j < map_height_end; j++){
                 Sprite sprite = world.getCurrent_map().getTileAt(i, j - message_buffer).sprite;
                 if(fov[i][j - message_buffer] > 0)
-                    display.putWithConsistentLight(i, j, sprite.character, sprite.foregroundColor, Color.BLACK, SColor.CW_PALE_YELLOW, (float)(fov[i][j - message_buffer]));
+                    display.putWithConsistentLight(i, j, sprite.character, sprite.foregroundColor, bgColor, SColor.CW_PALE_YELLOW, (float)(fov[i][j - message_buffer]));
                 else
                     display.put(i, j, sprite.character, sprite.foregroundColor, bgColor);
             }

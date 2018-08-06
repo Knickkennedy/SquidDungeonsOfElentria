@@ -3,7 +3,9 @@ package roguelike.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
 import roguelike.engine.Game;
 import squidpony.squidgrid.gui.gdx.DefaultResources;
 import squidpony.squidgrid.gui.gdx.SColor;
@@ -17,6 +19,8 @@ public class StartScreen extends ScreenAdapter {
     private Game game;
     private Stage stage;
     private SparseLayers display;
+    private SpriteBatch batch;
+    private StretchViewport startViewPort;
 
     private Color bgColor;
 
@@ -24,10 +28,13 @@ public class StartScreen extends ScreenAdapter {
 
     public StartScreen(Game game_in){
         game = game_in;
-        stage = game.stage;
+        batch = new SpriteBatch();
+        startViewPort = new StretchViewport(gridWidth * cellWidth, gridHeight * cellHeight);
+        startViewPort.setScreenBounds(0, 0, gridWidth * cellWidth, gridHeight * cellHeight);
+        stage = new Stage(startViewPort, batch);
         display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getCrispDejaVuFont());
         display.font.tweakWidth(cellWidth + 1).tweakHeight(cellHeight + 1).setSmoothingMultiplier(1.6f).initBySize();
-        bgColor = SColor.DB_MIDNIGHT;
+        bgColor = SColor.BLACK;
         display.fillBackground(bgColor);
 
     }
@@ -39,8 +46,7 @@ public class StartScreen extends ScreenAdapter {
 
 		    switch(key) {
                 case SquidInput.ENTER: {
-	                /*game.setGame_screen(new GameScreen(game));*/
-                    game.setScreen(game.getGame_screen());
+                    game.setScreen(game.makeNewGameScreen());
                     break;
                 }
             }
@@ -60,8 +66,8 @@ public class StartScreen extends ScreenAdapter {
         if(input.hasNext()){
             input.next();
         }
-        stage.draw();
         stage.act();
+        stage.draw();
     }
 
 	@Override

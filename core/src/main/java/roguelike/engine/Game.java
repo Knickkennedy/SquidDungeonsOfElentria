@@ -14,7 +14,6 @@ import roguelike.screens.StartScreen;
 
 @Getter @Setter
 public class Game extends com.badlogic.gdx.Game {
-    SpriteBatch batch;
 
     public static final int gridWidth = 112;
     public static final int gridHeight = 32;
@@ -25,25 +24,10 @@ public class Game extends com.badlogic.gdx.Game {
     public static final int cellWidth = 10;
     public static final int cellHeight = 20;
 
-    public Stage stage;
-    public Stage stage2;
     private GameScreen game_screen;
 
     @Override
     public void create () {
-
-        batch = new SpriteBatch();
-
-        StretchViewport mainViewport = new StretchViewport(gridWidth * cellWidth, gridHeight * cellHeight);
-                        mainViewport.setScreenBounds(0, 0, gridWidth * cellWidth, gridHeight * cellHeight);
-
-        StretchViewport gameViewPort = new StretchViewport(gridWidth * cellWidth, gridHeight * cellHeight);
-		gameViewPort.setScreenBounds(0, 0, gridWidth * cellWidth, gridHeight * cellHeight);
-
-        stage = new Stage(mainViewport, batch);
-        stage2 = new Stage(gameViewPort, batch);
-
-        game_screen = new GameScreen(this, stage2);
 
 	    setScreen(new StartScreen(this));
     }
@@ -59,9 +43,12 @@ public class Game extends com.badlogic.gdx.Game {
 //        stage.act();
     }
 
+    public GameScreen makeNewGameScreen(){
+        this.game_screen = new GameScreen(this);
+        return game_screen;
+    }
+
     @Override
 	public void dispose(){
-    	batch.dispose();
-    	stage.dispose();
     }
 }
