@@ -59,7 +59,7 @@ public class TargetingScreen extends ScreenAdapter {
 		stage = new Stage(viewport, batch);
 		display = new SparseLayers(gridWidth, gridHeight, cellWidth, cellHeight, DefaultResources.getCrispDejaVuFont());
 		display.font.tweakWidth(cellWidth + 1).tweakHeight(cellHeight + 1).setSmoothingMultiplier(1.6f).initBySize();
-		bgColor = SColor.DB_MIDNIGHT;
+		bgColor = SColor.BLACK;
 		display.fillBackground(bgColor);
 	}
 
@@ -88,12 +88,20 @@ public class TargetingScreen extends ScreenAdapter {
 					end = end.add(Point.NORTH); break;
 				case SquidInput.UP_RIGHT_ARROW:
 					end = end.add(Point.NORTH_EAST); break;
+				case SquidInput.ENTER:
+					printCoords(); break;
 				case SquidInput.ESCAPE:
 					game.setScreen(game.getGame_screen()); break;
 			}
 		});
 
 		Gdx.input.setInputProcessor(input);
+	}
+
+	public void printCoords(){
+		for(Coord coord : line){
+			System.out.println(coord);
+		}
 	}
 
 	@Override
@@ -163,7 +171,6 @@ public class TargetingScreen extends ScreenAdapter {
 	private void placeEntity(Integer entity, Coord location){
 		Sprite sprite = entityManager.gc(entity, Sprite.class);
 		display.put(location.x, location.y + message_buffer, sprite.character, sprite.foregroundColor);
-		sprite.makeGlyph(display, location.x, location.y + message_buffer);
 	}
 
 	private void renderTargetLine(){
@@ -174,16 +181,16 @@ public class TargetingScreen extends ScreenAdapter {
 			if(position.location != location) {
 				if(!position.map.isSolid(location.x, location.y)) {
 					display.clear(location.x, location.y + message_buffer);
-					display.put(location.x, location.y + message_buffer, '/', SColor.BROWN);
+					display.put(location.x, location.y + message_buffer, '/', SColor.CHESTNUT_LEATHER_BROWN, SColor.CW_FADED_GOLD);
 				}
 				else{
 					display.clear(location.x, location.y + message_buffer);
-					display.put(location.x, location.y + message_buffer, 'X', SColor.RED);
+					display.put(location.x, location.y + message_buffer, 'X', SColor.RED, SColor.CW_FADED_GOLD);
 				}
 
 				if(position.map.entityAt(location) != null){
 					display.clear(location.x, location.y + message_buffer);
-					display.put(location.x, location.y + message_buffer, '*', SColor.BRIGHT_GREEN);
+					display.put(location.x, location.y + message_buffer, '!', SColor.DARK_GREEN, SColor.CW_FADED_GOLD);
 				}
 			}
 		}

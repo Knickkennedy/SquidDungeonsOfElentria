@@ -17,6 +17,8 @@ public class Equippable implements Component{
 				case "chest": slots.add(EquipmentSlot.CHEST); break;
 				case "left hand": slots.add(EquipmentSlot.LEFT_HAND); break;
 				case "right hand": slots.add(EquipmentSlot.RIGHT_HAND); break;
+				case "ranged weapon": slots.add(EquipmentSlot.RANGED_WEAPON); break;
+				case "ammunition": slots.add(EquipmentSlot.AMMUNITION); break;
 			}
 		}
 	}

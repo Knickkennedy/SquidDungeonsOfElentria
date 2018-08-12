@@ -29,15 +29,6 @@ public enum EquipmentSlot {
 		String name = this.name().toLowerCase();
 		name = name.replace("_", " ");
 
-
-
-
-
-
-
-
-
-
 		return Word.capitalize_all(name);
 	}
 }

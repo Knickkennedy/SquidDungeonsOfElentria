@@ -8,7 +8,12 @@
 		"details": { "name": "leather helmet", "description": "soft leather meant to turn a strike" },
 		"equippable": { "head": true },
 		"defenses": { "piercing": 1, "slashing": 2, "crushing": 1 }},
-	
+
+	"iron arrow":{
+		"details": { "name": "iron arrow", "description": "crudely made, deadly" },
+		"equippable": { "ammunition": true },
+		"attack": { "physical": { "type": "piercing", "dice":{ "number of": 1, "size": 6 }}}},
+
 	"iron helm": {
 		"details": { "name": "iron helm", "description": "thick iron to protect a thin skull" },
 		"equippable": { "head": true },
@@ -23,9 +28,8 @@
 		"details":{ "name": "iron breastplate", "description": "sturdy, heavy. This is what quality feels like." },
 		"equippable":{ "chest": true },
 		"defenses":{ "piercing": 2, "slashing": 2, "crushing": 2 }},
+
 	"shortbow": {
 		"details":{ "name": "shortbow", "description": "small, but powerful" },
-		"equippable":{ "ranged weapon": true },
-		"attack":{ "physical":{ "type": "piercing", "dice":{ "number of": 1, "size": 6 }}}
-	}
+		"equippable":{ "ranged weapon": true }}
 }

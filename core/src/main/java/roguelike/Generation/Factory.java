@@ -86,6 +86,8 @@ public class Factory {
 		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("iron breastplate"), EquipmentSlot.CHEST);
 		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("iron helm"), EquipmentSlot.HEAD);
 		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("iron shortsword"), EquipmentSlot.LEFT_HAND);
+		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("shortbow"), EquipmentSlot.RANGED_WEAPON);
+		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("iron arrow"), EquipmentSlot.AMMUNITION);
 
 
 

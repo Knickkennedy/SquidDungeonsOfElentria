@@ -5,7 +5,7 @@
 		"speed": 100,
 		"statistics": { "health": 10, "strength": 10, "intelligence": 10, "willpower": 10, "constitution": 10, "dexterity": 10, "charisma": 10 },
         "ai": true,
-        "equipment":{ "head": "group:very common headgear", "chest": "group:very common chestpieces", "right hand": "group:very common weapons" }},
+        "equipment":{ "head": "group:very common headgear", "chest": "group:very common chestpieces", "right hand": "group:very common weapons"}},
 	
 	"goblin":{
 		"details": { "name": "goblin", "description": "a tiny gobbo", "hostile towards": ["player", "human"] },

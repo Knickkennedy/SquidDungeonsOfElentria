@@ -33,6 +33,8 @@ public class Equipment implements Component{
 				case "chest": equipment.put(EquipmentSlot.CHEST, Factory.getInstance().create_new_item((String)object.get(o.toString()))); break;
 				case "left hand": equipment.put(EquipmentSlot.LEFT_HAND, Factory.getInstance().create_new_item((String)object.get(o.toString()))); break;
 				case "right hand": equipment.put(EquipmentSlot.RIGHT_HAND, Factory.getInstance().create_new_item((String)object.get(o.toString()))); break;
+				case "ranged weapon": equipment.put(EquipmentSlot.RANGED_WEAPON, Factory.getInstance().create_new_item((String)object.get(o.toString()))); break;
+				case "ammunition": equipment.put(EquipmentSlot.AMMUNITION, Factory.getInstance().create_new_item((String)object.get(o.toString()))); break;
 			}
 		}
 	}
