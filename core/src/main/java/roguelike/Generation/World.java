@@ -56,7 +56,7 @@ public class World {
 		{
 			e.printStackTrace();
 		}
-		first_dungeon = new Dungeon("Main Dungeon", 25);
+		first_dungeon = new Dungeon("Main Dungeon", 10);
 		surface = new Map(initializeMapWithFile("surface.txt"));
 		first_dungeon.add_level(0, surface);
 		first_dungeon.build_basic_dungeon();
