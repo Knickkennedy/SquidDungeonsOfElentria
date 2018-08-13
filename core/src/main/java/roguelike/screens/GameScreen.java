@@ -60,10 +60,6 @@ public class GameScreen extends ScreenAdapter {
         else
             world = new World(gridWidth, gridHeight - statistics_height, display);
         stage.addActor(display);
-	    /*GreasedRegion greasedRegion = new GreasedRegion(gridWidth, gridHeight);
-	    greasedRegion.allOn();
-	    display.addAction(new PanelEffect.ProjectileEffect(display, 5f, greasedRegion, Coord.get(10, 10), Coord.get(10, 15), '/', SColor.BROWN));
-    */
     }
 
     @Override
@@ -71,14 +67,14 @@ public class GameScreen extends ScreenAdapter {
         display.clear();
 
         world.update();
+
         render_map();
         render_entities();
         render_statistics();
         render_messages();
 
-
-	    stage.act();
-	    stage.draw();
+        stage.act();
+        stage.draw();
 
     }
 

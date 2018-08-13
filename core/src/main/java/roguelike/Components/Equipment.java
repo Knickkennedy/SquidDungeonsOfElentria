@@ -118,6 +118,10 @@ public class Equipment implements Component{
 		return amount;
 	}
 
+	public ArrayList<Damage> getRangedDamage(){
+		return entityManager.gc(equipment.get(EquipmentSlot.AMMUNITION), OffensiveComponent.class).damages;
+	}
+
 	private ArrayList<Damage> get_base_damage(){
 		ArrayList<Damage> damages = new ArrayList<>();
 		damages.add(new Damage("crushing", new Dice(1, 3)));

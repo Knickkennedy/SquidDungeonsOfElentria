@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import roguelike.Actions.RangedAttack;
 import roguelike.Components.*;
 import roguelike.Effects.Damage;
 import roguelike.Generation.World;
@@ -89,7 +90,9 @@ public class TargetingScreen extends ScreenAdapter {
 				case SquidInput.UP_RIGHT_ARROW:
 					end = end.add(Point.NORTH_EAST); break;
 				case SquidInput.ENTER:
-					printCoords(); break;
+					game.setScreen(game.getGame_screen());
+					entityManager.gc(entity, ActionComponent.class).setAction(new RangedAttack(entity, line, game.getGame_screen().display));
+					break;
 				case SquidInput.ESCAPE:
 					game.setScreen(game.getGame_screen()); break;
 			}
