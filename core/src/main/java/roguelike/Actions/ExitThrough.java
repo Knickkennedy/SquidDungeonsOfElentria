@@ -24,6 +24,11 @@ public class ExitThrough extends Action{
 	}
 
 	@Override
+	public boolean canPerform(){
+		return entityManager.gc(entity, Energy.class).energy >= cost;
+	}
+
+	@Override
 	public boolean perform() {
 		Coord temp_position = entityManager.gc(entity, Position.class).location;
 		
@@ -63,6 +68,11 @@ public class ExitThrough extends Action{
 
 		entityManager.gc(entity, ActionComponent.class).setAction(null);
 
+		return false;
+	}
+
+	@Override
+	public boolean isAlternativeAction() {
 		return false;
 	}
 

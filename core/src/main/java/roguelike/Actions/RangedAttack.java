@@ -35,10 +35,12 @@ public class RangedAttack extends Action{
     }
 
     @Override
-    public boolean perform() {
+    public boolean canPerform(){
+        return entityManager.gc(entity, Energy.class).energy >= cost;
+    }
 
-        if(entityManager.gc(entity, Energy.class).energy < cost)
-            return true;
+    @Override
+    public boolean perform() {
 
         Position position = entityManager.gc(entity, Position.class);
         for(Coord coord : line){
@@ -80,5 +82,10 @@ public class RangedAttack extends Action{
         entityManager.gc(entity, Energy.class).energy -= cost;
         entityManager.gc(entity, ActionComponent.class).setAction(null);
         return true;
+    }
+
+    @Override
+    public boolean isAlternativeAction() {
+        return false;
     }
 }

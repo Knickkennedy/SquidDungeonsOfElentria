@@ -25,10 +25,12 @@ public class MeleeAttack extends Action{
 	}
 
 	@Override
-	public boolean perform() {
+	public boolean canPerform(){
+		return entityManager.gc(attacker, Energy.class).energy >= cost;
+	}
 
-		if(entityManager.gc(attacker, Energy.class).energy < cost)
-			return true;
+	@Override
+	public boolean perform() {
 
 		Statistics statistics = entityManager.gc(target, Statistics.class);
 		if(statistics != null) {
@@ -69,5 +71,10 @@ public class MeleeAttack extends Action{
 
 			return true;
 		}
+	}
+
+	@Override
+	public boolean isAlternativeAction() {
+		return false;
 	}
 }

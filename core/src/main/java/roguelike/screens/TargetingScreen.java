@@ -91,7 +91,9 @@ public class TargetingScreen extends ScreenAdapter {
 					end = end.add(Point.NORTH_EAST); break;
 				case SquidInput.ENTER:
 					entityManager.gc(entity, ActionComponent.class).setAction(new RangedAttack(entity, line, game.getGame_screen().display));
-					game.setScreen(game.getGame_screen());
+					if(!display.hasActiveAnimations()) {
+						game.setScreen(game.getGame_screen());
+					}
 					break;
 				case SquidInput.ESCAPE:
 					game.setScreen(game.getGame_screen()); break;

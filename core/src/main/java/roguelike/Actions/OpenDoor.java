@@ -19,6 +19,11 @@ public class OpenDoor extends Action{
 	}
 
 	@Override
+	public boolean canPerform(){
+		return entityManager.gc(entity, Energy.class).energy >= cost;
+	}
+
+	@Override
 	public boolean perform() {
 
 		entityManager.gc(entity, Energy.class).energy -= cost;
@@ -30,5 +35,10 @@ public class OpenDoor extends Action{
 		entityManager.gc(entity, ActionComponent.class).setAction(null);
 
 		return true;
+	}
+
+	@Override
+	public boolean isAlternativeAction() {
+		return false;
 	}
 }

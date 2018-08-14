@@ -34,7 +34,7 @@ public class TurnSystem implements BaseSystem {
 
 			Active active = entityManager.gc(current_actor, Active.class);
 			if(active != null) {
-				AISystem.process();
+				AISystem.process(current_actor);
 				Command command = entityManager.gc(current_actor, Command.class);
 
 				if (command != null && !display.hasActiveAnimations() && command.hasNext()) {
@@ -44,13 +44,22 @@ public class TurnSystem implements BaseSystem {
 
 				if (action != null) {
 
-					entityManager.gc(current_actor, Energy.class).energy += entityManager.gc(current_actor, Energy.class).speed;
+					Energy energy = entityManager.gc(current_actor, Energy.class);
+					energy.energy += energy.speed;
 
-					if (entityManager.gc(current_actor, ActionComponent.class).getAction().perform()) {
-						current_actor = actors.get((actors.indexOf(current_actor) + 1) % actors.size());
+					while (true){
+						if(action.isAlternativeAction()) {
+							action = entityManager.gc(current_actor, ActionComponent.class).getAction();
+							if(action == null)
+								break;
+						}
+						else
+							break;
 					}
-					else {
-						entityManager.gc(current_actor, Energy.class).energy -= entityManager.gc(current_actor, Energy.class).speed;
+
+					if (action != null && action.canPerform()) {
+						action.perform();
+						current_actor = actors.get((actors.indexOf(current_actor) + 1) % actors.size());
 					}
 				}
 				else
@@ -59,6 +68,11 @@ public class TurnSystem implements BaseSystem {
 			else
 				break;
 		}
+
+	}
+
+	@Override
+	public void process(Integer actor) {
 
 	}
 }

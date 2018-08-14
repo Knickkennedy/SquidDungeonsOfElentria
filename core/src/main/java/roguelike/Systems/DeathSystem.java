@@ -25,4 +25,9 @@ public class DeathSystem implements BaseSystem {
 			Factory.getInstance().death_queue.add(defender);
 		}
 	}
+
+	@Override
+	public void process(Integer actor) {
+
+	}
 }

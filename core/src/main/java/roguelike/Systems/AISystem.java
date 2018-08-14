@@ -14,7 +14,8 @@ import static roguelike.Generation.World.entityManager;
 
 public class AISystem implements BaseSystem {
 
-	public ArrayList<Integer> actors;
+	private ArrayList<Integer> actors;
+	private Integer currentActor;
 	private SparseLayers display;
 	public DijkstraMap path;
 
@@ -24,71 +25,78 @@ public class AISystem implements BaseSystem {
 	}
 
 	@Override
-	public void process() {
+	public void process() { }
 
-		for (Integer current_actor : actors) {
-			if (entityManager.gc(current_actor, AI.class) != null) {
-				if(entityManager.gc(current_actor, ActionComponent.class).getAction() == null) {
+	@Override
+	public void process(Integer actor) {
 
-					if(path == null){
-						path = new DijkstraMap(entityManager.gc(current_actor, Position.class).map.pathfinding, DijkstraMap.Measurement.EUCLIDEAN);
-					}
+		this.currentActor = actor;
 
-					switch (entityManager.gc(current_actor, AI.class).mode) {
-						case PASSIVE:
-							entityManager.gc(current_actor, ActionComponent.class).setAction(new Move(current_actor, Point.WAIT, display));
-							break;
-						case NEUTRAL:
-							entityManager.gc(current_actor, ActionComponent.class).setAction(
-									new Move(current_actor, Point.direction.get(Roll.rand(0, Point.direction.size() - 1)), display));
-							break;
-						case AGGRESSIVE:
-							perform_hunt_attempt(current_actor, path);
-							break;
-					}
+		if (entityManager.gc(actor, AI.class) != null) {
+			if (entityManager.gc(actor, ActionComponent.class).getAction() == null) {
+
+				if (path == null) {
+					path = new DijkstraMap(entityManager.gc(actor, Position.class).map.pathfinding, DijkstraMap.Measurement.EUCLIDEAN);
+				}
+
+				switch (entityManager.gc(actor, AI.class).mode) {
+					case DEBUG:
+						entityManager.gc(actor, ActionComponent.class).setAction(new Move(actor, Point.WAIT, display));
+						break;
+					case PASSIVE:
+						entityManager.gc(actor, ActionComponent.class).setAction(new Move(actor, Point.WAIT, display));
+						break;
+					case NEUTRAL:
+						entityManager.gc(actor, ActionComponent.class).setAction(
+								new Move(actor, Point.direction.get(Roll.rand(0, Point.direction.size() - 1)), display));
+						break;
+					case AGGRESSIVE:
+						perform_hunt_attempt();
+						break;
 				}
 			}
 		}
 	}
 
-	public void perform_hunt_attempt(Integer current_actor, DijkstraMap path){
+	public void perform_hunt_attempt(){
 
 		ArrayList<Coord> monster_locations = new ArrayList<>();
 
-		for(Integer actor : actors){
-			if(!entityManager.gc(current_actor, Details.class).is_hostile_towards(actor) && !current_actor.equals(actor)){
-				monster_locations.add(entityManager.gc(actor, Position.class).location);
+		for(Integer otherActor : actors){
+
+			if(!entityManager.gc(currentActor, Details.class).is_hostile_towards(otherActor) && !currentActor.equals(otherActor)){
+				monster_locations.add(entityManager.gc(otherActor, Position.class).location);
 			}
 		}
 
 		for(Integer actor : actors){
 
-			if(entityManager.gc(current_actor, AI.class).has_seen && entityManager.gc(current_actor, AI.class).current_target.equals(actor)){
+			if(entityManager.gc(currentActor, AI.class).has_seen && entityManager.gc(currentActor, AI.class).current_target.equals(actor)){
 				path.setGoal(entityManager.gc(actor, Position.class).location);
 				ArrayList<Coord> coords =
 						path.findPath(1, monster_locations, null,
-								entityManager.gc(current_actor, Position.class).location, entityManager.gc(actor, Position.class).location);
-				entityManager.gc(current_actor, ActionComponent.class).setAction(
-								new Move(current_actor, coords.get(0).subtract(entityManager.gc(current_actor, Position.class).location), display));
+								entityManager.gc(currentActor, Position.class).location, entityManager.gc(actor, Position.class).location);
+				entityManager.gc(currentActor, ActionComponent.class).setAction(
+								new Move(currentActor, coords.get(0).subtract(entityManager.gc(currentActor, Position.class).location), display));
 				break;
 			}
-			else if(entityManager.gc(current_actor, Details.class).is_hostile_towards(actor) && can_see(current_actor, actor)){
+			else if(entityManager.gc(currentActor, Details.class).is_hostile_towards(actor) && can_see(currentActor, actor)){
 
-				if(!entityManager.gc(current_actor, AI.class).has_seen) {
-					entityManager.gc(current_actor, AI.class).has_seen = true;
-					entityManager.gc(current_actor, AI.class).current_target = actor;
+				if(!entityManager.gc(currentActor, AI.class).has_seen) {
+					entityManager.gc(currentActor, AI.class).has_seen = true;
+					entityManager.gc(currentActor, AI.class).current_target = actor;
 				}
 
 				path.setGoal(entityManager.gc(actor, Position.class).location);
 				ArrayList<Coord> coords =
 								path.findPath(1, monster_locations, null,
-								entityManager.gc(current_actor, Position.class).location, entityManager.gc(actor, Position.class).location);
-				entityManager.gc(current_actor, ActionComponent.class).setAction(
-						new Move(current_actor, coords.get(0).subtract(entityManager.gc(current_actor, Position.class).location), display));
+								entityManager.gc(currentActor, Position.class).location, entityManager.gc(actor, Position.class).location);
+				entityManager.gc(currentActor, ActionComponent.class).setAction(
+						new Move(currentActor, coords.get(0).subtract(entityManager.gc(currentActor, Position.class).location), display));
 				break;
 			}
-			entityManager.gc(current_actor, ActionComponent.class).setAction(
-						new Move(current_actor, Point.direction.get(Roll.rand(0, Point.direction.size() - 1)), display));
+			entityManager.gc(currentActor, ActionComponent.class).setAction(
+						new Move(currentActor, Point.direction.get(Roll.rand(0, Point.direction.size() - 1)), display));
 		}
 	}
 
