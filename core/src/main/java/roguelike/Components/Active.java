@@ -1,4 +1,3 @@
 package roguelike.Components;
 
-public class Active implements Component{
-}
+public class Active implements Component{ }

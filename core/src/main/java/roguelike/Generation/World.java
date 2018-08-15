@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import roguelike.Actions.Animations.*;
 import roguelike.Components.Command;
 import roguelike.Components.Position;
 import roguelike.Components.Sprite;
@@ -14,8 +15,7 @@ import roguelike.engine.MessageLog;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidmath.Coord;
 
-import java.util.ArrayList;
-import java.util.Scanner;
+import java.util.*;
 
 @Getter
 @Setter
@@ -23,6 +23,10 @@ public class World {
 
 	public static EntityManager entityManager = new EntityManager();
 	private SparseLayers display;
+	private List<Animation> animations;
+	private List<Animation> multiTileAnimations;
+	private List<Animation> singleTileAnimations;
+	private Comparator<Animation> animationSorter;
 
 	private int map_width;
 	private int map_height;
@@ -42,6 +46,15 @@ public class World {
 	public ArrayList<Exit> surface_exits;
 
 	public World(int map_width, int map_height, SparseLayers display) {
+		this.animations = new ArrayList<>();
+		this.multiTileAnimations = new ArrayList<>();
+		this.singleTileAnimations = new ArrayList<>();
+		/*this.animationSorter = (o1, o2) -> {
+			if(o1.getPriority() == o2.getPriority())
+				return 0;
+			else
+				return o1.getPriority() > o2.getPriority() ? -1 : 1;
+		};*/
 		this.map_width = map_width;
 		this.map_height = map_height;
 
@@ -65,9 +78,10 @@ public class World {
 		current_map = surface;
 		Factory.getInstance().setDisplay(display);
 		Factory.getInstance().setWorld(this);
+		Factory.getInstance().setAnimations(animations);
 		player = Factory.getInstance().initialize_player();
 		Factory.getInstance().build_player(player, starting_location, surface);
-		turn_system = new TurnSystem(display);
+		turn_system = new TurnSystem(display, animations);
 		reload();
 	}
 	public void reload()
@@ -141,7 +155,36 @@ public class World {
 
 		current_map = entityManager.gc(player, Position.class).map;
 
+		processAnimations();
+
 		perform_deaths();
+	}
+
+	private void processAnimations(){
+
+		//animations.sort(animationSorter);
+
+		for(Animation animation : animations){
+
+			if(animation instanceof MultiTileAnimation)
+				multiTileAnimations.add(animation);
+			else if(animation instanceof SingleTileAnimation)
+				singleTileAnimations.add(animation);
+		}
+
+		for(Animation animation : multiTileAnimations){
+			animation.createAnimation(display);
+		}
+
+		if(multiTileAnimations.isEmpty() && !display.hasActiveAnimations()){
+			for(Animation animation : singleTileAnimations)
+				animation.createAnimation(display);
+			singleTileAnimations.clear();
+
+		}
+
+		animations.clear();
+		multiTileAnimations.clear();
 	}
 
 	private void perform_deaths(){

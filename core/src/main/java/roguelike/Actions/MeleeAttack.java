@@ -1,5 +1,7 @@
 package roguelike.Actions;
 
+import roguelike.Actions.Animations.Animation;
+import roguelike.Actions.Animations.MeleeAttackAnimation;
 import roguelike.Components.*;
 import roguelike.Effects.Damage;
 import roguelike.Systems.DeathSystem;
@@ -9,6 +11,8 @@ import squidpony.squidgrid.Direction;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidmath.Coord;
 
+import java.util.List;
+
 import static roguelike.Generation.World.entityManager;
 
 public class MeleeAttack extends Action{
@@ -16,12 +20,14 @@ public class MeleeAttack extends Action{
 	private Integer attacker;
 	private Integer target;
 	private SparseLayers display;
+	private List<Animation>animations;
 
-	public MeleeAttack(Integer attacker, Integer target, SparseLayers display){
+	public MeleeAttack(Integer attacker, Integer target, SparseLayers display, List<Animation> animations){
 		this.attacker = attacker;
 		this.target = target;
 		this.cost = 1000;
 		this.display = display;
+		this.animations = animations;
 	}
 
 	@Override
@@ -37,9 +43,10 @@ public class MeleeAttack extends Action{
 			Sprite sprite = entityManager.gc(attacker, Sprite.class);
 			Coord attackerLocation = entityManager.gc(attacker, Position.class).location;
 			Coord defenderLocation = entityManager.gc(target, Position.class).location;
-			if (sprite.getGlyph() != null) {
+			animations.add(new MeleeAttackAnimation(sprite, Direction.getDirection(defenderLocation.x - attackerLocation.x, defenderLocation.y - attackerLocation.y)));
+			/*if (sprite.getGlyph() != null) {
 				display.bump(sprite.getGlyph(), Direction.getDirection(defenderLocation.x - attackerLocation.x, defenderLocation.y - attackerLocation.y), 0.05f);
-			}
+			}*/
 
 			int damage = 0;
 			String type;

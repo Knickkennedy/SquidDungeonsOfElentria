@@ -1,6 +1,7 @@
 package roguelike.Systems;
 
 import roguelike.Actions.Action;
+import roguelike.Actions.Animations.Animation;
 import roguelike.Components.ActionComponent;
 import roguelike.Components.Active;
 import roguelike.Components.Command;
@@ -8,17 +9,20 @@ import roguelike.Components.Energy;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static roguelike.Generation.World.entityManager;
 
 public class TurnSystem implements BaseSystem {
 
 	private SparseLayers display;
+	private List<Animation>animations;
 	private EnergySystem energy_system;
 	private AISystem AISystem;
 
-	public TurnSystem(SparseLayers display){
+	public TurnSystem(SparseLayers display, List<Animation> animations){
 		this.display = display;
+		this.animations = animations;
 		this.energy_system = new EnergySystem();
 	}
 
@@ -28,7 +32,7 @@ public class TurnSystem implements BaseSystem {
 		actors.sort((a, b) -> a < b ? -1 : a.equals(b) ? 0 : 1);
 		int current_actor = actors.get(0);
 
-		this.AISystem = new AISystem(actors, display);
+		this.AISystem = new AISystem(actors, display, animations);
 
 		while(true){
 

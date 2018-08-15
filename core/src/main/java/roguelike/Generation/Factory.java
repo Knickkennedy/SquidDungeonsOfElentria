@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import roguelike.Actions.Animations.Animation;
 import roguelike.Components.*;
 import roguelike.Enums.EquipmentSlot;
 import roguelike.Enums.Race;
@@ -12,6 +13,7 @@ import roguelike.utilities.Roll;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
 import squidpony.squidmath.Coord;
 
+import java.util.List;
 import java.util.PriorityQueue;
 
 import static roguelike.Generation.World.entityManager;
@@ -23,6 +25,7 @@ public class Factory {
 	public Game game;
 	private SparseLayers display;
 	private World world;
+	private List<Animation> animations;
 
 	private JSONObject races;
 	private JSONObject items;
@@ -62,6 +65,7 @@ public class Factory {
 	}
 	public void setDisplay(SparseLayers display){ this.display = display; }
 	public void setWorld(World world){ this.world = world; }
+	public void setAnimations(List<Animation> animations){ this.animations = animations; }
 
 	public Integer initialize_player(){
 		return entityManager.createEntity();
@@ -80,7 +84,7 @@ public class Factory {
 		entityManager.addComponent(player, new Active());
 		entityManager.addComponent(player, new ActionComponent());
 		entityManager.addComponent(player, new Energy(100));
-		entityManager.addComponent(player, initializeCommandDisplay(player, display, world));
+		entityManager.addComponent(player, initializeCommandDisplay(player, display, world, animations));
 		entityManager.addComponent(player, new Inventory());
 		entityManager.addComponent(player, new Equipment());
 		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("iron breastplate"), EquipmentSlot.CHEST);
@@ -99,15 +103,11 @@ public class Factory {
 			current_map.entities.add(new_enemy);
 		}
 
-
-
-
-
 		current_map.entities.add(player);
 	}
 
-	public Command initializeCommandDisplay(Integer entity, SparseLayers display, World world){
-		return new Command(entity, game, display, world);
+	public Command initializeCommandDisplay(Integer entity, SparseLayers display, World world, List<Animation> animations){
+		return new Command(entity, game, display, world, animations);
 	}
 
 	public Integer create_new_entity(String name){

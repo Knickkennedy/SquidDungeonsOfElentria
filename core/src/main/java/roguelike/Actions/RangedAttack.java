@@ -1,5 +1,7 @@
 package roguelike.Actions;
 
+import roguelike.Actions.Animations.Animation;
+import roguelike.Actions.Animations.RangedAttackAnimation;
 import roguelike.Components.ActionComponent;
 import roguelike.Components.Energy;
 import roguelike.Components.Equipment;
@@ -14,6 +16,7 @@ import squidpony.squidmath.Coord;
 import squidpony.squidmath.GreasedRegion;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 
 import static roguelike.Generation.World.entityManager;
@@ -25,12 +28,14 @@ public class RangedAttack extends Action{
     private Queue<Coord> line; //Our initial line of fire
     private ArrayList<Coord> displayLine;
     private SparseLayers display; //Needed for animations
+    private List<Animation>animations;
 
-    public RangedAttack(Integer entity, Queue<Coord> lineIn, SparseLayers display){
+    public RangedAttack(Integer entity, Queue<Coord> lineIn, SparseLayers display, List<Animation>animations){
         this.entity = entity;
         this.line = lineIn;
         this.displayLine = new ArrayList<>();
         this.display = display;
+        this.animations = animations;
         this.cost = 1000;
     }
 
@@ -77,7 +82,10 @@ public class RangedAttack extends Action{
 
         GreasedRegion greasedRegion = new GreasedRegion(gridWidth, gridHeight);
         greasedRegion.allOn();
+        animations.add(new RangedAttackAnimation(greasedRegion, displayLine, '/', SColor.CHESTNUT_LEATHER_BROWN));
+/*
         display.addAction(new PanelEffect.ProjectileEffect(display, 1f, greasedRegion, displayLine.get(0), displayLine.get(displayLine.size() - 1), '/', SColor.CHESTNUT_LEATHER_BROWN));
+*/
 
         entityManager.gc(entity, Energy.class).energy -= cost;
         entityManager.gc(entity, ActionComponent.class).setAction(null);

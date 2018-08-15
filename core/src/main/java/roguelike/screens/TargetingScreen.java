@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
+import roguelike.Actions.Animations.Animation;
 import roguelike.Actions.RangedAttack;
 import roguelike.Components.*;
 import roguelike.Effects.Damage;
@@ -21,6 +22,7 @@ import squidpony.squidmath.Bresenham;
 import squidpony.squidmath.Coord;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
@@ -42,12 +44,13 @@ public class TargetingScreen extends ScreenAdapter {
 	private StretchViewport viewport;
 	private Stage stage;
 	private SparseLayers display;
+	private List<Animation> animations;
 
 	private Queue<Coord> line;
 
 	private Color bgColor;
 
-	public TargetingScreen(Game game, World world, Integer entity){
+	public TargetingScreen(Game game, World world, Integer entity, List<Animation> animations){
 		this.game = game;
 		this.world = world;
 		this.entity = entity;
@@ -62,6 +65,7 @@ public class TargetingScreen extends ScreenAdapter {
 		display.font.tweakWidth(cellWidth + 1).tweakHeight(cellHeight + 1).setSmoothingMultiplier(1.6f).initBySize();
 		bgColor = SColor.BLACK;
 		display.fillBackground(bgColor);
+		this.animations = animations;
 	}
 
 	@Override
@@ -90,7 +94,7 @@ public class TargetingScreen extends ScreenAdapter {
 				case SquidInput.UP_RIGHT_ARROW:
 					end = end.add(Point.NORTH_EAST); break;
 				case SquidInput.ENTER:
-					entityManager.gc(entity, ActionComponent.class).setAction(new RangedAttack(entity, line, game.getGame_screen().display));
+					entityManager.gc(entity, ActionComponent.class).setAction(new RangedAttack(entity, line, game.getGame_screen().display, animations));
 					if(!display.hasActiveAnimations()) {
 						game.setScreen(game.getGame_screen());
 					}
