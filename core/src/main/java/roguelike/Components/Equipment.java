@@ -122,6 +122,15 @@ public class Equipment implements Component{
 		return entityManager.gc(equipment.get(EquipmentSlot.AMMUNITION), OffensiveComponent.class).damages;
 	}
 
+	public int getRange(){
+		if(equipment.get(EquipmentSlot.RANGED_WEAPON) != null)
+			return entityManager.gc(equipment.get(EquipmentSlot.RANGED_WEAPON), Range.class).range;
+		else if(equipment.get(EquipmentSlot.AMMUNITION) != null)
+			return entityManager.gc(equipment.get(EquipmentSlot.AMMUNITION), Range.class).range;
+		else
+			return 0;
+	}
+
 	private ArrayList<Damage> get_base_damage(){
 		ArrayList<Damage> damages = new ArrayList<>();
 		damages.add(new Damage("crushing", new Dice(1, 3)));

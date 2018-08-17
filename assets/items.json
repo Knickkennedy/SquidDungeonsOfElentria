@@ -31,5 +31,6 @@
 
 	"shortbow": {
 		"details":{ "name": "shortbow", "description": "small, but powerful" },
-		"equippable":{ "ranged weapon": true }}
+		"equippable":{ "ranged weapon": true },
+		"range": 5}
 }

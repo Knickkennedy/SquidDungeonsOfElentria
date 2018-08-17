@@ -36,6 +36,7 @@ public class TargetingScreen extends ScreenAdapter {
 	private Game game;
 	private World world;
 	private Integer entity;
+	private int range;
 	private Coord start;
 	private Coord end;
 	private SquidInput input;
@@ -71,28 +72,32 @@ public class TargetingScreen extends ScreenAdapter {
 	@Override
 	public void show(){
 		stage.addActor(display);
+
+		Equipment equipment = entityManager.gc(entity, Equipment.class);
+		this.range = equipment.getRange();
+
 		start = entityManager.gc(entity, Position.class).location;
 		end = entityManager.gc(entity, Position.class).location;
 		input = new SquidInput((key, alt, ctrl, shift) -> {
 			switch(key) {
 				case SquidInput.DOWN_LEFT_ARROW:
-					end = end.add(Point.SOUTH_WEST); break;
+					tryMove(Point.SOUTH_WEST); break;
 				case SquidInput.DOWN_ARROW:
-					end = end.add(Point.SOUTH); break;
+					tryMove(Point.SOUTH); break;
 				case SquidInput.DOWN_RIGHT_ARROW:
-					end = end.add(Point.SOUTH_EAST); break;
+					tryMove(Point.SOUTH_EAST); break;
 				case SquidInput.LEFT_ARROW:
-					end = end.add(Point.WEST); break;
+					tryMove(Point.WEST); break;
 				case SquidInput.CENTER_ARROW:
-					end = end.add(Point.WAIT); break;
+					tryMove(Point.WAIT); break;
 				case SquidInput.RIGHT_ARROW:
-					end = end.add(Point.EAST); break;
+					tryMove(Point.EAST); break;
 				case SquidInput.UP_LEFT_ARROW:
-					end = end.add(Point.NORTH_WEST); break;
+					tryMove(Point.NORTH_WEST); break;
 				case SquidInput.UP_ARROW:
-					end = end.add(Point.NORTH); break;
+					tryMove(Point.NORTH); break;
 				case SquidInput.UP_RIGHT_ARROW:
-					end = end.add(Point.NORTH_EAST); break;
+					tryMove(Point.NORTH_EAST); break;
 				case SquidInput.ENTER:
 					entityManager.gc(entity, ActionComponent.class).setAction(new RangedAttack(entity, line, game.getGame_screen().display, animations));
 					if(!display.hasActiveAnimations()) {
@@ -107,10 +112,12 @@ public class TargetingScreen extends ScreenAdapter {
 		Gdx.input.setInputProcessor(input);
 	}
 
-	public void printCoords(){
-		for(Coord coord : line){
-			System.out.println(coord);
-		}
+	public void tryMove(Coord direction){
+		end = end.add(direction);
+		line = Bresenham.line2D(start, end);
+
+		if(line.size() > range)
+			end = end.subtract(direction);
 	}
 
 	@Override
@@ -183,7 +190,10 @@ public class TargetingScreen extends ScreenAdapter {
 	}
 
 	private void renderTargetLine(){
-		line = Bresenham.line2D(start, end);
+
+		if(line == null || line.isEmpty())
+			return;
+
 		Position position = entityManager.gc(entity, Position.class);
 		for(Coord location : line){
 

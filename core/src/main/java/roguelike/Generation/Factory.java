@@ -191,6 +191,8 @@ public class Factory {
 					entityManager.addComponent(item, new Armor((JSONObject)item_properties.get(o))); break;
 				case "attack":
 					entityManager.addComponent(item, new OffensiveComponent((JSONObject)item_properties.get(o))); break;
+				case "range":
+					entityManager.addComponent(item, new Range((int)(long)item_properties.get(o))); break;
 			}
 		}
 
