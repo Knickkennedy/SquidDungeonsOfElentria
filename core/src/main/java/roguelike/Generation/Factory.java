@@ -193,6 +193,8 @@ public class Factory {
 					entityManager.addComponent(item, new OffensiveComponent((JSONObject)item_properties.get(o))); break;
 				case "range":
 					entityManager.addComponent(item, new Range((int)(long)item_properties.get(o))); break;
+				case "ranged modifiers":
+					entityManager.addComponent(item, new RangedModifiers((JSONObject)item_properties.get(o))); break;
 			}
 		}
 

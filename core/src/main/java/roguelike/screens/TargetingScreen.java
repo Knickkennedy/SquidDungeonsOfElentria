@@ -73,6 +73,9 @@ public class TargetingScreen extends ScreenAdapter {
 	public void show(){
 		stage.addActor(display);
 
+		if(line != null)
+			line.clear();
+
 		Equipment equipment = entityManager.gc(entity, Equipment.class);
 		this.range = equipment.getRange();
 
@@ -116,8 +119,10 @@ public class TargetingScreen extends ScreenAdapter {
 		end = end.add(direction);
 		line = Bresenham.line2D(start, end);
 
-		if(line.size() > range)
+		if(line.size() > range + 1) {
 			end = end.subtract(direction);
+			line = Bresenham.line2D(start, end);
+		}
 	}
 
 	@Override

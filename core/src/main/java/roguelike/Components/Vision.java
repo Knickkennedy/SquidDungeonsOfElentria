@@ -28,4 +28,10 @@ public class Vision implements Component{
 		location = mapPosition;
 		FOV.reuseFOV(res, fov, location.x, location.y, range, Radius.CIRCLE);
 	}
+
+	public void refreshVision(){
+		res = DungeonUtility.generateSimpleResistances(map.pathfinding);
+		fov = new double[res.length][res[0].length];
+		FOV.reuseFOV(this.res, this.fov, this.location.x, this.location.y, this.range, Radius.CIRCLE);
+	}
 }

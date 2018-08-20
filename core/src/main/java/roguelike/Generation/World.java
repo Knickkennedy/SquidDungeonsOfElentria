@@ -156,8 +156,6 @@ public class World {
 		current_map = entityManager.gc(player, Position.class).map;
 
 		processAnimations();
-
-		perform_deaths();
 	}
 
 	private void processAnimations(){
@@ -180,7 +178,7 @@ public class World {
 			for(Animation animation : singleTileAnimations)
 				animation.createAnimation(display);
 			singleTileAnimations.clear();
-
+			perform_deaths();
 		}
 
 		animations.clear();
@@ -194,6 +192,10 @@ public class World {
 			MessageLog.getInstance().add_formatted_message("die", entity);
 
 			if(entity != null) {
+
+				if(entity.equals(player))
+					player = null;
+
 				Sprite sprite = entityManager.gc(entity, Sprite.class);
 				if(sprite != null && sprite.getGlyph() != null) {
 					display.removeGlyph(sprite.getGlyph());

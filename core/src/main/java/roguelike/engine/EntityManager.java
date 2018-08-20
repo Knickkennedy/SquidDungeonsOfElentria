@@ -16,6 +16,15 @@ public class EntityManager
 		componentStores = new HashMap<>();
 	}
 
+	public void killAllEntities(){
+
+		List<Integer> temp = new LinkedList<>(allEntities);
+
+		for(Integer entity : temp){
+			killEntity(entity);
+		}
+	}
+
 	public <T extends Component> T gc(int entity, Class<T> componentType)
 	{
 		HashMap<Integer, Component> store = componentStores.get( componentType );

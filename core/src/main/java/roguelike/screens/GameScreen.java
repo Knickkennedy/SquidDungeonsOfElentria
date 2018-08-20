@@ -7,6 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import roguelike.Components.*;
 import roguelike.Effects.Damage;
+import roguelike.Enums.EquipmentSlot;
 import roguelike.Generation.Factory;
 import roguelike.Generation.World;
 import roguelike.engine.Game;
@@ -68,6 +69,12 @@ public class GameScreen extends ScreenAdapter {
 
         world.update();
 
+	    if(world.getPlayer() == null) {
+	    	entityManager.killAllEntities();
+		    game.setScreen(new StartScreen(game));
+		    return;
+	    }
+
         render_map();
         render_entities();
         render_statistics();
@@ -105,11 +112,12 @@ public class GameScreen extends ScreenAdapter {
     }
 
     public void render_map(){
+
         double[][] fov = entityManager.gc(world.getPlayer(), Vision.class).getFov();
         for(int i  = 0; i < gridWidth; i++){
             for(int j = map_height_start; j < map_height_end; j++){
                 Sprite sprite = world.getCurrent_map().getTileAt(i, j - message_buffer).sprite;
-                if(fov[i][j - message_buffer] > 0)
+                if(fov[i][j - message_buffer] > 0 && world.getCurrent_map().getTileAt(i, j - message_buffer).passable)
                     display.putWithConsistentLight(i, j, sprite.character, sprite.foregroundColor, bgColor, SColor.CW_PALE_YELLOW, (float)(fov[i][j - message_buffer]));
                 else
                     display.put(i, j, sprite.character, sprite.foregroundColor, bgColor);
@@ -130,11 +138,13 @@ public class GameScreen extends ScreenAdapter {
     	int[] armor = entityManager.gc(world.getPlayer(), Equipment.class).total_armor();
     	String armor_string = String.format("Pierce:%d Slash:%d Crush:%d", armor[0], armor[1], armor[2]);
 
-	    ArrayList<Damage> damage_list = entityManager.gc(world.getPlayer(), Equipment.class).get_melee_damages();
+	    ArrayList<Damage> damage_list = entityManager.gc(world.getPlayer(), Equipment.class).getRangedDamage();
+		RangedModifiers rangedModifiers = entityManager.gc(world.getPlayer(), Equipment.class).getRangedModifiers();
 	    StringBuilder melee_damage = new StringBuilder();
 	    for(Damage damage : damage_list){
-	    	melee_damage.append(String.format("Type: %s %s", damage.type, damage.dice));
+	    	melee_damage.append(String.format("Type: %s +%s %s+%s", damage.type, rangedModifiers.toHitBonus, damage.dice, rangedModifiers.damageBonus));
 	    }
+
 
 	    String melee_string = melee_damage.toString();
 

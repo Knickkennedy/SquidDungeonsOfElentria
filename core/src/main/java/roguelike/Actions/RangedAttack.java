@@ -2,10 +2,7 @@ package roguelike.Actions;
 
 import roguelike.Actions.Animations.Animation;
 import roguelike.Actions.Animations.RangedAttackAnimation;
-import roguelike.Components.ActionComponent;
-import roguelike.Components.Energy;
-import roguelike.Components.Equipment;
-import roguelike.Components.Position;
+import roguelike.Components.*;
 import roguelike.Effects.Damage;
 import roguelike.Systems.DeathSystem;
 import roguelike.engine.MessageLog;
@@ -56,6 +53,7 @@ public class RangedAttack extends Action{
             if(position.map.isSolid(coord.x, coord.y))
                 break;
 
+	        RangedModifiers rangedModifiers = entityManager.gc(entity, Equipment.class).getRangedModifiers();
             Integer target = position.map.entityAt(coord);
             if(target != null){
 
@@ -64,13 +62,14 @@ public class RangedAttack extends Action{
                 for(Damage damage : entityManager.gc(entity, Equipment.class).getRangedDamage()){
                     int defenseValue = entityManager.gc(target, Equipment.class).get_resistance_from_type(damage.type);
 
-                    damageAmount += damage.roll() - defenseValue;
+                    damageAmount += damage.roll() + rangedModifiers.damageBonus - defenseValue;
 
                     if(damageAmount < 0)
                         damageAmount = 0;
                 }
 
-                MessageLog.getInstance().add_formatted_message("shoot", entity, target, damageAmount);
+	            displayLine.add(coord.translate(0, message_buffer));
+	            MessageLog.getInstance().add_formatted_message("shoot", entity, target, damageAmount);
 
                 new DeathSystem(entity, target, "health", -damageAmount).process();
 
@@ -83,9 +82,6 @@ public class RangedAttack extends Action{
         GreasedRegion greasedRegion = new GreasedRegion(gridWidth, gridHeight);
         greasedRegion.allOn();
         animations.add(new RangedAttackAnimation(greasedRegion, displayLine, '/', SColor.CHESTNUT_LEATHER_BROWN));
-/*
-        display.addAction(new PanelEffect.ProjectileEffect(display, 1f, greasedRegion, displayLine.get(0), displayLine.get(displayLine.size() - 1), '/', SColor.CHESTNUT_LEATHER_BROWN));
-*/
 
         entityManager.gc(entity, Energy.class).energy -= cost;
         entityManager.gc(entity, ActionComponent.class).setAction(null);

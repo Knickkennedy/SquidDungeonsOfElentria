@@ -26,8 +26,9 @@ public class RangedAttackAnimation extends MultiTileAnimation implements Animati
 
     @Override
     public void createAnimation(SparseLayers display) {
-        display.addAction(new PanelEffect.ProjectileEffect(display, 0.67f, greasedRegion, coords.get(0), coords.get(coords.size() - 1), shown, color));
-    }
+    	if(coords.size() > 1)
+            display.addAction(new PanelEffect.SteadyProjectileEffect(display, 0.15f, greasedRegion, coords.get(0), coords.get(coords.size() - 1), shown, color));
+    	}
 
     @Override
     public int getPriority() {

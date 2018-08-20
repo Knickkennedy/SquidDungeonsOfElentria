@@ -86,7 +86,10 @@ public class Map{
         pathfinding = new char[tiles.length][tiles[0].length];
         for (int i = 0; i < this.tiles.length; i++) {
             for (int j = 0; j < this.tiles[0].length; j++) {
-                this.pathfinding[i][j] = tiles[i][j].sprite.character;
+            	if(!tiles[i][j].passable)
+                    this.pathfinding[i][j] = '#';
+            	else
+            		this.pathfinding[i][j] = '.';
             }
         }
     }
@@ -136,6 +139,7 @@ public class Map{
 
 	public void open_door(Coord start, Coord direction){
     	tiles[start.x + direction.x][start.y + direction.y] = new Tile((JSONObject)tile_file.get("door - open"));
+    	pathfinding[start.x + direction.x][start.y + direction.y] = '.';
 	}
 
 	public int getCost(Coord start, Coord direction){

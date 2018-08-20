@@ -27,10 +27,12 @@
 	"iron breastplate": {
 		"details":{ "name": "iron breastplate", "description": "sturdy, heavy. This is what quality feels like." },
 		"equippable":{ "chest": true },
-		"defenses":{ "piercing": 2, "slashing": 2, "crushing": 2 }},
+		"defenses":{ "piercing": 2, "slashing": 2, "crushing": 2 },
+        "ranged modifiers":{ "to hit": 2, "damage": 2 }},
 
 	"shortbow": {
 		"details":{ "name": "shortbow", "description": "small, but powerful" },
 		"equippable":{ "ranged weapon": true },
-		"range": 5}
+		"range": 5,
+        "ranged modifiers":{ "to hit": 2, "damage": 0}}
 }

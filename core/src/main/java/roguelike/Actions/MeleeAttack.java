@@ -44,12 +44,11 @@ public class MeleeAttack extends Action{
 			Coord attackerLocation = entityManager.gc(attacker, Position.class).location;
 			Coord defenderLocation = entityManager.gc(target, Position.class).location;
 			animations.add(new MeleeAttackAnimation(sprite, Direction.getDirection(defenderLocation.x - attackerLocation.x, defenderLocation.y - attackerLocation.y)));
-			/*if (sprite.getGlyph() != null) {
-				display.bump(sprite.getGlyph(), Direction.getDirection(defenderLocation.x - attackerLocation.x, defenderLocation.y - attackerLocation.y), 0.05f);
-			}*/
 
 			int damage = 0;
 			String type;
+
+			MeleeModifiers meleeModifiers = entityManager.gc(attacker, Equipment.class).getMeleeModifiers();
 
 			for (Damage dam : entityManager.gc(attacker, Equipment.class).get_melee_damages()) {
 				String[] types = dam.type.split("/");
@@ -57,7 +56,7 @@ public class MeleeAttack extends Action{
 
 				type = types[Roll.rand(0, number_of_types - 1)];
 				int defensive_amount = entityManager.gc(target, Equipment.class).get_resistance_from_type(type);
-				damage += dam.roll() - defensive_amount;
+				damage += dam.roll() + meleeModifiers.damageBonus - defensive_amount;
 
 				if (damage < 0) {
 					damage = 0;

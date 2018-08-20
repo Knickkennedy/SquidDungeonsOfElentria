@@ -131,6 +131,40 @@ public class Equipment implements Component{
 			return 0;
 	}
 
+	public RangedModifiers getRangedModifiers(){
+		RangedModifiers rangedModifiers = new RangedModifiers();
+		for(EquipmentSlot slot : EquipmentSlot.values()){
+
+			RangedModifiers temp = new RangedModifiers();
+			if(equipment.get(slot) != null) {
+				temp = entityManager.gc(equipment.get(slot), RangedModifiers.class);
+			}
+			if(temp != null){
+				rangedModifiers.toHitBonus += temp.toHitBonus;
+				rangedModifiers.damageBonus += temp.damageBonus;
+			}
+		}
+
+		return rangedModifiers;
+	}
+
+	public MeleeModifiers getMeleeModifiers(){
+		MeleeModifiers meleeModifiers = new MeleeModifiers();
+		for(EquipmentSlot slot : EquipmentSlot.values()){
+
+			MeleeModifiers temp = new MeleeModifiers();
+			if(equipment.get(slot) != null){
+				temp = entityManager.gc(equipment.get(slot), MeleeModifiers.class);
+			}
+			if(temp != null){
+				meleeModifiers.toHitBonus += temp.toHitBonus;
+				meleeModifiers.damageBonus += temp.damageBonus;
+			}
+		}
+
+		return meleeModifiers;
+	}
+
 	private ArrayList<Damage> get_base_damage(){
 		ArrayList<Damage> damages = new ArrayList<>();
 		damages.add(new Damage("crushing", new Dice(1, 3)));

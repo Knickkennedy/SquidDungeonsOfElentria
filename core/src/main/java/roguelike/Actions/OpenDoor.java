@@ -30,6 +30,8 @@ public class OpenDoor extends Action{
 
 		entityManager.gc(entity, Position.class).map.open_door(entityManager.gc(entity, Position.class).location, direction);
 
+		entityManager.gc(entity, Vision.class).refreshVision();
+
 		entityManager.gc(entity, Position.class).update_location(direction);
 		entityManager.gc(entity, Vision.class).setLocation(entityManager.gc(entity, Position.class).location);
 		entityManager.gc(entity, ActionComponent.class).setAction(null);

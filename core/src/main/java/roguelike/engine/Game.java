@@ -39,8 +39,6 @@ public class Game extends com.badlogic.gdx.Game {
         Screen screen = getScreen();
         if(screen != null) 
             screen.render(Gdx.graphics.getDeltaTime());
-//        stage.draw();
-//        stage.act();
     }
 
     public GameScreen makeNewGameScreen(){

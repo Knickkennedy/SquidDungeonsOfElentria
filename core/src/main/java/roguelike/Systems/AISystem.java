@@ -95,6 +95,7 @@ public class AISystem implements BaseSystem {
 				ArrayList<Coord> coords =
 								path.findPath(1, monster_locations, null,
 								entityManager.gc(currentActor, Position.class).location, entityManager.gc(actor, Position.class).location);
+
 				entityManager.gc(currentActor, ActionComponent.class).setAction(
 						new Move(currentActor, coords.get(0).subtract(entityManager.gc(currentActor, Position.class).location), display, animations));
 				break;
