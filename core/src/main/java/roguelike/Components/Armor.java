@@ -19,4 +19,9 @@ public class Armor implements Component{
 		}
 	}
 
+	@Override
+	public String toString(){
+		return String.format("Piercing: %d, Slashing: %d, Crushing: %d", piercing, slashing, crushing);
+	}
+
 }

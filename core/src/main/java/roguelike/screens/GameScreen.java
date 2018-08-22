@@ -86,6 +86,42 @@ public class GameScreen extends ScreenAdapter {
     }
 
 	public void render_messages(){
+        /*String temp = "";
+
+        for(String message : MessageLog.getInstance().messages){
+            temp = temp.concat(message);
+            temp = temp.concat(" ");
+        }
+
+        String[] words = temp.split(" ");
+        String firstLine = "";
+        String secondLine = "";
+
+        int stoppingPoint = 0;
+        for (int i = 0, wordsLength = words.length; i < wordsLength; i++) {
+            String word = words[i];
+            if (firstLine.length() + word.length() < gridWidth && secondLine.length() < 1) {
+                firstLine = firstLine.concat(word);
+                firstLine = firstLine.concat(" ");
+            } else if (secondLine.length() + word.length() >= gridWidth) {
+                stoppingPoint = i;
+                break;
+            } else if (secondLine.length() + word.length() < gridWidth) {
+                secondLine = secondLine.concat(word);
+                secondLine = secondLine.concat(" ");
+            }
+        }
+
+        if(stoppingPoint != 0){
+            MessageLog.getInstance().messages.clear();
+            for(int i = stoppingPoint; i < words.length - stoppingPoint; i++){
+                MessageLog.getInstance().messages.add(words[i]);
+            }
+        }
+
+        display.put(0, 0, firstLine, Colors.getColor("gray"));
+        display.put(0, 1, secondLine, Colors.getColor("gray"));*/
+
     	String[] temp = new String[] {"", ""};
     	for(String message : MessageLog.getInstance().messages){
 

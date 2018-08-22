@@ -10,8 +10,17 @@
 	"goblin":{
 		"details": { "name": "goblin", "description": "a tiny gobbo", "hostile towards": ["player", "human"] },
 		"sprite": { "glyph": "g", "color": "blue" },
-		"speed": 100,
+		"speed": 110,
 		"statistics": { "health": 8, "strength": 9, "intelligence": 9, "willpower": 9, "constitution": 9, "dexterity": 15, "charisma": 9 },
 		"ai": true, 
-		"equipment":{ "head": "group:very common headgear", "chest": "leather armor", "right hand": "group:very common weapons" }}
+		"equipment":{ "head": "group:very common headgear", "chest": "leather armor", "right hand": "group:very common weapons" }},
+	"wasp":{
+		"details": { "name": "wasp", "description": "the stinger is bigger than expected", "hostile towards": ["player"] },
+		"sprite": { "glyph": "h", "color": "brown" },
+		"speed": 120,
+		"statistics": { "health": 7, "strength": 7, "intelligence": 7, "willpower": 20, "constitution": 7, "dexterity": 20, "charisma": 1 },
+		"ai": true,
+		"creature":{ "armor":{ "piercing": 2, "slashing": 2, "crushing": 2 },
+			"attack": { "physical": { "type": "piercing", "dice":{ "number of": 1, "size": 8 }}},
+			"melee modifiers": { "to hit": 2, "damage": 2 }}}
 }

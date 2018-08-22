@@ -18,4 +18,9 @@ public class OffensiveComponent implements Component{
 		}
 	}
 
+	@Override
+	public String toString(){
+		return damages.toString();
+	}
+
 }

@@ -97,6 +97,7 @@ public class Factory {
 
 		for(int i = 0; i < 5; i++){
 			Integer new_enemy = create_new_entity("group:rockthrowers");
+			//Integer new_enemy = create_new_entity("wasp");
 			entityManager.gc(new_enemy, Position.class).map = current_map;
 			entityManager.gc(new_enemy, Position.class).location = Coord.get(20 + i + 1, 20 );
 			entityManager.addComponent(new_enemy, new Vision(Coord.get(20 + i + 1, 20), current_map, 5.0));
@@ -146,6 +147,7 @@ public class Factory {
 				case "speed": entityManager.addComponent(entity, new Energy((int)(long)base_entity.get(o.toString()))); break;
 				case "ai": entityManager.addComponent(entity, new AI()); break;
 				case "equipment": entityManager.addComponent(entity, new Equipment((JSONObject)base_entity.get(o.toString()))); break;
+				case "creature": entityManager.addComponent(entity, new Creature((JSONObject)base_entity.get(o.toString()))); break;
 			}
 		}
 

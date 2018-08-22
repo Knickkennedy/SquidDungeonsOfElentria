@@ -19,4 +19,9 @@ public class MeleeModifiers implements Component{
 		this.toHitBonus = 0;
 		this.damageBonus = 0;
 	}
+
+	@Override
+	public String toString(){
+		return String.format("To Hit: %d, Damage Bonus: %d", toHitBonus, damageBonus);
+	}
 }

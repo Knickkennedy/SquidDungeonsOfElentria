@@ -48,18 +48,56 @@ public class MeleeAttack extends Action{
 			int damage = 0;
 			String type;
 
-			MeleeModifiers meleeModifiers = entityManager.gc(attacker, Equipment.class).getMeleeModifiers();
+			Equipment attackerEquipment = entityManager.gc(attacker, Equipment.class);
+			Equipment defenderEquipment = entityManager.gc(target, Equipment.class);
+			if(attackerEquipment != null && defenderEquipment != null) {
+				MeleeModifiers meleeModifiers = attackerEquipment.getMeleeModifiers();
 
-			for (Damage dam : entityManager.gc(attacker, Equipment.class).get_melee_damages()) {
-				String[] types = dam.type.split("/");
-				int number_of_types = types.length;
+				for (Damage dam : attackerEquipment.get_melee_damages()) {
+					String[] types = dam.type.split("/");
+					int number_of_types = types.length;
 
-				type = types[Roll.rand(0, number_of_types - 1)];
-				int defensive_amount = entityManager.gc(target, Equipment.class).get_resistance_from_type(type);
-				damage += dam.roll() + meleeModifiers.damageBonus - defensive_amount;
+					type = types[Roll.rand(0, number_of_types - 1)];
+					int defensive_amount = defenderEquipment.get_resistance_from_type(type);
+					damage += dam.roll() + meleeModifiers.damageBonus - defensive_amount;
 
-				if (damage < 0) {
-					damage = 0;
+					if (damage < 0) {
+						damage = 0;
+					}
+				}
+			}
+			else if(attackerEquipment != null){
+				Creature creature = entityManager.gc(target, Creature.class);
+				MeleeModifiers meleeModifiers = attackerEquipment.getMeleeModifiers();
+
+				for (Damage dam : attackerEquipment.get_melee_damages()) {
+					String[] types = dam.type.split("/");
+					int number_of_types = types.length;
+
+					type = types[Roll.rand(0, number_of_types - 1)];
+					int defensive_amount = creature.get_resistance_from_type(type);
+					damage += dam.roll() + meleeModifiers.damageBonus - defensive_amount;
+
+					if (damage < 0) {
+						damage = 0;
+					}
+				}
+			}
+			else if(defenderEquipment != null){
+				Creature creature = entityManager.gc(attacker, Creature.class);
+				MeleeModifiers meleeModifiers = creature.meleeModifiers;
+
+				for(Damage dam : creature.attack.damages){
+					String[] types = dam.type.split("/");
+					int number_of_types = types.length;
+
+					type = types[Roll.rand(0, number_of_types - 1)];
+					int defensive_amount = defenderEquipment.get_resistance_from_type(type);
+					damage += dam.roll() + meleeModifiers.damageBonus - defensive_amount;
+
+					if (damage < 0) {
+						damage = 0;
+					}
 				}
 			}
 

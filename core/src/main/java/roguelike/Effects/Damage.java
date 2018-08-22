@@ -25,4 +25,8 @@ public class Damage {
 		return dice.roll();
 	}
 
+	@Override
+	public String toString(){
+		return String.format("Type: %s, Dice Rolled: %s", type, dice);
+	}
 }
