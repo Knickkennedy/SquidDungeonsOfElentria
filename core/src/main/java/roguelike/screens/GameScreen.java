@@ -174,11 +174,11 @@ public class GameScreen extends ScreenAdapter {
     	int[] armor = entityManager.gc(world.getPlayer(), Equipment.class).total_armor();
     	String armor_string = String.format("Pierce:%d Slash:%d Crush:%d", armor[0], armor[1], armor[2]);
 
-	    ArrayList<Damage> damage_list = entityManager.gc(world.getPlayer(), Equipment.class).getRangedDamage();
-		RangedModifiers rangedModifiers = entityManager.gc(world.getPlayer(), Equipment.class).getRangedModifiers();
+	    ArrayList<Damage> damage_list = entityManager.gc(world.getPlayer(), Equipment.class).get_melee_damages();
+		MeleeModifiers meleeModifiers = entityManager.gc(world.getPlayer(), Equipment.class).getMeleeModifiers();
 	    StringBuilder melee_damage = new StringBuilder();
 	    for(Damage damage : damage_list){
-	    	melee_damage.append(String.format("Type: %s +%s %s+%s", damage.type, rangedModifiers.toHitBonus, damage.dice, rangedModifiers.damageBonus));
+	    	melee_damage.append(String.format("Type: %s +%s %s+%s", damage.type, meleeModifiers.toHitBonus, damage.dice, meleeModifiers.damageBonus));
 	    }
 
 
