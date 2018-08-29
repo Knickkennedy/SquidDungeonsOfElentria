@@ -11,7 +11,7 @@ import java.util.HashMap;
 
 import static roguelike.Generation.World.entityManager;
 
-public class Equipment implements Component{
+public class Equipment extends Body implements Component{
 	public HashMap<EquipmentSlot, Integer> equipment;
 
 	public Equipment(){
@@ -71,7 +71,8 @@ public class Equipment implements Component{
 		return new int[]{piercing, slashing, crushing};
 	}
 
-	public int get_resistance_from_type(String type){
+	@Override
+	public int getResistanceFromType(String type){
 
 		switch (type){
 			case "piercing": return get_piercing_resistance();
@@ -117,8 +118,14 @@ public class Equipment implements Component{
 		}
 		return amount;
 	}
+	/*
+	Hi!
+	 */
 
-	public ArrayList<Damage> getRangedDamage(){
+	@Override
+	public ArrayList<Damage> getRangedDamages(){
+		System.out.println(equipment.get(EquipmentSlot.AMMUNITION));
+		System.out.println(entityManager.gc(equipment.get(EquipmentSlot.AMMUNITION), OffensiveComponent.class));
 		return entityManager.gc(equipment.get(EquipmentSlot.AMMUNITION), OffensiveComponent.class).damages;
 	}
 
@@ -131,6 +138,7 @@ public class Equipment implements Component{
 			return 0;
 	}
 
+	@Override
 	public RangedModifiers getRangedModifiers(){
 		RangedModifiers rangedModifiers = new RangedModifiers();
 		for(EquipmentSlot slot : EquipmentSlot.values()){
@@ -186,7 +194,8 @@ public class Equipment implements Component{
 		return temp;
 	}
 
-	public ArrayList<Damage> get_melee_damages(){
+	@Override
+	public ArrayList<Damage> getMeleeDamages(){
 
 		if(equipment.get(EquipmentSlot.LEFT_HAND) != null && equipment.get(EquipmentSlot.RIGHT_HAND) != null){
 

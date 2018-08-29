@@ -17,6 +17,6 @@ public class Poison extends Effect{
 
 	@Override
 	public String verb() {
-		return null;
+		return this.verb;
 	}
 }

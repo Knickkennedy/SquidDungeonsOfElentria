@@ -21,7 +21,7 @@ import static roguelike.engine.Game.*;
 
 public class RangedAttack extends Action{
 
-    private Integer entity; //Entity making attack
+    private Integer entity; //Entity making meleeAttack
     private Queue<Coord> line; //Our initial line of fire
     private ArrayList<Coord> displayLine;
     private SparseLayers display; //Needed for animations
@@ -57,10 +57,30 @@ public class RangedAttack extends Action{
             Integer target = position.map.entityAt(coord);
             if(target != null){
 
+	            Body attackerBody;
+	            Body defenderBody;
+	            if(entityManager.gc(entity, Details.class).isHumanoid){
+		            attackerBody = entityManager.gc(entity, Equipment.class);
+	            }
+	            else{
+		            attackerBody = entityManager.gc(entity, Creature.class);
+	            }
+
+	            if(entityManager.gc(target, Details.class).isHumanoid){
+		            defenderBody = entityManager.gc(target, Equipment.class);
+	            }
+	            else{
+		            defenderBody = entityManager.gc(target, Creature.class);
+	            }
+
                 int damageAmount = 0;
 
-                for(Damage damage : entityManager.gc(entity, Equipment.class).getRangedDamage()){
-                    int defenseValue = entityManager.gc(target, Equipment.class).get_resistance_from_type(damage.type);
+	            System.out.println(attackerBody);
+	            System.out.println(defenderBody);
+	            System.out.println(attackerBody.getRangedDamages());
+
+                for(Damage damage : attackerBody.getRangedDamages()){
+                    int defenseValue = defenderBody.getResistanceFromType(damage.type);
 
                     damageAmount += damage.roll() + rangedModifiers.damageBonus - defenseValue;
 

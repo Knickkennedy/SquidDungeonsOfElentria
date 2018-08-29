@@ -13,6 +13,7 @@ public class Details implements Component{
 	public String name;
 	public String description;
 	public Race race;
+	public boolean isHumanoid;
 	public ArrayList<Hostility> hostile_to;
 
 	public boolean isPlayer;
@@ -25,6 +26,7 @@ public class Details implements Component{
 			switch (o.toString()){
 				case "name": name = (String)object.get(o.toString()); break;
 				case "description": description = (String)object.get(o.toString()); break;
+				case "humanoid": isHumanoid = (boolean)object.get(o.toString()); break;
 				case "hostile towards":{
 					JSONArray array = (JSONArray)object.get(o.toString());
 					for(Object type : array){
@@ -34,7 +36,6 @@ public class Details implements Component{
 				}
 			}
 		}
-
 		race = Race.get_race(name);
 		isPlayer = false;
 	}

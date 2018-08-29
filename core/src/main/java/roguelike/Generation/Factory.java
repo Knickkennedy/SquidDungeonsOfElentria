@@ -93,10 +93,8 @@ public class Factory {
 		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("shortbow"), EquipmentSlot.RANGED_WEAPON);
 		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("iron arrow"), EquipmentSlot.AMMUNITION);
 
-
-
 		for(int i = 0; i < 5; i++){
-			Integer new_enemy = create_new_entity("group:rockthrowers");
+			Integer new_enemy = create_new_entity("wasp");
 			//Integer new_enemy = create_new_entity("wasp");
 			entityManager.gc(new_enemy, Position.class).map = current_map;
 			entityManager.gc(new_enemy, Position.class).location = Coord.get(20 + i + 1, 20 );
@@ -191,7 +189,7 @@ public class Factory {
 					entityManager.addComponent(item, new Equippable((JSONObject)item_properties.get(o))); break;
 				case "defenses":
 					entityManager.addComponent(item, new Armor((JSONObject)item_properties.get(o))); break;
-				case "attack":
+				case "meleeAttack":
 					entityManager.addComponent(item, new OffensiveComponent((JSONObject)item_properties.get(o))); break;
 				case "range":
 					entityManager.addComponent(item, new Range((int)(long)item_properties.get(o))); break;

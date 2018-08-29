@@ -167,7 +167,7 @@ public class TargetingScreen extends ScreenAdapter {
 		int[] armor = entityManager.gc(world.getPlayer(), Equipment.class).total_armor();
 		String armor_string = String.format("Pierce:%d Slash:%d Crush:%d", armor[0], armor[1], armor[2]);
 
-		ArrayList<Damage> damage_list = entityManager.gc(world.getPlayer(), Equipment.class).get_melee_damages();
+		ArrayList<Damage> damage_list = entityManager.gc(world.getPlayer(), Equipment.class).getMeleeDamages();
 		StringBuilder melee_damage = new StringBuilder();
 		for(Damage damage : damage_list){
 			melee_damage.append(String.format("Type: %s %s", damage.type, damage.dice));

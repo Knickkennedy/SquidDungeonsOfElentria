@@ -1,23 +1,33 @@
 package roguelike.Components;
 
 import org.json.simple.JSONObject;
+import roguelike.Effects.Damage;
 
-public class Creature implements Component{
+import java.util.ArrayList;
+
+public class Creature extends Body{
     public Armor armor;
-    public OffensiveComponent attack;
+    public OffensiveComponent meleeAttack;
     public MeleeModifiers meleeModifiers;
+    public OffensiveComponent rangedAttack;
+    public RangedModifiers rangedModifiers;
 
     public Creature(JSONObject object){
         for(Object o : object.keySet()){
             switch (o.toString()){
                 case "armor": armor = new Armor((JSONObject)object.get(o.toString())); break;
-                case "attack": attack = new OffensiveComponent((JSONObject)object.get(o.toString())); break;
+                case "melee attack": meleeAttack = new OffensiveComponent((JSONObject)object.get(o.toString())); break;
                 case "melee modifiers": meleeModifiers = new MeleeModifiers((JSONObject)object.get(o.toString())); break;
+	            case "ranged attack": rangedAttack = new OffensiveComponent((JSONObject)object.get(o.toString())); break;
+	            case "ranged modifiers": rangedModifiers = new RangedModifiers((JSONObject)object.get(o.toString())); break;
             }
         }
+
+        System.out.println(meleeModifiers);
     }
 
-    public int get_resistance_from_type(String type){
+    @Override
+    public int getResistanceFromType(String type){
 
         switch (type){
             case "piercing": return armor.piercing;
@@ -28,7 +38,23 @@ public class Creature implements Component{
     }
 
     @Override
+    public MeleeModifiers getMeleeModifiers(){
+    	return meleeModifiers;
+    }
+
+    @Override
+    public ArrayList<Damage> getMeleeDamages(){
+    	return meleeAttack.damages;
+    }
+
+    @Override
+    public RangedModifiers getRangedModifiers(){ return rangedModifiers; }
+
+    @Override
+    public ArrayList<Damage> getRangedDamages(){ return rangedAttack.damages; }
+
+    @Override
     public String toString(){
-        return armor.toString() + attack.toString() + meleeModifiers.toString();
+        return armor.toString() + meleeAttack.toString() + meleeModifiers.toString();
     }
 }

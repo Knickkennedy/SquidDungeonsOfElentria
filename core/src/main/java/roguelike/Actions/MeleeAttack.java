@@ -48,60 +48,38 @@ public class MeleeAttack extends Action{
 			int damage = 0;
 			String type;
 
-			Equipment attackerEquipment = entityManager.gc(attacker, Equipment.class);
-			Equipment defenderEquipment = entityManager.gc(target, Equipment.class);
-			if(attackerEquipment != null && defenderEquipment != null) {
-				MeleeModifiers meleeModifiers = attackerEquipment.getMeleeModifiers();
-
-				for (Damage dam : attackerEquipment.get_melee_damages()) {
-					String[] types = dam.type.split("/");
-					int number_of_types = types.length;
-
-					type = types[Roll.rand(0, number_of_types - 1)];
-					int defensive_amount = defenderEquipment.get_resistance_from_type(type);
-					damage += dam.roll() + meleeModifiers.damageBonus - defensive_amount;
-
-					if (damage < 0) {
-						damage = 0;
-					}
-				}
+			Body attackerBody;
+			Body defenderBody;
+			if(entityManager.gc(attacker, Details.class).isHumanoid){
+				attackerBody = entityManager.gc(attacker, Equipment.class);
 			}
-			else if(attackerEquipment != null){
-				Creature creature = entityManager.gc(target, Creature.class);
-				MeleeModifiers meleeModifiers = attackerEquipment.getMeleeModifiers();
-
-				for (Damage dam : attackerEquipment.get_melee_damages()) {
-					String[] types = dam.type.split("/");
-					int number_of_types = types.length;
-
-					type = types[Roll.rand(0, number_of_types - 1)];
-					int defensive_amount = creature.get_resistance_from_type(type);
-					damage += dam.roll() + meleeModifiers.damageBonus - defensive_amount;
-
-					if (damage < 0) {
-						damage = 0;
-					}
-				}
+			else{
+				attackerBody = entityManager.gc(attacker, Creature.class);
 			}
-			else if(defenderEquipment != null){
-				Creature creature = entityManager.gc(attacker, Creature.class);
-				MeleeModifiers meleeModifiers = creature.meleeModifiers;
 
-				for(Damage dam : creature.attack.damages){
-					String[] types = dam.type.split("/");
-					int number_of_types = types.length;
+			if(entityManager.gc(target, Details.class).isHumanoid){
+				defenderBody = entityManager.gc(target, Equipment.class);
+			}
+			else{
+				defenderBody = entityManager.gc(target, Creature.class);
+			}
 
-					type = types[Roll.rand(0, number_of_types - 1)];
-					int defensive_amount = defenderEquipment.get_resistance_from_type(type);
-					damage += dam.roll() + meleeModifiers.damageBonus - defensive_amount;
+			MeleeModifiers attackerMeleeModifiers = attackerBody.getMeleeModifiers();
 
-					if (damage < 0) {
-						damage = 0;
-					}
+			for(Damage dam : attackerBody.getMeleeDamages()){
+				String[] types = dam.type.split("/");
+				int numberOfTypes = types.length;
+
+				type = types[Roll.rand(0, numberOfTypes - 1)];
+				int defensiveAmount = defenderBody.getResistanceFromType(type);
+				damage += getActualDamage(dam, attackerMeleeModifiers.damageBonus, defensiveAmount);
+
+				if(damage < 0){
+					damage = 0;
 				}
 			}
 
-			MessageLog.getInstance().add_formatted_message("attack", attacker, target, damage);
+			MessageLog.getInstance().add_formatted_message("meleeAttack", attacker, target, damage);
 
 			new DeathSystem(attacker, target, "health", - damage).process();
 
@@ -115,6 +93,10 @@ public class MeleeAttack extends Action{
 
 			return true;
 		}
+	}
+
+	private int getActualDamage(Damage damage, int damageBonus, int defensiveStat){
+		return damage.roll() + damageBonus - defensiveStat;
 	}
 
 	@Override

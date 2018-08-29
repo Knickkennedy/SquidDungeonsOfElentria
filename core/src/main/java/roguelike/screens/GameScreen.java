@@ -7,7 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import roguelike.Components.*;
 import roguelike.Effects.Damage;
-import roguelike.Enums.EquipmentSlot;
 import roguelike.Generation.Factory;
 import roguelike.Generation.World;
 import roguelike.engine.Game;
@@ -174,7 +173,7 @@ public class GameScreen extends ScreenAdapter {
     	int[] armor = entityManager.gc(world.getPlayer(), Equipment.class).total_armor();
     	String armor_string = String.format("Pierce:%d Slash:%d Crush:%d", armor[0], armor[1], armor[2]);
 
-	    ArrayList<Damage> damage_list = entityManager.gc(world.getPlayer(), Equipment.class).get_melee_damages();
+	    ArrayList<Damage> damage_list = entityManager.gc(world.getPlayer(), Equipment.class).getMeleeDamages();
 		MeleeModifiers meleeModifiers = entityManager.gc(world.getPlayer(), Equipment.class).getMeleeModifiers();
 	    StringBuilder melee_damage = new StringBuilder();
 	    for(Damage damage : damage_list){
