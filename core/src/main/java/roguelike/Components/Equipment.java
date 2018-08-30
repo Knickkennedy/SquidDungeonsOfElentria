@@ -119,7 +119,7 @@ public class Equipment extends Body implements Component{
 		return amount;
 	}
 	/*
-	Hi!
+
 	 */
 
 	@Override
