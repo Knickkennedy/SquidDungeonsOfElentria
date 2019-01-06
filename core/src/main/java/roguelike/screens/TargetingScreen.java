@@ -146,7 +146,7 @@ public class TargetingScreen extends ScreenAdapter {
 		for(int i  = 0; i < world.getMap_width(); i++){
 			for(int j = 0; j < world.getMap_height(); j++){
 				Sprite sprite = world.getCurrent_map().getTileAt(i, j).sprite;
-				if(fov[i][j] > 0)
+				if(fov[i][j] > 0 && world.getCurrent_map().getTileAt(i, j).passable)
 					display.putWithConsistentLight(i, j + message_buffer, sprite.character, sprite.foregroundColor, Color.BLACK, SColor.CW_PALE_YELLOW, (float)(fov[i][j]));
 				else
 					display.put(i, j + message_buffer, sprite.character, sprite.foregroundColor, bgColor);

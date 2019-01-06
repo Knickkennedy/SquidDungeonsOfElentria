@@ -6,20 +6,31 @@ import roguelike.Effects.Poison;
 
 import static roguelike.Generation.World.entityManager;
 
-public class OnHitEffect {
-	public Effect onHitEffect;
+public class OnHitEffect implements Component{
+	public JSONObject object;
+	public String type;
+	public double procChance;
 
 	public OnHitEffect(JSONObject object){
+		this.object = object;
 		for(Object o : object.keySet()) {
 			switch (o.toString()) {
 				case "poison":
-					onHitEffect = new Poison(object);
+					type = "poison";
+					break;
+				case "proc chance":
+					procChance = (double)object.get(o.toString());
 					break;
 			}
 		}
 	}
 
 	public void apply(Integer target){
-		entityManager.gc(target, StatusEffects.class).add(onHitEffect);
+
+		switch (type){
+			case "poison":
+				entityManager.gc(target, StatusEffects.class).add(new Poison((JSONObject)object.get("poison")));
+				break;
+		}
 	}
 }

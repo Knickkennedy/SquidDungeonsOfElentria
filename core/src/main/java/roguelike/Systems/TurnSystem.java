@@ -18,12 +18,14 @@ public class TurnSystem implements BaseSystem {
 	private SparseLayers display;
 	private List<Animation>animations;
 	private EnergySystem energy_system;
+	private StatusEffectsSystem statusEffectsSystem;
 	private AISystem AISystem;
 
 	public TurnSystem(SparseLayers display, List<Animation> animations){
 		this.display = display;
 		this.animations = animations;
 		this.energy_system = new EnergySystem();
+		this.statusEffectsSystem = new StatusEffectsSystem();
 	}
 
 	@Override
@@ -47,9 +49,7 @@ public class TurnSystem implements BaseSystem {
 				Action action = entityManager.gc(current_actor, ActionComponent.class).getAction();
 
 				if (action != null) {
-
-					Energy energy = entityManager.gc(current_actor, Energy.class);
-					energy.energy += energy.speed;
+					energy_system.process(current_actor);
 
 					while (true){
 						if(action.isAlternativeAction()) {
@@ -63,6 +63,7 @@ public class TurnSystem implements BaseSystem {
 
 					if (action != null && action.canPerform()) {
 						action.perform();
+						statusEffectsSystem.process(current_actor);
 						current_actor = actors.get((actors.indexOf(current_actor) + 1) % actors.size());
 					}
 				}

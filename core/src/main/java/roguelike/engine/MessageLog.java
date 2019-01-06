@@ -22,6 +22,18 @@ public class MessageLog {
 			messages.clear();
 		}
 	}
+
+	public void addEffectMessage(String message, Integer ...entities){
+		if(entities.length == 1){
+			if(entityManager.gc(entities[0], Details.class).isPlayer){
+				messages.add(String.format("You %s.", message));
+			}
+			else{
+				messages.add(String.format("The %s %s.", entityManager.gc(entities[0], Details.class).name, structure_verb(message)));
+			}
+		}
+	}
+
 	public void add_formatted_message(String message, Integer ...entities){
 
 		if(entities.length == 1){

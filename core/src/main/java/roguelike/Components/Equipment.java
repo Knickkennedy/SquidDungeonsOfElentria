@@ -118,13 +118,9 @@ public class Equipment extends Body implements Component{
 		}
 		return amount;
 	}
-	/*
-
-	 */
 
 	@Override
 	public ArrayList<Damage> getRangedDamages(){
-		System.out.println(equipment.get(EquipmentSlot.AMMUNITION));
 		System.out.println(entityManager.gc(equipment.get(EquipmentSlot.AMMUNITION), OffensiveComponent.class));
 		return entityManager.gc(equipment.get(EquipmentSlot.AMMUNITION), OffensiveComponent.class).damages;
 	}
@@ -265,4 +261,7 @@ public class Equipment extends Body implements Component{
 		equipment.remove(slot, equipment.get(slot));
 		entityManager.gc(owner, Inventory.class).add_item(item);
 	}
+
+	@Override
+	public ArrayList<OnHitEffect> getOnHitEffects(){ return null; }
 }

@@ -16,6 +16,10 @@ public class Roll {
     
     public static RNG rng = new RNG(random);
 
+    public static double d100(){
+    	return random.nextDouble(100.0);
+    }
+
     public static int rand(int min, int max){
         return random.nextInt(min, max+1);
     }

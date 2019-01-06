@@ -75,8 +75,6 @@ public class RangedAttack extends Action{
 
                 int damageAmount = 0;
 
-	            System.out.println(attackerBody);
-	            System.out.println(defenderBody);
 	            System.out.println(attackerBody.getRangedDamages());
 
                 for(Damage damage : attackerBody.getRangedDamages()){

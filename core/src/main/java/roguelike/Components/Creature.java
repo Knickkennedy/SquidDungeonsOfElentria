@@ -11,8 +11,10 @@ public class Creature extends Body{
     public MeleeModifiers meleeModifiers;
     public OffensiveComponent rangedAttack;
     public RangedModifiers rangedModifiers;
+    public ArrayList<OnHitEffect> onHitEffects;
 
     public Creature(JSONObject object){
+    	this.onHitEffects = new ArrayList<>();
         for(Object o : object.keySet()){
             switch (o.toString()){
                 case "armor": armor = new Armor((JSONObject)object.get(o.toString())); break;
@@ -20,10 +22,9 @@ public class Creature extends Body{
                 case "melee modifiers": meleeModifiers = new MeleeModifiers((JSONObject)object.get(o.toString())); break;
 	            case "ranged attack": rangedAttack = new OffensiveComponent((JSONObject)object.get(o.toString())); break;
 	            case "ranged modifiers": rangedModifiers = new RangedModifiers((JSONObject)object.get(o.toString())); break;
+	            case "on hit effect": onHitEffects.add(new OnHitEffect((JSONObject)object.get(o.toString()))); break;
             }
         }
-
-        System.out.println(meleeModifiers);
     }
 
     @Override
@@ -52,6 +53,9 @@ public class Creature extends Body{
 
     @Override
     public ArrayList<Damage> getRangedDamages(){ return rangedAttack.damages; }
+
+    @Override
+    public ArrayList<OnHitEffect> getOnHitEffects(){ return onHitEffects; }
 
     @Override
     public String toString(){

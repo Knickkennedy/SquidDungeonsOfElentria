@@ -4,16 +4,19 @@ import org.json.simple.JSONObject;
 
 public abstract class Effect {
 	public int duration;
-	public String verb;
-	public abstract void update();
-	public abstract String verb();
+	public String updateMessage;
+	public boolean isFinished;
+	public abstract void update(Integer actor);
+	public abstract void checkIfFinished();
 
 	public Effect(JSONObject object){
 		for(Object o : object.keySet()){
 			switch (o.toString()){
-				case "verb": this.verb = (String)object.get(o.toString()); break;
+				case "update message": this.updateMessage = (String)object.get(o.toString()); break;
 				case "duration": this.duration = (int)(long)object.get(o.toString()); break;
 			}
 		}
+
+		isFinished = false;
 	}
 }

@@ -1,6 +1,7 @@
 package roguelike.Generation;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.utils.Json;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -18,6 +19,7 @@ import java.util.PriorityQueue;
 
 import static roguelike.Generation.World.entityManager;
 
+@SuppressWarnings("Duplicates")
 public class Factory {
 
 	public static Factory factory;
@@ -87,6 +89,7 @@ public class Factory {
 		entityManager.addComponent(player, initializeCommandDisplay(player, display, world, animations));
 		entityManager.addComponent(player, new Inventory());
 		entityManager.addComponent(player, new Equipment());
+		entityManager.addComponent(player, new StatusEffects());
 		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("iron breastplate"), EquipmentSlot.CHEST);
 		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("iron helm"), EquipmentSlot.HEAD);
 		entityManager.gc(player, Equipment.class).equip_item(player, create_new_item("iron shortsword"), EquipmentSlot.LEFT_HAND);
@@ -95,7 +98,6 @@ public class Factory {
 
 		for(int i = 0; i < 5; i++){
 			Integer new_enemy = create_new_entity("wasp");
-			//Integer new_enemy = create_new_entity("wasp");
 			entityManager.gc(new_enemy, Position.class).map = current_map;
 			entityManager.gc(new_enemy, Position.class).location = Coord.get(20 + i + 1, 20 );
 			entityManager.addComponent(new_enemy, new Vision(Coord.get(20 + i + 1, 20), current_map, 5.0));
@@ -136,6 +138,7 @@ public class Factory {
 		entityManager.addComponent(entity, new Inventory());
 		entityManager.addComponent(entity, new ActionComponent());
 		entityManager.addComponent(entity, new Active());
+		entityManager.addComponent(entity, new StatusEffects());
 
 		for(Object o : base_entity.keySet()){
 			switch (o.toString()){
@@ -146,6 +149,7 @@ public class Factory {
 				case "ai": entityManager.addComponent(entity, new AI()); break;
 				case "equipment": entityManager.addComponent(entity, new Equipment((JSONObject)base_entity.get(o.toString()))); break;
 				case "creature": entityManager.addComponent(entity, new Creature((JSONObject)base_entity.get(o.toString()))); break;
+				case "on hit effect": entityManager.addComponent(entity, new OnHitEffect((JSONObject)base_entity.get(o.toString()))); break;
 			}
 		}
 
@@ -189,7 +193,7 @@ public class Factory {
 					entityManager.addComponent(item, new Equippable((JSONObject)item_properties.get(o))); break;
 				case "defenses":
 					entityManager.addComponent(item, new Armor((JSONObject)item_properties.get(o))); break;
-				case "meleeAttack":
+				case "attack":
 					entityManager.addComponent(item, new OffensiveComponent((JSONObject)item_properties.get(o))); break;
 				case "range":
 					entityManager.addComponent(item, new Range((int)(long)item_properties.get(o))); break;

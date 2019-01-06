@@ -10,4 +10,5 @@ public abstract class Body implements Component{
 	public abstract ArrayList<Damage> getMeleeDamages();
 	public abstract RangedModifiers getRangedModifiers();
 	public abstract ArrayList<Damage> getRangedDamages();
+	public abstract ArrayList<OnHitEffect> getOnHitEffects();
 }

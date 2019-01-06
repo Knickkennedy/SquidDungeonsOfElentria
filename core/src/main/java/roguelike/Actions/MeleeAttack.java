@@ -6,6 +6,7 @@ import roguelike.Components.*;
 import roguelike.Effects.Damage;
 import roguelike.Systems.DeathSystem;
 import roguelike.engine.MessageLog;
+import roguelike.utilities.Dice;
 import roguelike.utilities.Roll;
 import squidpony.squidgrid.Direction;
 import squidpony.squidgrid.gui.gdx.SparseLayers;
@@ -74,12 +75,25 @@ public class MeleeAttack extends Action{
 				int defensiveAmount = defenderBody.getResistanceFromType(type);
 				damage += getActualDamage(dam, attackerMeleeModifiers.damageBonus, defensiveAmount);
 
-				if(damage < 0){
+				if(damage <= 0){
 					damage = 0;
+				}
+				else{
+					if(attackerBody.getOnHitEffects() != null) {
+						for (OnHitEffect onHitEffect : attackerBody.getOnHitEffects()) {
+							double roll = Roll.d100();
+							double comparedTo = 100.0 - onHitEffect.procChance;
+
+							System.out.println(roll);
+
+							if(roll >= comparedTo)
+								onHitEffect.apply(target);
+						}
+					}
 				}
 			}
 
-			MessageLog.getInstance().add_formatted_message("meleeAttack", attacker, target, damage);
+			MessageLog.getInstance().add_formatted_message("attack", attacker, target, damage);
 
 			new DeathSystem(attacker, target, "health", - damage).process();
 
